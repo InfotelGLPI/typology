@@ -1,2 +1,2 @@
 # typology
-Plugin typology pour GLPI
+Plugin typology pour GLPI 0.90
