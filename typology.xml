@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+   <name>Typology</name>
+   <key>typology</key>
+   <state>stable</state>
+   <logo></logo>
+   <description>
+      <short>
+         <fr><![CDATA[Typology. Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.]]></fr>
+         <en><![CDATA[Typology. This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.]]></en>
+      </short>
+      <long>
+         <fr><![CDATA[Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.<br />Fonctionnalités :<br />-Utilisation d'un moteur de règle d'affectation de typologie<br />-Définition de critères (Informations générales de l'ordinateur / Composants / Réseau / Logiciels)<br />-Alertes : Vérification des typologies respectées<br />-Actions automatiques : Mise à jour automatique des typologies affectées<br />-Rapport : Liste des typologies par service]]></fr>
+         <en><![CDATA[This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.<br />Features :<br />-Use of an rule engine for typologies assignment<br />-Definition of criteria (General Information Computer / Components / Network / Software)<br />-Alerts: Checking typologies observed<br />-Automatic Actions: Automatic update typologies affected<br />-Report : List of typologies of services]]></en>
+      </long>
+   </description>
+   <homepage>https://github.com/InfotelGLPI/typology</homepage>
+   <download>https://github.com/InfotelGLPI/typology/releases</download>
+   <authors>
+      <author>Xavier Caillaud / Infotel</author>
+   </authors>
+   <versions>
+      <version>
+          <num>2.2.0</num>
+          <compatibility>0.90</compatibility>
+      </version>
+      <version>
+          <num>2.1.0</num>
+          <compatibility>0.85</compatibility>
+      </version>
+      <version>
+          <num>2.0.0</num>
+          <compatibility>0.84</compatibility>
+      </version>
+      <version>
+          <num>1.0.0</num>
+          <compatibility>0.83.3</compatibility>
+      </version>
+   </versions>
+   <langs>
+      <lang>en_GB</lang>
+      <lang>fr_FR</lang>
+      <lang>es_ES</lang>
+      <lang>es_AR</lang>
+      <lang>pt_BR</lang>
+      <lang>ro_RO</lang>
+      <lang>tr_TR</lang>
+   </langs>
+   <license><![CDATA[GPL v2+]]></license>
+      <tags>
+         <fr>
+            <tag>Configuration</tag>
+            <tag>Inventaire</tag>
+            <tag>Gestion</tag>
+         </fr>
+         <en>
+            <tag>Setup</tag>
+            <tag>Inventory</tag>
+            <tag>Management</tag>
+         </en>
+   </tags>
+</root>
