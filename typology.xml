@@ -10,14 +10,15 @@
          <en><![CDATA[Typology. This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.]]></en>
       </short>
       <long>
-         <fr><![CDATA[Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.<br />Fonctionnalités :<br />-Utilisation d'un moteur de règle d'affectation de typologie<br />-Définition de critères (Informations générales de l'ordinateur / Composants / Réseau / Logiciels)<br />-Alertes : Vérification des typologies respectées<br />-Actions automatiques : Mise à jour automatique des typologies affectées<br />-Rapport : Liste des typologies par service]]></fr>
-         <en><![CDATA[This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.<br />Features :<br />-Use of an rule engine for typologies assignment<br />-Definition of criteria (General Information Computer / Components / Network / Software)<br />-Alerts: Checking typologies observed<br />-Automatic Actions: Automatic update typologies affected<br />-Report : List of typologies of services]]></en>
+         <fr><![CDATA[Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.<br />Fonctionnalités :<br />- Utilisation d'un moteur de règle d'affectation de typologie<br />- Définition de critères (Informations générales de l'ordinateur / Composants / Réseau / Logiciels)<br />- Alertes : Vérification des typologies respectées<br />- Actions automatiques : Mise à jour automatique des typologies affectées<br />- Rapport : Liste des typologies par service]]></fr>
+         <en><![CDATA[This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.<br />Features :<br />- Use of an rule engine for typologies assignment<br />- Definition of criteria (General Information Computer / Components / Network / Software)<br />- Alerts: Checking typologies observed<br />- Automatic Actions: Automatic update typologies affected<br />- Report : List of typologies of services]]></en>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/typology</homepage>
    <download>https://github.com/InfotelGLPI/typology/releases</download>
    <authors>
-      <author>Xavier Caillaud / Infotel</author>
+      <author>Xavier Caillaud</author>
+      <author>Infotel</author>
    </authors>
    <versions>
       <version>
