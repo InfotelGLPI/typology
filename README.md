@@ -1,6 +1,12 @@
 # typology
 Plugin typology pour GLPI 0.90
 
+Ce plugin est sur Transifex - Aidez-nous à le traduire :
+https://www.transifex.com/tsmr/GLPI_typology/
+
+This plugin is on Transifex - Help us to translate :
+https://www.transifex.com/tsmr/GLPI_typology/
+
 Ce plugin permet de définir des typologies d'usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI. 
 Exemple : les ordinateurs ayant tel nom doivent avoir tel lieu, tel statut, telle IP et pas tel ou tel logiciel..
 
