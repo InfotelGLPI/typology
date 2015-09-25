@@ -36,7 +36,7 @@ class PluginTypologyTypology extends CommonDBTM {
    // From CommonDBTM
    var $dohistory = true;
    static $rightname                   = "plugin_typology";
-   protected $usenotepadrights         = true;
+   protected $usenotepad         = true;
    protected static $forward_entity_to = array('PluginTypologyTypologyCriteria');
 
    static $types = array('Computer');
