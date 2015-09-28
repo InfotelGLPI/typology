@@ -3,7 +3,7 @@
    <name>Typology</name>
    <key>typology</key>
    <state>stable</state>
-   <logo></logo>
+   <logo>https://raw.githubusercontent.com/InfotelGLPI/typology/master/typology.png</logo>
    <description>
       <short>
          <fr><![CDATA[Typology. Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.]]></fr>
