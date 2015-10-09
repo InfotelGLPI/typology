@@ -71,7 +71,7 @@ function plugin_version_typology() {
 
    return array (
       'name'           => _n('Typology', 'Typologies', 2, 'typology'),
-      'version'        => '2.2.0',
+      'version'        => '2.2.1',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
