@@ -33,6 +33,8 @@ if (strpos($_SERVER['PHP_SELF'],"dropdownAction.php")) {
    Html::header_nocache();
 }
 
+Session::checkLoginUser();
+
 //Display list of logical operator depending on field
 PluginTypologyTypologyCriteriaDefinition::dropdownSelect($_POST['itemtype'],
                                                          $_POST['typocrit_id'],
