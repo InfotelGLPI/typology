@@ -50,9 +50,9 @@ if (isset($_POST["update"])) {
       Html::back();
    }
 
-} else if (isset($_POST["delete"])) {
+} else if (isset($_POST["purge"])) {
 
-   $criteria->check($_POST['id'], DELETE);
+   $criteria->check($_POST['id'], PURGE);
    $criteria->delete($_POST);
    $criteria->redirectToList();
 

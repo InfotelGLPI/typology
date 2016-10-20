@@ -218,7 +218,7 @@ function plugin_typology_getDatabaseRelations() {
 }
 
 ////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
-/*
+
 // Define actions :
 function plugin_typology_MassiveActions($type) {
 
@@ -227,130 +227,14 @@ function plugin_typology_MassiveActions($type) {
       // Actions from items lists
       if (in_array($type, PluginTypologyTypology::getTypes(true))) {
          return array(
-            "plugin_typology_add_item" => _sx('button','Assign a typology to this material','typology'),
-            "plugin_typology_del_item" => _sx('button','Remove typology from this material','typology'),
-            "plugin_typology_compute_item" => _sx('button','Recalculate typology for the elements','typology'));
-      }
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material','typology'),
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material'),
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements','typology'));
+       }
       break;
    }
    return array();
 }
-
-
-// How to display specific actions ?
-// options contain at least itemtype and and action
-function plugin_typology_MassiveActionsDisplay($options = array()) {
-
-
-   if (in_array($options['itemtype'], PluginTypologyTypology::getTypes(true))) {
-      switch ($options['action']) {
-         //add item to a typo
-         case "plugin_typology_add_item":
-            echo "</br>&nbsp;".PluginTypologyTypology::getTypeName(2)." : ";
-            Dropdown::show('PluginTypologyTypology', 
-                     array('name' => "plugin_typology_typologies_id"));
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"".
-               _sx('button', 'Post')."\" >";
-            break;
-         //delete item to a typo
-         case "plugin_typology_del_item":
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"".
-               _sx('button', 'Post')."\" >";
-            break;
-         //delete item to a typo
-         case "plugin_typology_compute_item":
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"".
-               _sx('button', 'Post')."\" >";
-            break;
-      }
-   }
-   return "";
-}
-
-// How to process specific actions ?
-function plugin_typology_MassiveActionsProcess($data) {
-
-   $typo = new PluginTypologyTypology();
-   $typo_item = new PluginTypologyTypology_Item();
-   $criteria = new PluginTypologyTypologyCriteria();
-   $definition = new PluginTypologyTypologyCriteriaDefinition();
-   
-   switch ($data['action']) {
-
-      //add item to a typo
-      case "plugin_typology_add_item":
-         foreach ($data["item"] as $key => $val) {
-            if ($val == 1) {
-            
-               $input = array('plugin_typology_typologies_id' => $data['plugin_typology_typologies_id'],
-                              'items_id'      => $key,
-                              'itemtype'      => $data['itemtype']);
-               $item = new $data['itemtype']();
-               if ($item->getFromDB($key)) {
-                  $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
-                  $fields= array();
-                  $item->input = $input['plugin_typology_typologies_id'];
-                  $fields=$ruleCollection->processAllRules($item->fields,$fields, array());
-                  //Store rule that matched
-
-                  if (isset($fields['_ruleid'])) {
-                     if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']){
-                        $message = __('Element not match with the rule for assigning the typology:','typology')." ".
-                           Dropdown::getDropdownName('glpi_plugin_typology_typologies',$input['plugin_typology_typologies_id']);
-                        Session::addMessageAfterRedirect($message,ERROR,true);
-                     } else {
-                        $typo_item->add($input);
-                     }
-                  } else {
-                     $message = __('Element not match with rules for assigning a typology','typology');
-                     Session::addMessageAfterRedirect($message, ERROR, true);
-                  }
-               }
-            }
-         }
-         break;
-      //get out an item from a store
-      case "plugin_typology_del_item":
-         foreach ($data["item"] as $key => $val) {
-            if ($val == 1) {
-               $input = array('items_id'      => $key,
-                              'itemtype'      => $data['itemtype']);
-               $restrict = "`items_id` = '".$key."'
-                        AND `itemtype` = '".$data['itemtype']."'";
-               $items = getAllDatasFromTable("glpi_plugin_typology_typologies_items",$restrict);
-               if (!empty($items)) {
-                  foreach ($items as $item) {
-                     $input = array('id' => $item["id"],
-                                    'delete' => 'delete');
-                  }
-                  $typo_item->delete($input);
-               }
-            }
-         }
-         break;
-         //add item to a typo
-      case "plugin_typology_compute_item":
-         foreach ($data["item"] as $key => $val) {
-            if ($val == 1) {
-               
-               $restrict = "`items_id` = '".$key."'
-                        AND `itemtype` = '".$data['itemtype']."'";
-               $items = getAllDatasFromTable("glpi_plugin_typology_typologies_items",$restrict);
-               if (!empty($items)) {
-                  foreach ($items as $item) {
-                     $values = array('id' => $item["id"],
-                                    'plugin_typology_typologies_id' => $item['plugin_typology_typologies_id'],
-                                    'items_id'      => $key,
-                                    'itemtype'      => $data['itemtype']);
-                     $input=PluginTypologyTypology_Item::checkValidated($values);
-                     $typo_item->update($input);
-                  }
-               }
-            }
-         }
-         break;
-   }
-}*/
 
 ////// SEARCH FUNCTIONS ///////(){
 

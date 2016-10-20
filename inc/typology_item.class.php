@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -935,120 +936,132 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    }
 
    /**
-    * Get the specific massive actions
+    * @since version 0.85
     *
-    * @since version 0.84
-    * @param $checkitem link item to check right   (default NULL)
-    *
-    * @return an array of massive actions
-    **/
-   function getSpecificMassiveActions($checkitem=NULL) {
-      $isadmin = static::canUpdate();
-      $actions = parent::getSpecificMassiveActions($checkitem);
-      if ($isadmin) {
-         $actions['delete_item'] = _sx('button','Delete permanently');
-         $actions['update_allitem'] = __('Recalculate typology for the elements','typology');
-      }
-      return $actions;
-   }
-
-   /**
-    * Display specific options add action button for massive actions
-    *
-    * Parameters must not be : itemtype, action, is_deleted, check_itemtype or check_items_id
-    * @param $input array of input datas
-    * @since version 0.84
-    *
-    * @return boolean if parameters displayed ?
-    **/
-   function showSpecificMassiveActionsParameters($input = array()) {
-
-      switch ($input['action']) {
+    * @see CommonDBTM::showMassiveActionsSubForm()
+   **/
+   static function showMassiveActionsSubForm(MassiveAction $ma) {
+      
+      switch ($ma->getAction()) {
+         //add item to a typo
+         case "add_item":
+            echo "</br>&nbsp;".PluginTypologyTypology::getTypeName(2)." : ";
+            Dropdown::show('PluginTypologyTypology', 
+                     array('name' => "plugin_typology_typologies_id"));
+            echo "&nbsp;" .
+            Html::submit(_x('button', 'Post'), array('name' => 'massiveaction'));
+            return true;
+            break;
+         //delete item to a typo
          case "delete_item":
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"".
-               _sx('button', 'Post')."\" >";
+            echo Html::submit(_x('button', 'Post'), array('name' => 'massiveaction'));
             return true;
             break;
+         //update item to a typo
          case "update_allitem":
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"".
-               _sx('button', 'Post')."\" >";
+            echo Html::submit(_x('button', 'Post'), array('name' => 'massiveaction'));
             return true;
-            break;
-
-         default :
-            return parent::showSpecificMassiveActionsParameters($input);
             break;
       }
-      return false;
    }
 
-   /**
-    * Do the specific massive actions
-    *
-    * @since version 0.84
-    *
-    * @param $input array of input datas
-    *
-    * @return an array of results (nbok, nbko, nbnoright counts)
-    **/
-   function doSpecificMassiveActions($input = array()) {
 
-      $res = array('ok'      => 0,
-         'ko'      => 0,
-         'noright' => 0);
+   /**
+    * @since version 0.85
+    *
+    * @see CommonDBTM::processMassiveActionsForOneItemtype()
+   **/
+   static function processMassiveActionsForOneItemtype(MassiveAction $ma, CommonDBTM $item,
+                                                       array $ids) {
 
       $typo_item = new PluginTypologyTypology_Item();
 
-      switch ($input['action']) {
-         case "delete_item":
-            if ($input['itemtype']=='PluginTypologyTypology_Item') {
+      switch ($ma->getAction()) {
+         case "add_item":
+         $input = $ma->getInput();
 
-               foreach ($input["item"] as $key => $val) {
-                  if ($val!= 0) {
-                     $typo_item->getFromDB($key);
-                     if ($typo_item->delete(array('id'=>$key))) {
-                        $values = array('plugin_typology_typologies_id' => $input['plugin_typology_typologies_id'],
-                           'items_id'      => $typo_item->fields['items_id'],
-                           'itemtype'      => $typo_item->fields['itemtype']);
+            foreach ($ids as $id) {
+               
+               $input = array('plugin_typology_typologies_id' => $input['plugin_typology_typologies_id'],
+                              'items_id'      => $id,
+                              'itemtype'      => $item->getType());
+               
+               if ($item->getFromDB($id)) {
+                  $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
+                  $fields= array();
+                  $item->input = $input['plugin_typology_typologies_id'];
+                  $fields=$ruleCollection->processAllRules($item->fields,$fields, array());
+                  //Store rule that matched
+                  
+                  if (isset($fields['_ruleid'])) {
+                     if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']){
+                        $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
+                        $ma->addMessage(Dropdown::getDropdownName(getTableForItemType($item->getType()),$id)." : "
+                                        .__('Element not match with rules for assigning a typology','typology'));
+                     } else {
+                        if ($typo_item->can(-1, UPDATE, $input)) {
+                           if ($typo_item->add($input)) {
+                              PluginTypologyTypology_Item::addLog($input, PluginTypologyTypology_Item::LOG_ADD);
+                              $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+                           } else {
+                              $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+                           }
+                        } else {
+                           $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+                        }
+                     }
+                  } else {
+                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+                     $ma->addMessage(Dropdown::getDropdownName(getTableForItemType($item->getType()),$id)." : "
+                                    .__('Element not match with rules for assigning a typology','typology'));
+                  }
+               }
+            }
+         return;
+         case "delete_item":
+            $input = $ma->getInput();
+            foreach ($ids as $id) {
+               
+               if($typo_item->getFromDBByQuery("WHERE `items_id` = $id 
+                                                AND `itemtype` = '".$item->getType()."'")){
+                  $values = array('plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
+                                 'items_id'      => $typo_item->fields['items_id'],
+                                 'itemtype'      => $typo_item->fields['itemtype']);
+
+                  if ($typo_item->delete(array('id'=>$typo_item->fields['id']))) {
 
                         PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_DELETE);
 
-                        $res['ok']++;
-                     } else {
-                        $res['ko']++;
-                     }
+                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+                  } else {
+                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
                   }
                }
             }
-            break;
+         return;
          case "update_allitem":
-            if ($input['itemtype'] == 'PluginTypologyTypology_Item') {
+            foreach ($ids as $id) {
+               if($typo_item->getFromDBByQuery("WHERE `items_id` = $id 
+                                                AND `itemtype` = '".$item->getType()."'")){
+                  $result = PluginTypologyTypology_Item::checkValidated(array('items_id' => $typo_item->fields['items_id'],
+                                                                              'plugin_typology_typologies_id'=>$typo_item->fields['plugin_typology_typologies_id'],
+                                                                              'id'=>$typo_item->fields['id']));
+                  if($typo_item->update($result)){
+                     $values = array('plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
+                                    'items_id'      => $typo_item->fields['items_id'],
+                                    'itemtype'      => $typo_item->fields['itemtype']);
 
-               foreach ($input["item"] as $key => $val) {
-                  if ($val!= 0) {
-                     $typo_item->getFromDB($key);
-                     $result = PluginTypologyTypology_Item::checkValidated(array('items_id' => $typo_item->fields['items_id'],
-                     'plugin_typology_typologies_id'=>$typo_item->fields['plugin_typology_typologies_id'],
-                     'id'=>$typo_item->fields['id']));
-                     if($typo_item->update($result)){
-                        $values = array('plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
-                           'items_id'      => $typo_item->fields['items_id'],
-                           'itemtype'      => $typo_item->fields['itemtype']);
-
-                        PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_UPDATE);
-                        $res['ok']++;
-                     } else {
-                        $res['ko']++;
-                     }
+                     PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_UPDATE);
+                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_OK);
+                  } else {
+                     $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
                   }
                }
             }
-            break;
+         return;
 
-         default :
-            return parent::doSpecificMassiveActions($input);
       }
-      return $res;
+      parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
    }
 }
 

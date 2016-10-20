@@ -38,6 +38,7 @@ class PluginTypologyTypology extends CommonDBTM {
    var $dohistory = true;
    static $rightname                   = "plugin_typology";
    protected $usenotepad         = true;
+   protected $usenotepadrights         = true;
    protected static $forward_entity_to = array('PluginTypologyTypologyCriteria');
 
    static $types = array('Computer');
@@ -203,6 +204,20 @@ class PluginTypologyTypology extends CommonDBTM {
       echo "<textarea cols='45' rows='8' name='comment' >".$this->fields["comment"]."</textarea>";
       echo "</td></tr>";
 
+      echo "<tr class='tab_bg_1'>";
+
+      if (!$ID) {
+           echo "<td>".__('Last update')."</td>";
+           echo "<td>";
+           echo Html::convDateTime($_SESSION["glpi_currenttime"]);
+
+      } else {
+         echo "<td>".__('Last update')."</td>";
+         echo "<td>".($this->fields["date_mod"] ? Html::convDateTime($this->fields["date_mod"])
+                                                : __('Never'));
+      }
+
+      echo "</td></tr>";
       echo "<input type='hidden' name='entities_id' value='".$_SESSION['glpiactive_entity']."'>";
 
       $this->showFormButtons($options);
