@@ -1531,7 +1531,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "string" :
                               if ($def['action_type'] == 'contains') {
                                  $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " LIKE '%".$def["value"]."%'";
+                                    " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
                               } else if ($def['action_type'] == 'notcontains') {
                                  $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
                                     " LIKE '%".$def["value"]."%'";
@@ -1549,10 +1549,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  case "glpi_users":
                                     if ($def['action_type'] == 'contains') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".$def["value"]."%'";
+                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
                                     } else if ($def['action_type'] == 'notcontains') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".$def["value"]."%'";
+                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
                                     } else if ($def['action_type'] == 'equals') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
                                           " = '".getUserName($def["value"])."'";
@@ -1573,14 +1573,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  default :
                                     if ($def['action_type'] == 'contains' || $def['action_type'] == 'notcontains') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".$def["value"]."%'";
+                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
                                     } else if ($def['action_type'] == 'equals') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
                                        if ($item instanceof CommonDevice) {
                                           $item->getFromDB($def["value"]);
-                                          $queryConsole.= " = '".$item->getName()."'";
+                                          $queryConsole.= " = '".Toolbox::addslashes_deep($item->getName())."'";
                                        } else {
-                                          $queryConsole.=" = '".Dropdown::getDropdownName($searchOption['table'],$def["value"])."'";
+                                          $queryConsole.=" = '".Toolbox::addslashes_deep(Dropdown::getDropdownName($searchOption['table'],$def["value"]))."'";
                                        }
                                     } else if ($def['action_type'] == 'notequals') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
