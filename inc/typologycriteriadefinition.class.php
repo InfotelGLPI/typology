@@ -56,10 +56,22 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       if (!$withtemplate) {
          switch ($item->getType()) {
             case 'PluginTypologyTypologyCriteria' :
-               return self::getTypeName();
+               $nb = self::countForItem($item->fields['id']);
+               return array(self::createTabEntry(self::getTypeName(), $nb));
          }
       }
       return '';
+   }
+   
+   /**
+    * Count of definitions
+    * @param type $item
+    * @return type
+    */
+   static function countForItem($id){
+      $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
+      $datas = $typoCritDef->find("`plugin_typology_typologycriterias_id` = ".$id);
+      return count($datas);
    }
 
    /**
