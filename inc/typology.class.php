@@ -362,7 +362,7 @@ class PluginTypologyTypology extends CommonDBTM {
                   $message=array($entity=>'');
                }
                $task_infos[$type][$entity][] = $data;
-               if (!isset($tasks_infos[$type][$entity])) {
+               if (!isset($task_messages[$type][$entity])) {
                   $task_messages[$type][$entity] = __('Typology of the linked elements is updated.','typology')."<br />";
                }
                $task_messages[$type][$entity] .= $message[$entity];
