@@ -586,45 +586,48 @@ class PluginTypologyTypology extends CommonDBTM {
             
          case 'duplicate':
             $input = $ma->getInput();
-            foreach ($ids as $key) {
+            if ($item->getType() == 'PluginTypologyTypology') {
+               foreach ($ids as $key) {
 
-               $this->getFromDB($key);
+                  $item->getFromDB($key);
 
-               $restrict = "`plugin_typology_typologies_id` = '".$key."'";
-               $crits = getAllDatasFromTable("glpi_plugin_typology_typologycriterias", $restrict);
+                  $restrict = "`plugin_typology_typologies_id` = '" . $key . "'";
+                  $crits    = getAllDatasFromTable("glpi_plugin_typology_typologycriterias", $restrict);
 
-               unset($this->fields["id"]);
-               $this->fields["name"]=addslashes($this->fields["name"]." Copy");
-               $this->fields["comment"]=addslashes($this->fields["comment"]);
-               $this->fields["notepad"]=addslashes($this->fields["notepad"]);
-               $newIDtypo=$this->add($this->fields);
+                  unset($item->fields["id"]);
+                  $item->fields["name"]    = addslashes($item->fields["name"] . " Copy");
+                  $item->fields["comment"] = addslashes($item->fields["comment"]);
+                  //TODO duplicate notes
+//                  $item->fields["notepad"] = addslashes($item->fields["notepad"]);
+                  $newIDtypo               = $item->add($item->fields);
 
-               if (!empty($crits)) {
-                  foreach ($crits as $crit) {
+                  if (!empty($crits)) {
+                     foreach ($crits as $crit) {
 
-                     $criteria->getFromDB($crit["id"]);
+                        $criteria->getFromDB($crit["id"]);
 
-                     $condition = "`plugin_typology_typologycriterias_id` = '".$crit["id"]."'";
-                     $defs = getAllDatasFromTable("glpi_plugin_typology_typologycriteriadefinitions", $condition);
+                        $condition = "`plugin_typology_typologycriterias_id` = '" . $crit["id"] . "'";
+                        $defs      = getAllDatasFromTable("glpi_plugin_typology_typologycriteriadefinitions", $condition);
 
-                     unset($criteria->fields["id"]);
-                     $criteria->fields["name"]=addslashes($criteria->fields["name"]);
-                     $criteria->fields["plugin_typology_typologies_id"] = $newIDtypo;
-                     $criteria->fields["itemtype"]=addslashes($criteria->fields["itemtype"]);
-                     $newIDcrit=$criteria->add($criteria->fields);
+                        unset($criteria->fields["id"]);
+                        $criteria->fields["name"]                          = addslashes($criteria->fields["name"]);
+                        $criteria->fields["plugin_typology_typologies_id"] = $newIDtypo;
+                        $criteria->fields["itemtype"]                      = addslashes($criteria->fields["itemtype"]);
+                        $newIDcrit                                         = $criteria->add($criteria->fields);
 
-                     if (!empty($defs)) {
-                        foreach ($defs as $def) {
+                        if (!empty($defs)) {
+                           foreach ($defs as $def) {
 
-                           $definition->getFromDB($def["id"]);
+                              $definition->getFromDB($def["id"]);
 
-                           unset($definition->fields["id"]);
-                           $definition->fields["plugin_typology_typologycriterias_id"]=$newIDcrit;
-                           $definition->fields["field"]=addslashes($definition->fields["field"]);
-                           $definition->fields["action_type"]=addslashes($definition->fields["action_type"]);
-                           $definition->fields["value"]=addslashes($definition->fields["value"]);
-                           $definition->add($definition->fields);
+                              unset($definition->fields["id"]);
+                              $definition->fields["plugin_typology_typologycriterias_id"] = $newIDcrit;
+                              $definition->fields["field"]                                = addslashes($definition->fields["field"]);
+                              $definition->fields["action_type"]                          = addslashes($definition->fields["action_type"]);
+                              $definition->fields["value"]                                = addslashes($definition->fields["value"]);
+                              $definition->add($definition->fields);
 
+                           }
                         }
                      }
                   }
