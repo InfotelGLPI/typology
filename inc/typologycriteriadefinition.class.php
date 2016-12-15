@@ -410,7 +410,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                'groups_id_tech',
                'comment',
                'date_mod',
-               'os_license_number',
+//               'os_license_number',
                'os_licenseid',
                'autoupdatesystems_id',
 //               'locations_id',
@@ -1044,9 +1044,11 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         switch ($itemtype){
                            case "Computer":
                               $queryReal .= " FROM `glpi_computers`";
-                              $queryReal .= " INNER JOIN `".$searchOption['table']."`";
-                              $fk        = getForeignKeyFieldForTable($searchOption['table']);
-                              $queryReal .= " ON (`glpi_computers`.`".$fk."`= `".$searchOption['table']."`.`id`)";
+                              if($searchOption['table'] != 'glpi_computers') {
+                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $fk = getForeignKeyFieldForTable($searchOption['table']);
+                                 $queryReal .= " ON (`glpi_computers`.`" . $fk . "`= `" . $searchOption['table'] . "`.`id`)";
+                              }
                               $queryReal .= " WHERE `glpi_computers`.`id` = '$pcID'";
                               break;
                            case "Monitor":
@@ -1388,10 +1390,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         switch ($itemtype){
                            case "Computer":
                               $queryConsole .= " FROM `glpi_computers`";
-                              $queryConsole .= " INNER JOIN `".$searchOption['table']."`";
-                              $fk        = getForeignKeyFieldForTable($searchOption['table']);
-                              $queryConsole .= " ON (`glpi_computers`.`".$fk.
-                                               "`= `".$searchOption['table']."`.`id`)";
+                              if($searchOption['table'] != 'glpi_computers') {
+                                 $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $fk = getForeignKeyFieldForTable($searchOption['table']);
+                                 $queryConsole .= " ON (`glpi_computers`.`" . $fk .
+                                                  "`= `" . $searchOption['table'] . "`.`id`)";
+                              }
                               $queryConsole .= " WHERE `glpi_computers`.`id` = '$pcID'";
                               break;
                            case "Monitor":
