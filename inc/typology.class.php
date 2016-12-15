@@ -423,16 +423,19 @@ class PluginTypologyTypology extends CommonDBTM {
             // Get items entity
             $item = getItemForItemtype($data['itemtype']);
             $item->getFromDB($data['items_id']);
-            $entity = $item->fields['entities_id'];
-            
-            $message = $data["name"].": ".
-                        $data["error"]."<br>\n";
-            $task_infos[$type][$entity][] = $data;
 
-            if (!isset($tasks_infos[$type][$entity])) {
-               $task_messages[$type][$entity] = __('Elements not match with the typology','typology')."<br />";
+            if (!$item->fields['is_deleted']) {
+               $entity = $item->fields['entities_id'];
+
+               $message                      = $data["name"] . ": " .
+                                               $data["error"] . "<br>\n";
+               $task_infos[$type][$entity][] = $data;
+
+               if (!isset($tasks_infos[$type][$entity])) {
+                  $task_messages[$type][$entity] = __('Elements not match with the typology', 'typology') . "<br />";
+               }
+               $task_messages[$type][$entity] .= $message;
             }
-            $task_messages[$type][$entity] .= $message;
          }
       }
 
