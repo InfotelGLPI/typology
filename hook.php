@@ -228,7 +228,7 @@ function plugin_typology_MassiveActions($type) {
       if (in_array($type, PluginTypologyTypology::getTypes(true))) {
          return array(
             'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material','typology'),
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material'),
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material','typology'),
             'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements','typology'));
        }
       break;
