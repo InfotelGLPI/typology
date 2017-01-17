@@ -333,7 +333,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
          $fields= array();
          //si massive action ajouter tous les champs de la rules
-         if(!isset($item->input['_update'])){
+//         if(!isset($item->input['_update'])){
             $rule = new PluginTypologyRuleTypology();
             foreach ($rule->getCriterias() as $ID => $crit) {
                if(!isset($item->input[$ID])){
@@ -342,7 +342,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                   }
                }
             }
-         }
+//         }
          $fields=$ruleCollection->processAllRules($item->input,$fields, array());
          //Store rule that matched
          if (isset($fields['_ruleid'])) {
