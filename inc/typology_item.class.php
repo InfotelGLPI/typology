@@ -646,39 +646,31 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
       $canedit = $typo->can($typoID, UPDATE);
       $canview = $typo->can($typoID, READ);
-      $rand=mt_rand();
-
-      $query = "SELECT DISTINCT `itemtype`
-                    FROM `glpi_plugin_typology_typologies_items`
-                    WHERE `plugin_typology_typologies_id` = '$typoID'
-                    ORDER BY `itemtype`";
-      $result = $DB->query($query);
-      $number = $DB->numrows($result);
+      $rand    = mt_rand();
 
       if (Session::isMultiEntitiesMode()) {
-         $colsup=1;
+         $colsup = 1;
       } else {
-         $colsup=0;
+         $colsup = 0;
       }
 
       if ($canedit) {
 
          echo "<div class='firstbloc'>";
-         echo "<form method='post' name='typologies_form$rand' id='typologies_form$rand' action='".
-            $CFG_GLPI["root_doc"]."/plugins/typology/front/typology.form.php'>";
+         echo "<form method='post' name='typologies_form$rand' id='typologies_form$rand' action='" .
+         $CFG_GLPI["root_doc"] . "/plugins/typology/front/typology.form.php'>";
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";
-         echo "<th colspan='7'>".__('Add an item')."</th></tr>";
+         echo "<th colspan='7'>" . __('Add an item') . "</th></tr>";
 
          echo "<tr class='tab_bg_1'><td colspan='4' class='center'>";
          echo "<input type='hidden' name='plugin_typology_typologies_id' value='$typoID'>";
-         Dropdown::showAllItems("items_id", 0, 0,($typo->fields['is_recursive']?-1:$typo->fields['entities_id']),
-            PluginTypologyTypology::getTypes());
+         Dropdown::showAllItems("items_id", 0, 0, ($typo->fields['is_recursive'] ? -1 : $typo->fields['entities_id']), PluginTypologyTypology::getTypes());
          echo "</td>";
          echo "<td colspan='3' class='center' class='tab_bg_2'>";
 
-         echo "<input type='submit' name='add_item' value=\""._sx('button','Add')."\" class='submit'>";
+         echo "<input type='submit' name='add_item' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
          echo "</td></tr>";
 
          echo "</table>";
@@ -686,147 +678,207 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          echo "</div>";
       }
 
+      $types = PluginTypologyTypology::getTypes();
+      $title = __('Linked elements', 'typology');
+      $type  = Session::getSavedOption(__CLASS__, 'onlytype', '');
+
+      if (!in_array($type, $types)) {
+         $type = 'Computer';
+      } 
+
       echo "<div class='spaced'>";
-      if ($canedit && $number) {
-         Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-         $massiveactionparams = array();
-         Html::showMassiveActions($massiveactionparams);
-      }
       echo "<table class='tab_cadre_fixe'>";
-      echo "<tr>";
-      echo "<th colspan='".($canedit?(7+$colsup):(6+$colsup))."'>";
-
-      if ($DB->numrows($result)==0) {
-         _e('No linked element','typology');
-
+      echo "<tr class='tab_bg_1'><th colspan='3'>$title</tr>";
+      echo "<tr class='tab_bg_1'><td class='center'>";
+      echo __('Type') . "&nbsp;";
+      Dropdown::showItemType($types, array('value'      => $type,
+                                          'name'       => 'onlytype',
+                                          'plural'     => true,
+                                          'on_change'  => 'reloadTab("start=0&onlytype="+this.value)',
+                                          'checkright' => true));
+      echo "</td></tr></table>";
+      
+      if(empty($type)){
+         echo "<table class='tab_cadre_fixe'>";
+         echo "<tr><th class='center'>";
+         _e('Select a type', 'typology');
+         echo "</th></tr>";
+         echo "</table>";
+         
       } else {
-         _e('Linked elements','typology');
-      }
 
-      echo "</th></tr><tr>";
+         $datas = array();
 
-      if ($canedit && $number) {
-         echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
-      }
+         $start  = (isset($_GET['start']) ? intval($_GET['start']) : 0);
+         $number = self::getDataItems($type, $start, $datas, $typoID);
 
-      echo "<th>".__('Type')."</th>";
-      echo "<th>".__('Name')."</th>";
-      if (Session::isMultiEntitiesMode()) {
-         echo "<th>".__('Entity')."</th>";
-      }
-      echo "<th>".__('Serial number')."</th>";
-      echo "<th>".__('Inventory number')."</th>";
-      echo "<th>".__('Responding to typology\'s criteria','typology')."</th>";
-      echo "</tr>";
+         Html::printAjaxPager('', $start, $number);
 
-      for ($i=0 ; $i < $number ; $i++) {
-         $itemtype=$DB->result($result, $i, "itemtype");
-         if (!($item = getItemForItemtype($itemtype))) {
-            continue;
+         if ($canedit && $number) {
+            Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+            $massiveactionparams = array();
+            Html::showMassiveActions($massiveactionparams);
          }
-         if ($canview) {
-            $column="name";
-            $itemtable = getTableForItemType($itemtype);
+         echo "<table class='tab_cadre_fixe'>";
+         echo "<tr>";
+         echo "<th colspan='" . ($canedit ? (7 + $colsup) : (6 + $colsup)) . "'>";
 
-            $query = "SELECT `".$itemtable."`.*,
+         if ($number == 0) {
+            _e('No linked element', 'typology');
+         } else {
+            _e('Linked elements', 'typology');
+         }
+
+         echo "</th></tr><tr>";
+
+         if ($canedit && $number) {
+            echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+         }
+
+         echo "<th>" . __('Type') . "</th>";
+         echo "<th>" . __('Name') . "</th>";
+         if (Session::isMultiEntitiesMode()) {
+            echo "<th>" . __('Entity') . "</th>";
+         }
+         echo "<th>" . __('Serial number') . "</th>";
+         echo "<th>" . __('Inventory number') . "</th>";
+         echo "<th>" . __('Responding to typology\'s criteria', 'typology') . "</th>";
+         echo "</tr>";
+
+         $itemtype = $type;
+         $item     = getItemForItemtype($itemtype);
+
+         foreach ($datas as $data) {
+
+            Session::initNavigateListItems($type, PluginTypologyTypology::getTypeName(1) .
+               " = " . $typo->fields['name']);
+
+            $ID = "";
+
+
+            Session::addToNavigateListItems($itemtype, $data["id"]);
+
+            if ($itemtype == 'User') {
+               $format = formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
+            } else {
+               $format = $data["name"];
+            }
+
+            if ($_SESSION["glpiis_ids_visible"] || empty($data["name"]))
+               $ID = " (" . $data["id"] . ")";
+
+            $link = Toolbox::getItemTypeFormURL($itemtype);
+
+            $name = "<a href=\"" . $link . "?id=" . $data["id"] . "\">" . $format;
+
+            if ($itemtype != 'User')
+               $name.= "&nbsp;" . $ID;
+
+            $name.= "</a>";
+
+            echo "<tr class='tab_bg_1'>";
+
+            if ($canedit) {
+               echo "<td width='10'>";
+               Html::showMassiveActionCheckBox(__CLASS__, $data["IDP"]);
+               echo "</td>";
+            }
+
+            echo "<input type='hidden' name='plugin_typology_typologies_id' value='$typoID'>";
+            echo "<td class='center'>" . $item->getTypeName() . "</td>";
+            echo "<td class='center' " . (isset($data['is_deleted']) && $data['is_deleted'] ? "class='tab_bg_2_2'" : "") . ">" . $name . "</td>";
+            if (Session::isMultiEntitiesMode())
+               if ($itemtype != 'User') {
+                  echo "<td class='center'>" . Dropdown::getDropdownName("glpi_entities", $data['entity']) . "</td>";
+               } else {
+                  echo "<td class='center'>-</td>";
+               }
+            echo "<td class='center'>" . (isset($data["serial"]) ? "" . $data["serial"] . "" : "-") . "</td>";
+            echo "<td class='center'>" . (isset($data["otherserial"]) ? "" . $data["otherserial"] . "" : "-") . "</td>";
+
+            if ($data["is_validated"] > 0) {
+               $critTypOK = __('Yes');
+            } else {
+               $critTypOK = "<font color='red'>" . __('No') . " " .
+                  __('for the criteria', 'typology') . " ";
+               $i         = 0;
+
+               $critTypOK.=self::displayErrors($data["error"]);
+
+               $critTypOK.="</font>";
+            }
+
+            echo "<td class ='center'><b>" . $critTypOK . "</b></td>";
+
+            echo "</tr>";
+         }
+         echo "</table>";
+         if ($canedit && $number) {
+            $paramsma['ontop'] = false;
+            Html::showMassiveActions($paramsma);
+            Html::closeForm();
+         }
+
+         echo "</div>";
+      }
+   }
+   
+   static function getDataItems($itemtype, $start, array &$res, $typoID) {
+      global $DB;
+      if (!($item = getItemForItemtype($itemtype))) {
+         return;
+      }
+      if (!$item->canView()) {
+         return;
+      }
+      $itemtable = getTableForItemType($itemtype);
+      $column    = "name";
+
+      $max = $_SESSION['glpilist_limit'];
+      $res = array();
+
+      $query = "SELECT count(`glpi_plugin_typology_typologies_items`.`id`) AS count"
+         . " FROM `glpi_plugin_typology_typologies_items`, `" . $itemtable
+         . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $itemtable . "`.`entities_id`) "
+         . " WHERE `" . $itemtable . "`.`id` = `glpi_plugin_typology_typologies_items`.`items_id`
+                              AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
+                              AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
+      if ($itemtype != 'User')
+         $query.=getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
+
+      if ($item->maybeTemplate()) {
+         $query.=" AND " . $itemtable . ".is_template='0'";
+      }
+      $result = $DB->query($query);
+      $number = $DB->result($result, 0, "count");
+
+      $query = "SELECT `" . $itemtable . "`.*,
                                 `glpi_plugin_typology_typologies_items`.`id` AS IDP,
                                 `glpi_plugin_typology_typologies_items`.`is_validated`,
                                 `glpi_plugin_typology_typologies_items`.`error`,
                                 `glpi_entities`.`id` AS entity "
-               ." FROM `glpi_plugin_typology_typologies_items`, `".$itemtable
-               ."` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `".$itemtable."`.`entities_id`) "
-               ." WHERE `".$itemtable."`.`id` = `glpi_plugin_typology_typologies_items`.`items_id`
+         . " FROM `glpi_plugin_typology_typologies_items`, `" . $itemtable
+         . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $itemtable . "`.`entities_id`) "
+         . " WHERE `" . $itemtable . "`.`id` = `glpi_plugin_typology_typologies_items`.`items_id`
                               AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
                               AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
-            if ($itemtype!='User')
-               $query.=getEntitiesRestrictRequest(" AND ",$itemtable,'','',$item->maybeRecursive());
+      if ($itemtype != 'User')
+         $query.=getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
 
-            if ($item->maybeTemplate()) {
-               $query.=" AND ".$itemtable.".is_template='0'";
-            }
-
-            $query.=" ORDER BY `glpi_entities`.`completename`, `".$itemtable."`.`$column` ";
-
-            if ($result_linked=$DB->query($query)) {
-               if ($DB->numrows($result_linked)) {
-                  Session::initNavigateListItems($itemtype,PluginTypologyTypology::getTypeName(1).
-                     " = ".$typo->fields['name']);
-
-                  while ($data=$DB->fetch_assoc($result_linked)) {
-                     $ID="";
-
-                     $item->getFromDB($data["id"]);
-
-                     Session::addToNavigateListItems($itemtype,$data["id"]);
-
-                     if ($itemtype=='User') {
-                        $format=formatUserName($data["id"],$data["name"],$data["realname"],$data["firstname"],1);
-                     } else {
-                        $format=$data["name"];
-                     }
-
-                     if($_SESSION["glpiis_ids_visible"] || empty($data["name"]))
-                        $ID = " (".$data["id"].")";
-
-                     $link=Toolbox::getItemTypeFormURL($itemtype);
-
-                     $name= "<a href=\"".$link."?id=".$data["id"]."\">".$format;
-
-                     if ($itemtype!='User')
-                        $name.= "&nbsp;".$ID;
-
-                     $name.= "</a>";
-
-                     echo "<tr class='tab_bg_1'>";
-
-                     if ($canedit) {
-                        echo "<td width='10'>";
-                        Html::showMassiveActionCheckBox(__CLASS__, $data["IDP"]);
-                        echo "</td>";
-                     }
-
-                     echo "<input type='hidden' name='plugin_typology_typologies_id' value='$typoID'>";
-                     echo "<td class='center'>".$item->getTypeName()."</td>";
-                     echo "<td class='center' ".(isset($data['is_deleted'])&&$data['is_deleted']?"class='tab_bg_2_2'":"").">".$name."</td>";
-                     if (Session::isMultiEntitiesMode())
-                        if ($itemtype!='User') {
-                           echo "<td class='center'>".Dropdown::getDropdownName("glpi_entities",$data['entity'])."</td>";
-                        } else {
-                           echo "<td class='center'>-</td>";
-                        }
-                     echo "<td class='center'>".(isset($data["serial"])? "".$data["serial"]."" :"-")."</td>";
-                     echo "<td class='center'>".(isset($data["otherserial"])? "".$data["otherserial"]."" :"-")."</td>";
-
-                     if($data["is_validated"] > 0){
-                        $critTypOK = __('Yes');
-                     } else {
-                        $critTypOK = "<font color='red'>".__('No')." ".
-                           __('for the criteria','typology')." ";
-                        $i=0;
-
-                        $critTypOK.=self::displayErrors($data["error"]);
-
-                        $critTypOK.="</font>";
-                     }
-
-                     echo "<td class ='center'><b>".$critTypOK."</b></td>";
-
-                     echo "</tr>";
-                  }
-               }
-            }
-         }
-      }
-      echo "</table>";
-      if ($canedit && $number) {
-         $paramsma['ontop'] =false;
-         Html::showMassiveActions($paramsma);
-         Html::closeForm();
+      if ($item->maybeTemplate()) {
+         $query.=" AND " . $itemtable . ".is_template='0'";
       }
 
-      echo "</div>";
+      $query.=" ORDER BY `glpi_entities`.`completename`, `" . $itemtable . "`.`$column`
+                  LIMIT $start, $max";
+
+      foreach ($DB->request($query) as $data) {
+         $res[] = $data;
+         $max--;
+      }
+
+      return $number;
    }
-
 
    /**
     * Display a management console in order to see the difference between the typology linkked
