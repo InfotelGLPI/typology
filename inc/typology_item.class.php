@@ -701,7 +701,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       if(empty($type)){
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr><th class='center'>";
-         _e('Select a type', 'typology');
+         echo __('Select a type', 'typology');
          echo "</th></tr>";
          echo "</table>";
          
@@ -724,9 +724,9 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          echo "<th colspan='" . ($canedit ? (7 + $colsup) : (6 + $colsup)) . "'>";
 
          if ($number == 0) {
-            _e('No linked element', 'typology');
+            echo __('No linked element', 'typology');
          } else {
-            _e('Linked elements', 'typology');
+            echo __('Linked elements', 'typology');
          }
 
          echo "</th></tr><tr>";
@@ -909,7 +909,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
             //title
             echo "<tr><th colspan='7'>";
-            _e('Management console','typology');
+            echo __('Management console','typology');
             echo "</th></tr>";
 
             //column name
