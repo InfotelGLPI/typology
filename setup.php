@@ -72,18 +72,18 @@ function plugin_version_typology() {
 
    return array (
       'name'           => _n('Typology', 'Typologies', 2, 'typology'),
-      'version'        => '2.3.1',
+      'version'        => '2.4.0',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
-      'minGlpiVersion' => '9.1');
+      'minGlpiVersion' => '9.2');
 
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
 function plugin_typology_check_prerequisites() {
-   if (version_compare(GLPI_VERSION,'9.1','lt') || version_compare(GLPI_VERSION,'9.2','ge')) {
-      echo __('This plugin requires GLPI >= 9.1', 'typology');
+   if (version_compare(GLPI_VERSION, '9.2', 'lt') || version_compare(GLPI_VERSION, '9.3', 'ge')) {
+      echo __('This plugin requires GLPI >= 9.2');
       return false;
    }
    return true;

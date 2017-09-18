@@ -503,8 +503,7 @@ class PluginTypologyTypology extends CommonDBTM {
             $actions['PluginTypologyTypology'.MassiveAction::CLASS_ACTION_SEPARATOR.'duplicate']    = _sx('button','Duplicate');
 
             if (Session::haveRight('transfer', READ)
-                     && Session::isMultiEntitiesMode()
-            ) {
+                     && Session::isMultiEntitiesMode()) {
                $actions['PluginTypologyTypology'.MassiveAction::CLASS_ACTION_SEPARATOR.'transfer'] = __('Transfer');
             }
          }

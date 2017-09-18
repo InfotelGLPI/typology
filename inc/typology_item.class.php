@@ -666,7 +666,10 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
          echo "<tr class='tab_bg_1'><td colspan='4' class='center'>";
          echo "<input type='hidden' name='plugin_typology_typologies_id' value='$typoID'>";
-         Dropdown::showAllItems("items_id", 0, 0, ($typo->fields['is_recursive'] ? -1 : $typo->fields['entities_id']), PluginTypologyTypology::getTypes());
+         Dropdown::showSelectItemFromItemtypes(['items_id_name'   => "items_id",
+                                                'entity_restrict' => ($typo->fields['is_recursive'] ? -1 : $typo->fields['entities_id']),
+                                                'itemtypes'       => PluginTypologyTypology::getTypes()
+                                               ]);
          echo "</td>";
          echo "<td colspan='3' class='center' class='tab_bg_2'>";
 

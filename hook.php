@@ -32,7 +32,7 @@ function plugin_typology_install() {
 
    include_once (GLPI_ROOT . "/plugins/typology/inc/profile.class.php");
 
-   if (!TableExists("glpi_plugin_typology_typologies")) {
+   if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
       
       // table sql creation
       $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-1.2.0.sql");
@@ -76,13 +76,13 @@ function plugin_typology_install() {
       $result=$DB->query($query);
 
       $query = "INSERT INTO `glpi_notifications`
-                                   VALUES (NULL, 'Alert no validated typology', 0, 'PluginTypologyTypology', 'AlertNotValidatedTypology',
-                                          'mail',".$itemtype.",
-                                          '', 1, 1, '2010-02-17 22:36:46', '2010-02-17 22:36:46');";
+                (`name`, `entities_id`, `itemtype`, `event`, `notificationtemplates_id`, `is_recursive`, `is_active`) 
+                 VALUES ('Alert no validated typology', 0, 'PluginTypologyTypology', 'AlertNotValidatedTypology',
+                         ".$itemtype.", 1, 1);";
       $result=$DB->query($query);
    }
 
-   if(TableExists("glpi_plugin_typology_typologycriterias")){
+   if($DB->tableExists("glpi_plugin_typology_typologycriterias")){
 
       $query = "UPDATE `glpi_plugin_typology_typologycriterias`
                      SET `itemtype`='IPAddress'
@@ -95,13 +95,13 @@ function plugin_typology_install() {
       $result=$DB->query($query);
    }
    
-   if(TableExists("glpi_plugin_typology_profiles")){
+   if($DB->tableExists("glpi_plugin_typology_profiles")){
 
       $notepad_tables = array('glpi_plugin_typology_typologies');
 
       foreach ($notepad_tables as $t) {
          // Migrate data
-         if (FieldExists($t, 'notepad')) {
+         if ($DB->fieldExists($t, 'notepad')) {
             $query = "SELECT id, notepad
                       FROM `$t`
                       WHERE notepad IS NOT NULL
