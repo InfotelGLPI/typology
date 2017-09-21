@@ -149,7 +149,7 @@ function plugin_typology_uninstall() {
    // Plugin adding information on general table deletion
    $tables_glpi = array("glpi_displaypreferences", 
                         "glpi_documents_items",
-                        "glpi_bookmarks", 
+                        "glpi_savedsearches",
                         "glpi_logs",
                         "glpi_notepads");
 
