@@ -97,6 +97,97 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       }
       asort($this->tag_descriptions);
    }
+
+   public static function install() {
+      global $DB;
+
+      $template     = new NotificationTemplate();
+      $query_id     = "SELECT `id`
+                       FROM `glpi_notificationtemplates`
+                       WHERE `itemtype`='PluginTypologyTypology'
+                       AND `name` = 'Alert no validated typology'";
+      $result       = $DB->query($query_id) or die ($DB->error());
+
+      if ($DB->numrows($result) > 0) {
+         $templates_id = $DB->result($result, 0, 'id');
+      } else {
+         $tmp = array(
+            'name'     => 'Alert no validated typology',
+            'itemtype' => 'PluginTypologyTypology',
+            'date_mod' => $_SESSION['glpi_currenttime'],
+            'comment'  => '',
+            'css'      => '',
+         );
+         $templates_id = $template->add($tmp);
+      }
+
+      if ($templates_id) {
+         $translation = new NotificationTemplateTranslation();
+         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+            $tmp['notificationtemplates_id'] = $templates_id;
+            $tmp['language']                 = '';
+            $tmp['subject']                  = '##typology.action## : ##typology.entity##';
+            $tmp['conttent_text']            = '##FOREACHitems##
+   ##lang.typology.name## : ##typology.name##
+   ##lang.typology.itemtype## : ##typology.itemtype##
+   ##lang.typology.items_id## : ##typology.items_id##
+   ##lang.typology.itemlocation## : ##typology.itemlocation##
+   ##lang.typology.itemuser## : ##typology.itemuser##
+   ##lang.typology.error## : ##typology.error##
+   ##ENDFOREACHitems##';
+            $tmp['content_html']             = '&lt;table class="tab_cadre" border="1" cellspacing="2" cellpadding="3"&gt;
+   &lt;tbody&gt;
+   &lt;tr&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.name##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.itemtype##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.items_id##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.itemlocation##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.itemuser##&lt;/span&gt;&lt;/td&gt;
+   &lt;td style="text-align: left;" bgcolor="#cccccc"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##lang.typology.error##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##FOREACHtypologyitems##
+   &lt;tr&gt;
+   &lt;td&gt;&lt;a href="##typology.url##" target="_blank"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.itemtype##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;a href="##typology.itemurl##" target="_blank"&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.items_id##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.itemlocation##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.itemuser##&lt;/span&gt;&lt;/td&gt;
+   &lt;td&gt;&lt;span style="font-family: Verdana; font-size: 11px; text-align: left;"&gt;##typology.error##&lt;/span&gt;&lt;/td&gt;
+   &lt;/tr&gt;
+   ##ENDFOREACHtypologyitems##
+   &lt;/tbody&gt;
+   &lt;/table&gt;';
+
+            $translation->add($tmp);
+         }
+
+         $notifs = array(
+            'Alert no validated typology'     => 'AlertNotValidatedTypology',
+         );
+         $notification = new Notification();
+         $notificationtemplate = new Notification_NotificationTemplate();
+         foreach ($notifs as $label => $name) {
+            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginTypologyTypology' AND `event`='$name'")) {
+               $tmp = array(
+                  'name'                     => $label,
+                  'entities_id'              => 0,
+                  'itemtype'                 => 'PluginTypologyTypology',
+                  'event'                    => $name,
+                  'comment'                  => '',
+                  'is_recursive'             => 1,
+                  'is_active'                => 1,
+                  'date_mod'                 => $_SESSION['glpi_currenttime'],
+               );
+               $notification_id = $notification->add($tmp);
+
+               $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
+                                           'mode'                     => 'mailing',
+                                           'notifications_id'         => $notification_id]);
+            }
+         }
+      }
+
+   }
 }
 
 ?>

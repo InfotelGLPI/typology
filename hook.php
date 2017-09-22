@@ -36,50 +36,10 @@ function plugin_typology_install() {
       
       // table sql creation
       $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-1.2.0.sql");
-      
-      $query_id = "SELECT `id` FROM `glpi_notificationtemplates` WHERE `itemtype`='PluginTypologyTypology' AND `name` = 'Alert no validated typology'";
-      $result = $DB->query($query_id) or die ($DB->error());
-      $itemtype = $DB->result($result,0,'id');
 
-      $query="INSERT INTO `glpi_notificationtemplatetranslations`
-                                 VALUES(NULL, ".$itemtype.", '','##typology.action## : ##typology.entity##',
-                        '##FOREACHitems##
-   ##lang.typology.name## : ##typology.name##
-   ##lang.typology.itemtype## : ##typology.itemtype##
-   ##lang.typology.items_id## : ##typology.items_id##
-   ##lang.typology.itemlocation## : ##typology.itemlocation##
-   ##lang.typology.itemuser## : ##typology.itemuser##
-   ##lang.typology.error## : ##typology.error##
-   ##ENDFOREACHitems##',
-   '&lt;table class=\"tab_cadre\" border=\"1\" cellspacing=\"2\" cellpadding=\"3\"&gt;
-   &lt;tbody&gt;
-   &lt;tr&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.name##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.itemtype##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.items_id##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.itemlocation##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.itemuser##&lt;/span&gt;&lt;/td&gt;
-   &lt;td style=\"text-align: left;\" bgcolor=\"#cccccc\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##lang.typology.error##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##FOREACHtypologyitems##
-   &lt;tr&gt;
-   &lt;td&gt;&lt;a href=\"##typology.url##\" target=\"_blank\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.name##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.itemtype##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;a href=\"##typology.itemurl##\" target=\"_blank\"&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.items_id##&lt;/span&gt;&lt;/a&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.itemlocation##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.itemuser##&lt;/span&gt;&lt;/td&gt;
-   &lt;td&gt;&lt;span style=\"font-family: Verdana; font-size: 11px; text-align: left;\"&gt;##typology.error##&lt;/span&gt;&lt;/td&gt;
-   &lt;/tr&gt;
-   ##ENDFOREACHtypologyitems##
-   &lt;/tbody&gt;
-   &lt;/table&gt;');";
-      $result=$DB->query($query);
-
-      $query = "INSERT INTO `glpi_notifications`
-                (`name`, `entities_id`, `itemtype`, `event`, `notificationtemplates_id`, `is_recursive`, `is_active`) 
-                 VALUES ('Alert no validated typology', 0, 'PluginTypologyTypology', 'AlertNotValidatedTypology',
-                         ".$itemtype.", 1, 1);";
-      $result=$DB->query($query);
+      // Add record notification
+      include_once(GLPI_ROOT . "/plugins/typology/inc/notificationtargettypology.class.php");
+      call_user_func(array("PluginTypologyNotificationTargetTypology", 'install'));
    }
 
    if($DB->tableExists("glpi_plugin_typology_typologycriterias")){
