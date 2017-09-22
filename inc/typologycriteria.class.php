@@ -181,7 +181,8 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                      
          $restrict = "`plugin_typology_typologies_id` = '$ID'
                      ORDER BY `itemtype`";
-         $criterias = getAllDatasFromTable('glpi_plugin_typology_typologycriterias', $restrict);
+         $dbu = new DbUtils();
+         $criterias = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriterias', $restrict);
 
          Session::initNavigateListItems("PluginTypologyTypologyCriteria",PluginTypologyTypology::getTypeName(1).
             " = ".$typo->getName());
@@ -277,7 +278,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
                $condition = "`glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` ".
                   " = '".$criteria['id']."' ORDER BY `glpi_plugin_typology_typologycriteriadefinitions`.`id`";
-               $definitions = getAllDatasFromTable('glpi_plugin_typology_typologycriteriadefinitions',
+               $definitions = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriteriadefinitions',
                   $condition);
                if(!empty($definitions)){
                   echo "<table class='tab_cadre' width='100%'>";
