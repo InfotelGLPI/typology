@@ -68,7 +68,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
             $tmp['##typology.itemtype##'] = $itemtype->getTypeName();
             $tmp['##typology.items_id##'] = $itemtype->getName();
             $tmp['##typology.error##'] = PluginTypologyTypology_Item::displayErrors($item['error'],false);
-            $tmp['##typology.url##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=plugin_typology_".
+            $tmp['##typology.url##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=PluginTypologyTypology_".
                $item['plugin_typology_typologies_id']);
             $tmp['##typology.itemurl##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=".
                Toolbox::strtolower($item['itemtype'])."_".$item["items_id"]);
