@@ -39,25 +39,25 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       return array ('AlertNotValidatedTypology' => __('Elements not match with the typology','typology'));
    }
 
-   function getDatasForTemplate($event,$options=array()) {
+   function addDataForTemplate($event,$options=array()) {
       global $CFG_GLPI;
       
       if ($event == 'AlertNotValidatedTypology') {
          
-         $this->datas['##typology.entity##'] =
+         $this->data['##typology.entity##'] =
                            Dropdown::getDropdownName('glpi_entities',
                                                      $options['entities_id']);
-         $this->datas['##lang.typology.entity##'] =__('Entity');
-         $this->datas['##typology.action##'] = __('Elements not match with the typology','typology');
+         $this->data['##lang.typology.entity##'] =__('Entity');
+         $this->data['##typology.action##'] = __('Elements not match with the typology','typology');
 
-         $this->datas['##lang.typology.name##'] = PluginTypologyTypology::getTypeName(1);
-         $this->datas['##lang.typology.itemtype##'] = __('Type');
-         $this->datas['##lang.typology.items_id##'] = __('Name');
-         $this->datas['##lang.typology.error##'] = __('Error');
-         $this->datas['##lang.typology.url##'] = __('Link to the typology','typology');
-         $this->datas['##lang.typology.itemurl##'] = __('Link to the element','typology');
-         $this->datas['##lang.typology.itemuser##'] = __('User');
-         $this->datas['##lang.typology.itemlocation##'] = __('Location');
+         $this->data['##lang.typology.name##'] = PluginTypologyTypology::getTypeName(1);
+         $this->data['##lang.typology.itemtype##'] = __('Type');
+         $this->data['##lang.typology.items_id##'] = __('Name');
+         $this->data['##lang.typology.error##'] = __('Error');
+         $this->data['##lang.typology.url##'] = __('Link to the typology','typology');
+         $this->data['##lang.typology.itemurl##'] = __('Link to the element','typology');
+         $this->data['##lang.typology.itemuser##'] = __('User');
+         $this->data['##lang.typology.itemlocation##'] = __('Location');
 
          foreach($options['items'] as $id => $item) {
             $tmp = array();
@@ -76,7 +76,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
             $tmp['##typology.itemlocation##'] = Dropdown::getDropdownName("glpi_locations",
                $itemtype->fields['locations_id']);
 
-            $this->datas['typologyitems'][] = $tmp;
+            $this->data['typologyitems'][] = $tmp;
          }
       }
    }
