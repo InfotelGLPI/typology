@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Amandine Manceau, 2016
+# Amandine Manceau, 2016-2017
 # tynet <faustine.crespel@infotel.com>, 2013
 # Xavier CAILLAUD <thetsmr@gmail.com>, 2013,2015
 msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-20 12:34+0200\n"
-"PO-Revision-Date: 2017-04-10 09:05+0000\n"
+"POT-Creation-Date: 2017-10-10 14:46+0200\n"
+"PO-Revision-Date: 2017-10-10 13:03+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: French (France) (http://www.transifex.com/tsmr/GLPI_typology/language/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -20,50 +20,46 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:230 inc/typology_item.class.php:560
+#: hook.php:190 inc/typology_item.class.php:561
 msgid "Assign a typology to this material"
 msgstr "Attribuer une typologie à ce matériel"
 
-#: hook.php:231
+#: hook.php:191
 msgid "Delete the typology of this material"
 msgstr "Supprimer la typologie du matériel"
 
-#: hook.php:232 inc/typology.class.php:288
+#: hook.php:192 inc/typology.class.php:288
 msgid "Recalculate typology for the elements"
 msgstr "Recalculer la typologie sur les éléments"
 
-#: hook.php:253
+#: hook.php:213
 msgid "Typology's name"
 msgstr "Nom de la typologie"
 
-#: hook.php:267 inc/typology_item.class.php:490
-#: inc/typology_item.class.php:719
+#: hook.php:227 inc/typology_item.class.php:491
+#: inc/typology_item.class.php:749
 msgid "Responding to typology's criteria"
 msgstr "Répondant aux critères de la typologie"
 
-#: setup.php:74 inc/menu.class.php:34 inc/profile.class.php:133
+#: setup.php:74 inc/menu.class.php:34 inc/profile.class.php:132
 #: inc/typology.class.php:58
 msgid "Typology"
 msgid_plural "Typologies"
 msgstr[0] "Typologie"
 msgstr[1] "Typologies"
 
-#: setup.php:86
-msgid "This plugin requires GLPI >= 9.1"
-msgstr "Ce plugin nécessite GLPI >= 9.1"
-
 #: front/typology.form.php:82
 msgid "Element not match with the rule for assigning the typology:"
 msgstr "L'élément ne verifie pas la règle d'affectation de la typologie :"
 
-#: front/typology.form.php:97 inc/typology_item.class.php:1000
-#: inc/typology_item.class.php:1016
+#: front/typology.form.php:97 inc/typology_item.class.php:1056
+#: inc/typology_item.class.php:1072
 msgid "Element not match with rules for assigning a typology"
 msgstr "L'élément ne verifie pas de règle d'affectation de typologie"
 
 #: inc/notificationtargettypology.class.php:39
 #: inc/notificationtargettypology.class.php:51 inc/typology.class.php:292
-#: inc/typology.class.php:433
+#: inc/typology.class.php:435
 msgid "Elements not match with the typology"
 msgstr "Eléments ne verifiant pas la typologie"
 
@@ -89,11 +85,11 @@ msgstr "La typologie des éléments liés est actualisée."
 msgid "Add a criterion"
 msgstr "Ajouter un critère"
 
-#: inc/typologycriteria.class.php:200
+#: inc/typologycriteria.class.php:201
 msgid "Criteria's list"
 msgstr "Liste des critères"
 
-#: inc/typologycriteria.class.php:224 inc/typology_item.class.php:868
+#: inc/typologycriteria.class.php:225 inc/typology_item.class.php:925
 msgid "Detail of the assigned typology"
 msgstr "Détail de la typologie attribuée"
 
@@ -103,21 +99,21 @@ msgid_plural "Definitions"
 msgstr[0] "Définition"
 msgstr[1] "Définitions"
 
-#: inc/typologycriteriadefinition.class.php:80
+#: inc/typologycriteriadefinition.class.php:92
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
 msgstr "Vous n'avez pas les droits nécessaires pour créer une définition à ce critère. Merci de contacter une personne ayant ce droit."
 
-#: inc/typologycriteriadefinition.class.php:527
-#: inc/typologycriteriadefinition.class.php:533
-#: inc/typologycriteriadefinition.class.php:768
+#: inc/typologycriteriadefinition.class.php:553
+#: inc/typologycriteriadefinition.class.php:559
+#: inc/typologycriteriadefinition.class.php:794
 msgid "Less than"
 msgstr "Moins de"
 
-#: inc/typologycriteriadefinition.class.php:528
-#: inc/typologycriteriadefinition.class.php:534
-#: inc/typologycriteriadefinition.class.php:770
+#: inc/typologycriteriadefinition.class.php:554
+#: inc/typologycriteriadefinition.class.php:560
+#: inc/typologycriteriadefinition.class.php:796
 msgid "More than"
 msgstr "Plus de"
 
@@ -139,48 +135,52 @@ msgstr "actualisation de l'élément à la typologie"
 msgid "Element out of the typology"
 msgstr "sortie de l'élément de la typologie"
 
-#: inc/typology_item.class.php:223
+#: inc/typology_item.class.php:224
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
 msgstr "Vous ne pouvez attribuer cette typologie à ce matériel car il a déjà la typologie : "
 
-#: inc/typology_item.class.php:485
+#: inc/typology_item.class.php:486
 msgid "Typology assigned to this material"
 msgstr "Typologie attribuée à ce matériel"
 
-#: inc/typology_item.class.php:492
+#: inc/typology_item.class.php:493
 msgid "Actions"
 msgstr "Actions"
 
-#: inc/typology_item.class.php:524 inc/typology_item.class.php:804
+#: inc/typology_item.class.php:525 inc/typology_item.class.php:807
 msgid "for the criteria"
 msgstr "pour le critère"
 
-#: inc/typology_item.class.php:700
-msgid "No linked element"
-msgstr "Aucun élément lié"
-
-#: inc/typology_item.class.php:703
+#: inc/typology_item.class.php:686 inc/typology_item.class.php:733
 msgid "Linked elements"
 msgstr "Eléments liés"
 
-#: inc/typology_item.class.php:860
+#: inc/typology_item.class.php:708
+msgid "Select a type"
+msgstr "Sélectionner un type"
+
+#: inc/typology_item.class.php:731
+msgid "No linked element"
+msgstr "Aucun élément lié"
+
+#: inc/typology_item.class.php:917
 msgid "Management console"
 msgstr "Console de gestion"
 
-#: inc/typology_item.class.php:867
+#: inc/typology_item.class.php:924
 msgid "Comparison"
 msgstr "Comparaison"
 
-#: inc/typology_item.class.php:869
+#: inc/typology_item.class.php:926
 msgid "Detail of the encountered configuration"
 msgstr "Détail de la configuration rencontrée"
 
-#: inc/typology_item.class.php:875
+#: inc/typology_item.class.php:932
 msgid "Waiting value"
 msgstr "Valeur attendue"
 
-#: inc/typology_item.class.php:876
+#: inc/typology_item.class.php:933
 msgid "Real value"
 msgstr "Valeur réelle"

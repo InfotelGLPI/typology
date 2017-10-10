@@ -105,6 +105,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       $typocrit_id = $typocrit->getField('id');
 
+      $canedit = Session::haveRight("plugin_typology", UPDATE);
+      $rand    = mt_rand();
 
       $query = "SELECT `glpi_plugin_typology_typologycriteriadefinitions`.`id`,
                         `glpi_plugin_typology_typologycriterias`.`itemtype`,
@@ -151,15 +153,20 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          }
          if ($DB->num_fields($result)>0) {
 
-            if (Session::haveRight("plugin_typology", UPDATE)) {
-               echo "<form name='critDef_form' id='critDef_form' method='post' action='./typologycriteria.form.php'>";
+            if ($canedit) {
+               Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
+               $massiveactionparams = array('item' => $typocrit, 'container' => 'mass'.__CLASS__.$rand);
+               Html::showMassiveActions($massiveactionparams);
             }
 
             echo "<div class='center'><table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='4'>".PluginTypologyTypologyCriteriaDefinition::getTypeName(2)."</th></tr>";
 
             echo "<tr class='tab_bg_1 center'>";
-            echo "<th colspan='2'>"._n('Field','Fields',2)."</th>";
+            if ($canedit) {
+               echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
+            }
+            echo "<th>"._n('Field','Fields',2)."</th>";
             echo "<th class='center b'>" . __('Logical operator') . "</th>";
             echo "<th class='center b'>" . __('Value') . "</th>";
             echo "</tr>";
@@ -167,13 +174,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             while ($ligne = $DB->fetch_array($result)) {
                echo "<tr class='tab_bg_2'>";
 
-               if (Session::haveRight("plugin_typology", UPDATE)) {
+               if ($canedit) {
                   echo "<td width='10'>";
-                  echo "<input type='checkbox' name='item[".$ligne["id"]."]' value='1'>";
-                  echo "<input type='hidden' name='plugin_typology_typologycriterias_id' value='$typocrit_id'>";
-                  echo "</td>";
-               } else {
-                  echo "<td width='10'>";
+                  Html::showMassiveActionCheckBox(__CLASS__, $ligne["id"]);
                   echo "</td>";
                }
 
@@ -182,17 +185,28 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                echo "</tr>";
             }
 
-            if (Session::haveRight("plugin_typology", UPDATE)){
-               Html::openArrowMassives("critDef_form",true);
-               Html::closeArrowMassives(array('delete_action' => __('Delete permanently')));
-            }
-            echo "</table></div>";
-            if (Session::haveRight("plugin_typology", UPDATE)){
+            if ($canedit) {
+               $massiveactionparams['ontop'] = false;
+               Html::showMassiveActions($massiveactionparams);
                Html::closeForm();
             }
-
+            echo "</table></div>";
          }
       }
+   }
+
+   /**
+    * Get the standard massive actions which are forbidden
+    *
+    * @since version 0.84
+    *
+    * @return an array of massive actions
+    **/
+   public function getForbiddenStandardMassiveAction() {
+      $forbidden = parent::getForbiddenStandardMassiveAction();
+      $forbidden[] = 'update';
+
+      return $forbidden;
    }
 
    /**

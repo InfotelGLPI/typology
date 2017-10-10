@@ -41,8 +41,8 @@ if (!defined('GLPI_ROOT')) {
 class PluginTypologyRuleTypology extends Rule {
 
    // From Rule
-   public static $right='plugin_typology';
-   public $can_sort=true;
+   static $rightname = "plugin_typology";
+   public $can_sort  = true;
 
    function getTitle() {
 

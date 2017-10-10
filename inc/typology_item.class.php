@@ -720,7 +720,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
          if ($canedit && $number) {
             Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-            $massiveactionparams = array();
+            $massiveactionparams = array('item' => $typo, 'container' => 'mass'.__CLASS__.$rand);
             Html::showMassiveActions($massiveactionparams);
          }
          echo "<table class='tab_cadre_fixe'>";
@@ -818,8 +818,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          }
          echo "</table>";
          if ($canedit && $number) {
-            $paramsma['ontop'] = false;
-            Html::showMassiveActions($paramsma);
+            $massiveactionparams['ontop'] = false;
+            Html::showMassiveActions($massiveactionparams);
             Html::closeForm();
          }
 
@@ -987,7 +987,6 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    public function getForbiddenStandardMassiveAction() {
       $forbidden = parent::getForbiddenStandardMassiveAction();
       $forbidden[] = 'update';
-      $forbidden[] = 'purge';
 
       return $forbidden;
    }
@@ -1003,7 +1002,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          //add item to a typo
          case "add_item":
             echo "</br>&nbsp;".PluginTypologyTypology::getTypeName(2)." : ";
-            Dropdown::show('PluginTypologyTypology', 
+            Dropdown::show('PluginTypologyTypology',
                      array('name' => "plugin_typology_typologies_id"));
             echo "&nbsp;" .
             Html::submit(_x('button', 'Post'), array('name' => 'massiveaction'));
