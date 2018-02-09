@@ -32,23 +32,23 @@ $DBCONNECTION_REQUIRED = 1;
 
 include ("../../../../inc/includes.php");
 
-$titre = __('Typologies list by service with materials list','typology');
+$titre = __('Typologies list by service with materials list', 'typology');
 
 // Instantiate Report with Name
 $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
 $typocrit = New PluginReportsDropdownCriteria($report, '`glpi_plugin_typology_typologies`.`id`',
-   'glpi_plugin_typology_typologies',PluginTypologyTypology::getTypeName(1));
-  
+   'glpi_plugin_typology_typologies', PluginTypologyTypology::getTypeName(1));
+
 //Display criterias form is needed
 $report->displayCriteriasForm();
 
 //colname with sort allowed
-$columns = array('entity' => array('sorton' => 'entity'),
-   'groups_id' => array('sorton' => 'groups_id'),
-   'typoID'=>array('sorton'=>'typoID'),
-   'COUNT'=> array('sorton'=>'COUNT'));
+$columns = ['entity' => ['sorton' => 'entity'],
+   'groups_id' => ['sorton' => 'groups_id'],
+   'typoID'=>['sorton'=>'typoID'],
+   'COUNT'=> ['sorton'=>'COUNT']];
 
 $output_type = Search::HTML_OUTPUT;
 
@@ -87,7 +87,7 @@ $styleItemTitle = 'font-size: 12px;
 
 //to verify if typology exist in this entity
 // SQL statement
-$condition = getEntitiesRestrictRequest('',"glpi_plugin_typology_typologies",'','',true);
+$condition = getEntitiesRestrictRequest('', "glpi_plugin_typology_typologies", '', '', true);
 $sqltypo = $typocrit->getSqlCriteriasRestriction('AND');
 
 $query = "SELECT *
@@ -172,7 +172,7 @@ if ($res && $nbtot >0) {
    showTitle($output_type, $num, __('Entity'), 'entity', true);
    showTitle($output_type, $num, __('Service'), 'groups_id', true);
    showTitle($output_type, $num, PluginTypologyTypology::getTypeName(1), 'typoID', true);
-   showTitle($output_type, $num, __('Number','typology'), 'COUNT', true);
+   showTitle($output_type, $num, __('Number', 'typology'), 'COUNT', true);
    echo Search::showEndLine($output_type);
 
    //By service and typology
@@ -202,51 +202,51 @@ if ($res && $nbtot >0) {
       if ($dataService['groups_id'] == 0) {
          $serviceName = __('None');
       } else {
-         $serviceName = Dropdown::getDropdownName("glpi_groups",$dataService['groups_id']);
+         $serviceName = Dropdown::getDropdownName("glpi_groups", $dataService['groups_id']);
       }
 
       if ($dataService['typoID'] == '0') {
          $typoName = __('None');
       } else {
-         $typoName = Dropdown::getDropdownName("glpi_plugin_typology_typologies",$dataService["typoID"]);
+         $typoName = Dropdown::getDropdownName("glpi_plugin_typology_typologies", $dataService["typoID"]);
       }
 
-      $entityName = Dropdown::getDropdownName('glpi_entities',$dataService['entity']);
+      $entityName = Dropdown::getDropdownName('glpi_entities', $dataService['entity']);
 
       $row_num++;
       $num = 1;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type,$entityName,$num,$row_num);
-      echo Search::showItem($output_type,$serviceName,$num,$row_num);
-      echo Search::showItem($output_type,$typoName,$num,$row_num);
-      echo Search::showItem($output_type,$dataService["COUNT"],$num,$row_num);
+      echo Search::showItem($output_type, $entityName, $num, $row_num);
+      echo Search::showItem($output_type, $serviceName, $num, $row_num);
+      echo Search::showItem($output_type, $typoName, $num, $row_num);
+      echo Search::showItem($output_type, $dataService["COUNT"], $num, $row_num);
       echo Search::showEndLine($output_type);
 
       $row_num++;
       $num =1;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type,'',$num,$row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
       if ($output_type == Search::HTML_OUTPUT) {
-         echo Search::showItem($output_type,__('Detail (workstation concerned)','typology'),$num, $row_num,"colspan = '3' style='$styleItemTitle'");
+         echo Search::showItem($output_type, __('Detail (workstation concerned)', 'typology'), $num, $row_num, "colspan = '3' style='$styleItemTitle'");
       } else {
-         echo Search::showItem($output_type,__('Detail (workstation concerned)','typology'),$num, $row_num);
-         echo Search::showItem($output_type,'',$num, $row_num);
-         echo Search::showItem($output_type,'',$num, $row_num);
+         echo Search::showItem($output_type, __('Detail (workstation concerned)', 'typology'), $num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
       }
       echo Search::showEndLine($output_type);
 
       $row_num++;
       $num=1;
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type,'',$num,$row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
       if ($output_type == Search::HTML_OUTPUT) {
-         echo Search::showItem($output_type,__('Name'),$num, $row_num, "style='$styleItemTitle'");
-         echo Search::showItem($output_type,__('User'),$num, $row_num, "style='$styleItemTitle'");
-         echo Search::showItem($output_type,__('Responding to typology\'s criteria','typology'),$num, $row_num, "style='$styleItemTitle'");
+         echo Search::showItem($output_type, __('Name'), $num, $row_num, "style='$styleItemTitle'");
+         echo Search::showItem($output_type, __('User'), $num, $row_num, "style='$styleItemTitle'");
+         echo Search::showItem($output_type, __('Responding to typology\'s criteria', 'typology'), $num, $row_num, "style='$styleItemTitle'");
       } else {
-         echo Search::showItem($output_type,__('Name'),$num, $row_num);
-         echo Search::showItem($output_type,__('User'),$num, $row_num);
-         echo Search::showItem($output_type,__('Responding to typology\'s criteria','typology'),$num, $row_num);
+         echo Search::showItem($output_type, __('Name'), $num, $row_num);
+         echo Search::showItem($output_type, __('User'), $num, $row_num);
+         echo Search::showItem($output_type, __('Responding to typology\'s criteria', 'typology'), $num, $row_num);
       }
       echo Search::showEndLine($output_type);
 
@@ -276,21 +276,21 @@ if ($res && $nbtot >0) {
          $link=Toolbox::getItemTypeFormURL("Computer");
 
          $computerName = "<a href='".$link."?id=".$dataComputer["items_id"]."' target='_blank'>".
-            Dropdown::getDropdownName("glpi_computers",$dataComputer["items_id"])."</a>";
+            Dropdown::getDropdownName("glpi_computers", $dataComputer["items_id"])."</a>";
 
          $computer = new Computer();
          $computer->getFromDB($dataComputer["items_id"]);
 
          $userName = getUserName($computer->fields["users_id"]);
 
-         if($dataComputer["is_validated"] > 0){
+         if ($dataComputer["is_validated"] > 0) {
             $critTypOK = __('Yes');
             $computeOK++;
          } else {
             $critTypOK = "<font color='red'>".__('No')." ".
-                           __('for the criteria','typology')." ";
+                           __('for the criteria', 'typology')." ";
             $i=0;
-            
+
             $critTypOK.=PluginTypologyTypology_Item::displayErrors($dataComputer["error"]);
 
             $critTypOK.="</font>";
@@ -300,24 +300,24 @@ if ($res && $nbtot >0) {
          $row_num++;
          $num=1;
          echo Search::showNewLine($output_type);
-         echo Search::showItem($output_type,'',$num,$row_num);
-         echo Search::showItem($output_type,$computerName,$num,$row_num);
-         echo Search::showItem($output_type,$userName,$num,$row_num);
-         echo Search::showItem($output_type,$critTypOK,$num,$row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
+         echo Search::showItem($output_type, $computerName, $num, $row_num);
+         echo Search::showItem($output_type, $userName, $num, $row_num);
+         echo Search::showItem($output_type, $critTypOK, $num, $row_num);
          echo Search::showEndLine($output_type);
       }
 
       $row_num++;
       $num=1;
 
-      $message = "<b><font color='green'>".__('Responding','typology')." ".
+      $message = "<b><font color='green'>".__('Responding', 'typology')." ".
          $computeOK." / ".$dataService["COUNT"]."</font>".", "."<font color='red'>".
-         __('Not responding','typology')." ".$computeNOTOK." / ".$dataService["COUNT"]."</font></b>";
+         __('Not responding', 'typology')." ".$computeNOTOK." / ".$dataService["COUNT"]."</font></b>";
       echo Search::showNewLine($output_type);
-      echo Search::showItem($output_type,'',$num,$row_num);
-      echo Search::showItem($output_type,'',$num,$row_num);
-      echo Search::showItem($output_type,__('Total'),$num,$row_num);
-      echo Search::showItem($output_type,$message,$num,$row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, '', $num, $row_num);
+      echo Search::showItem($output_type, __('Total'), $num, $row_num);
+      echo Search::showItem($output_type, $message, $num, $row_num);
       echo Search::showEndLine($output_type);
 
 
@@ -325,12 +325,12 @@ if ($res && $nbtot >0) {
       $num=1;
       echo Search::showNewLine($output_type);
       if ($output_type == Search::HTML_OUTPUT) {
-         echo Search::showItem($output_type,'',$num, $row_num, "colspan = '4' style='$styleItemTitle'");
+         echo Search::showItem($output_type, '', $num, $row_num, "colspan = '4' style='$styleItemTitle'");
       } else {
-         echo Search::showItem($output_type,'',$num, $row_num);
-         echo Search::showItem($output_type,'',$num, $row_num);
-         echo Search::showItem($output_type,'',$num, $row_num);
-         echo Search::showItem($output_type,'',$num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
+         echo Search::showItem($output_type, '', $num, $row_num);
       }
       echo Search::showEndLine($output_type);
 
@@ -352,7 +352,7 @@ if ($output_type == Search::HTML_OUTPUT) {
  * @param bool $sort
  * @return mixed
  */
-function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
+function showTitle($output_type, &$num, $title, $columnname, $sort = false) {
 
    if ($output_type != Search::HTML_OUTPUT ||$sort==false) {
       echo Search::showHeaderItem($output_type, $title, $num);
@@ -369,7 +369,7 @@ function showTitle($output_type, &$num, $title, $columnname, $sort=false) {
    $link  = $_SERVER['PHP_SELF'];
    $first = true;
    foreach ($_REQUEST as $name => $value) {
-      if (!in_array($name,array('sort','order','PHPSESSID'))) {
+      if (!in_array($name, ['sort','order','PHPSESSID'])) {
          $link .= ($first ? '?' : '&amp;');
          $link .= $name .'='.urlencode($value);
          $first = false;
@@ -420,7 +420,6 @@ function getOrderByFields($default, $columns) {
          return $column['sorton'];
       }
    }
-   return array();
+   return [];
 }
 
-?>

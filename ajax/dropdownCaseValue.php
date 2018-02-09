@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -40,12 +40,11 @@ if (!defined('GLPI_ROOT')) {
    die("Can not acces directly to this file");
 }
 
-$options=array('itemtype'     =>$_POST['itemtype'],
+$options=['itemtype'     =>$_POST['itemtype'],
                'typocrit_id'  =>$_POST['typocrit_id'],
                'field'        =>$_POST['field'],
-               'action_type'  =>$_POST['action_type']);
+               'action_type'  =>$_POST['action_type']];
 
 //Display list of values or text field depending on action_type
 PluginTypologyTypologyCriteriaDefinition::dropdownValues($options);
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -26,9 +26,8 @@
  along with typology. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 include ('../../../inc/includes.php');
 
 $typo = new PluginTypologyTypology();
 $typo->redirectToList();
-?>

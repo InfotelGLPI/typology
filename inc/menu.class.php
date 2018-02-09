@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  along with typology. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 class PluginTypologyMenu extends CommonGLPI {
    static $rightname = 'plugin_typology';
 
@@ -37,7 +37,7 @@ class PluginTypologyMenu extends CommonGLPI {
    static function getMenuContent() {
       global $CFG_GLPI;
 
-      $menu                                           = array();
+      $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
       $menu['page']                                   = "/plugins/typology/front/typology.php";
       $menu['links']['search']                        = PluginTypologyTypology::getSearchURL(false);
@@ -50,10 +50,10 @@ class PluginTypologyMenu extends CommonGLPI {
 
    static function removeRightsFromSession() {
       if (isset($_SESSION['glpimenu']['tools']['types']['PluginTypologyMenu'])) {
-         unset($_SESSION['glpimenu']['tools']['types']['PluginTypologyMenu']); 
+         unset($_SESSION['glpimenu']['tools']['types']['PluginTypologyMenu']);
       }
       if (isset($_SESSION['glpimenu']['tools']['content']['plugintypologymenu'])) {
-         unset($_SESSION['glpimenu']['tools']['content']['plugintypologymenu']); 
+         unset($_SESSION['glpimenu']['tools']['content']['plugintypologymenu']);
       }
    }
 }

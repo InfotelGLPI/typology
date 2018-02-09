@@ -27,4 +27,3 @@
  */
 $LANG['plugin_typology']['typologyreport'] = "Typologies state by service";
 
-?>

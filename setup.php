@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -30,39 +30,39 @@
 // Init the hooks of the plugins -Needed
 function plugin_init_typology() {
    global $PLUGIN_HOOKS;
-   
+
    $PLUGIN_HOOKS['add_css']['typology']        = 'typology.css';
    $PLUGIN_HOOKS['csrf_compliant']['typology'] = true;
-   $PLUGIN_HOOKS['change_profile']['typology'] = array('PluginTypologyProfile','initProfile');
+   $PLUGIN_HOOKS['change_profile']['typology'] = ['PluginTypologyProfile','initProfile'];
 
    if (Session::getLoginUserID()) {
 
       Plugin::registerClass('PluginTypologyProfile',
-         array('addtabon' => 'Profile'));
-      
-      Plugin::registerClass('PluginTypologyTypology', array(
+         ['addtabon' => 'Profile']);
+
+      Plugin::registerClass('PluginTypologyTypology', [
          'notificationtemplates_types' => true,
-      ));
+      ]);
       // Display a menu entry ?
       if (Session::haveRight("plugin_typology", READ)) {
          // menu entry
-         $PLUGIN_HOOKS['menu_toadd']['typology'] = array('tools'   => 'PluginTypologyMenu');
+         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => 'PluginTypologyMenu'];
       }
-      
+
       if (Session::haveRight("plugin_typology", UPDATE)) {
          //use massiveaction in the plugin
          $PLUGIN_HOOKS['use_massive_action']['typology']=1;
          $PLUGIN_HOOKS['redirect_page']['typology'] = 'front/typology.form.php';
       }
 
-      Plugin::registerClass('PluginTypologyRuleTypologyCollection', array(
+      Plugin::registerClass('PluginTypologyRuleTypologyCollection', [
          'rulecollections_types' => true
-      ));
-      
+      ]);
+
       if (class_exists('PluginBehaviorsCommon')) {
-         PluginBehaviorsCommon::addCloneType('PluginTypologyRuleTypology','PluginBehaviorsRule');
+         PluginBehaviorsCommon::addCloneType('PluginTypologyRuleTypology', 'PluginBehaviorsRule');
       }
-      
+
       $PLUGIN_HOOKS['post_init']['typology'] = 'plugin_typology_postinit';
    }
 }
@@ -70,13 +70,13 @@ function plugin_init_typology() {
 // Get the name and the version of the plugin - Needed
 function plugin_version_typology() {
 
-   return array (
+   return  [
       'name'           => _n('Typology', 'Typologies', 2, 'typology'),
       'version'        => '2.4.0',
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
-      'minGlpiVersion' => '9.2');
+      'minGlpiVersion' => '9.2'];
 
 }
 
@@ -93,4 +93,3 @@ function plugin_typology_check_prerequisites() {
 function plugin_typology_check_config() {
    return true;
 }
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -27,47 +27,47 @@
  --------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')){
+if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
 // Class NotificationTarget
 class PluginTypologyNotificationTargetTypology extends NotificationTarget {
-   
+
    function getEvents() {
 
-      return array ('AlertNotValidatedTypology' => __('Elements not match with the typology','typology'));
+      return  ['AlertNotValidatedTypology' => __('Elements not match with the typology', 'typology')];
    }
 
-   function addDataForTemplate($event,$options=array()) {
+   function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
-      
+
       if ($event == 'AlertNotValidatedTypology') {
-         
+
          $this->data['##typology.entity##'] =
                            Dropdown::getDropdownName('glpi_entities',
                                                      $options['entities_id']);
          $this->data['##lang.typology.entity##'] =__('Entity');
-         $this->data['##typology.action##'] = __('Elements not match with the typology','typology');
+         $this->data['##typology.action##'] = __('Elements not match with the typology', 'typology');
 
          $this->data['##lang.typology.name##'] = PluginTypologyTypology::getTypeName(1);
          $this->data['##lang.typology.itemtype##'] = __('Type');
          $this->data['##lang.typology.items_id##'] = __('Name');
          $this->data['##lang.typology.error##'] = __('Error');
-         $this->data['##lang.typology.url##'] = __('Link to the typology','typology');
-         $this->data['##lang.typology.itemurl##'] = __('Link to the element','typology');
+         $this->data['##lang.typology.url##'] = __('Link to the typology', 'typology');
+         $this->data['##lang.typology.itemurl##'] = __('Link to the element', 'typology');
          $this->data['##lang.typology.itemuser##'] = __('User');
          $this->data['##lang.typology.itemlocation##'] = __('Location');
 
-         foreach($options['items'] as $id => $item) {
-            $tmp = array();
-            
+         foreach ($options['items'] as $id => $item) {
+            $tmp = [];
+
             $tmp['##typology.name##'] = $item['name'];
             $itemtype = new $item['itemtype']();
             $itemtype->getFromDB($item["items_id"]);
             $tmp['##typology.itemtype##'] = $itemtype->getTypeName();
             $tmp['##typology.items_id##'] = $itemtype->getName();
-            $tmp['##typology.error##'] = PluginTypologyTypology_Item::displayErrors($item['error'],false);
+            $tmp['##typology.error##'] = PluginTypologyTypology_Item::displayErrors($item['error'], false);
             $tmp['##typology.url##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=PluginTypologyTypology_".
                $item['plugin_typology_typologies_id']);
             $tmp['##typology.itemurl##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=".
@@ -80,20 +80,20 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
          }
       }
    }
-   
+
    function getTags() {
 
-      $tags = array('typology.name'             => PluginTypologyTypology::getTypeName(1),
+      $tags = ['typology.name'             => PluginTypologyTypology::getTypeName(1),
                    'typology.itemtype'          => __('Type'),
                    'typology.items_id'          => __('Name'),
                    'typology.error'             => __('Error'),
-                   'typology.url'               => __('Link to the typology','typology'),
-                   'typology.itemurl'           => __('Link to the element','typology'),
+                   'typology.url'               => __('Link to the typology', 'typology'),
+                   'typology.itemurl'           => __('Link to the element', 'typology'),
                    'typology.itemuser'          => __('User'),
-                   'typology.itemlocation'      => __('Location'));
+                   'typology.itemlocation'      => __('Location')];
       foreach ($tags as $tag => $label) {
-         $this->addTagToList(array('tag'=>$tag,'label'=>$label,
-                                   'value'=>true));
+         $this->addTagToList(['tag'=>$tag,'label'=>$label,
+                                   'value'=>true]);
       }
       asort($this->tag_descriptions);
    }
@@ -111,13 +111,13 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');
       } else {
-         $tmp = array(
+         $tmp = [
             'name'     => 'Alert no validated typology',
             'itemtype' => 'PluginTypologyTypology',
             'date_mod' => $_SESSION['glpi_currenttime'],
             'comment'  => '',
             'css'      => '',
-         );
+         ];
          $templates_id = $template->add($tmp);
       }
 
@@ -161,14 +161,14 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
             $translation->add($tmp);
          }
 
-         $notifs = array(
+         $notifs = [
             'Alert no validated typology'     => 'AlertNotValidatedTypology',
-         );
+         ];
          $notification = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
          foreach ($notifs as $label => $name) {
             if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginTypologyTypology' AND `event`='$name'")) {
-               $tmp = array(
+               $tmp = [
                   'name'                     => $label,
                   'entities_id'              => 0,
                   'itemtype'                 => 'PluginTypologyTypology',
@@ -177,7 +177,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
                   'is_recursive'             => 1,
                   'is_active'                => 1,
                   'date_mod'                 => $_SESSION['glpi_currenttime'],
-               );
+               ];
                $notification_id = $notification->add($tmp);
 
                $notificationtemplate->add(['notificationtemplates_id' => $templates_id,
@@ -190,4 +190,3 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
    }
 }
 
-?>

@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -26,23 +26,23 @@
  along with typology. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
- 
+
 function plugin_typology_install() {
    global $DB;
 
    include_once (GLPI_ROOT . "/plugins/typology/inc/profile.class.php");
 
    if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
-      
+
       // table sql creation
       $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-1.2.0.sql");
 
       // Add record notification
       include_once(GLPI_ROOT . "/plugins/typology/inc/notificationtargettypology.class.php");
-      call_user_func(array("PluginTypologyNotificationTargetTypology", 'install'));
+      call_user_func(["PluginTypologyNotificationTargetTypology", 'install']);
    }
 
-   if($DB->tableExists("glpi_plugin_typology_typologycriterias")){
+   if ($DB->tableExists("glpi_plugin_typology_typologycriterias")) {
 
       $query = "UPDATE `glpi_plugin_typology_typologycriterias`
                      SET `itemtype`='IPAddress'
@@ -54,10 +54,10 @@ function plugin_typology_install() {
                      WHERE `field` LIKE '%glpi_networkports%'";
       $result=$DB->query($query);
    }
-   
-   if($DB->tableExists("glpi_plugin_typology_profiles")){
 
-      $notepad_tables = array('glpi_plugin_typology_typologies');
+   if ($DB->tableExists("glpi_plugin_typology_profiles")) {
+
+      $notepad_tables = ['glpi_plugin_typology_typologies'];
 
       foreach ($notepad_tables as $t) {
          // Migrate data
@@ -86,35 +86,37 @@ function plugin_typology_install() {
    PluginTypologyProfile::createFirstAccess($_SESSION['glpiactiveprofile']['id']);
    $migration = new Migration("2.3.0");
    $migration->dropTable('glpi_plugin_typology_profiles');
-   
+
    return true;
 }
 
 // Uninstall process for plugin : need to return true if succeeded
 function plugin_typology_uninstall() {
    global $DB;
-   
+
    include_once (GLPI_ROOT."/plugins/typology/inc/profile.class.php");
    include_once (GLPI_ROOT."/plugins/typology/inc/menu.class.php");
-   
+
    // Plugin tables deletion
-   $tables = array("glpi_plugin_typology_typologies",
+   $tables = ["glpi_plugin_typology_typologies",
                     "glpi_plugin_typology_typologycriterias",
                     "glpi_plugin_typology_typologycriteriadefinitions",
-                    "glpi_plugin_typology_typologies_items");
+                    "glpi_plugin_typology_typologies_items"];
 
-   foreach ($tables as $table)
+   foreach ($tables as $table) {
       $DB->query("DROP TABLE IF EXISTS `$table`;");
+   }
 
    // Plugin adding information on general table deletion
-   $tables_glpi = array("glpi_displaypreferences", 
+   $tables_glpi = ["glpi_displaypreferences",
                         "glpi_documents_items",
                         "glpi_savedsearches",
                         "glpi_logs",
-                        "glpi_notepads");
+                        "glpi_notepads"];
 
-   foreach ($tables_glpi as $table_glpi)
+   foreach ($tables_glpi as $table_glpi) {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginTypologyTypology';");
+   }
 
    //drop rules
    $Rule = new Rule();
@@ -122,40 +124,40 @@ function plugin_typology_uninstall() {
    foreach ($a_rules as $data) {
       $Rule->delete($data);
    }
-   
+
    $notif = new Notification();
-   $options = array('itemtype' => 'PluginTypologyTypology',
+   $options = ['itemtype' => 'PluginTypologyTypology',
                     'event'    => 'AlertNotValidatedTypology',
-                    'FIELDS'   => 'id');
+                    'FIELDS'   => 'id'];
    foreach ($DB->request('glpi_notifications', $options) as $data) {
       $notif->delete($data);
    }
-   
+
    //Delete rights associated with the plugin
    $profileRight = new ProfileRight();
    foreach (PluginTypologyProfile::getAllRights() as $right) {
-      $profileRight->deleteByCriteria(array('name' => $right['field']));
+      $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
    PluginTypologyMenu::removeRightsFromSession();
-   
+
    PluginTypologyProfile::removeRightsFromSession();
-   
+
    return true;
 }
 
 function plugin_typology_postinit() {
    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['item_purge']['typology'] = array();
-   $PLUGIN_HOOKS['item_add']['typology'] = array();
+   $PLUGIN_HOOKS['item_purge']['typology'] = [];
+   $PLUGIN_HOOKS['item_add']['typology'] = [];
 
    foreach (PluginTypologyTypology::getTypes(true) as $type) {
       $PLUGIN_HOOKS['item_purge']['typology'][$type]
-         = array('PluginTypologyTypology_Item','cleanItemTypology');
+         = ['PluginTypologyTypology_Item','cleanItemTypology'];
       $PLUGIN_HOOKS['item_add']['typology'][$type]
-         = array('PluginTypologyTypology_Item', 'addItem');
+         = ['PluginTypologyTypology_Item', 'addItem'];
       $PLUGIN_HOOKS['item_update']['typology'][$type]
-         = array('PluginTypologyTypology_Item', 'updateItem');
+         = ['PluginTypologyTypology_Item', 'updateItem'];
       CommonGLPI::registerStandardTab($type, 'PluginTypologyTypology_Item');
    }
 }
@@ -164,17 +166,18 @@ function plugin_typology_postinit() {
 function plugin_typology_getDatabaseRelations() {
 
    $plugin = new Plugin();
-   if ($plugin->isActivated("typology"))
-      return array ("glpi_entities" => array ("glpi_plugin_typology_typologies" =>"entities_id",
+   if ($plugin->isActivated("typology")) {
+      return  ["glpi_entities" =>  ["glpi_plugin_typology_typologies" =>"entities_id",
                                               "glpi_plugin_typology_typologycriterias" => "entities_id",
-                                              "glpi_plugin_typology_typologycriteriadefinitions" => "entities_id"),
-                    "glpi_plugin_typology_typologies" => array(
+                                              "glpi_plugin_typology_typologycriteriadefinitions" => "entities_id"],
+                    "glpi_plugin_typology_typologies" => [
                                        "glpi_plugin_typology_typologycriterias" => "plugin_typology_typologies_id",
-                                       "glpi_plugin_typology_typologies_items" => "plugin_typology_typologies_id"),
-                    "glpi_plugin_typology_typologycriterias" => array(
-                                       "glpi_plugin_typology_typologycriteriadefinitions" => "plugin_typology_typologycriterias_id"));
-   else
-      return array();
+                                       "glpi_plugin_typology_typologies_items" => "plugin_typology_typologies_id"],
+                    "glpi_plugin_typology_typologycriterias" => [
+                                       "glpi_plugin_typology_typologycriteriadefinitions" => "plugin_typology_typologycriterias_id"]];
+   } else {
+      return [];
+   }
 }
 
 ////// SPECIFIC MODIF MASSIVE FUNCTIONS ///////
@@ -184,16 +187,16 @@ function plugin_typology_MassiveActions($type) {
 
    switch ($type) {
       default:
-      // Actions from items lists
-      if (in_array($type, PluginTypologyTypology::getTypes(true))) {
-         return array(
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material','typology'),
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material','typology'),
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements','typology'));
-       }
+         // Actions from items lists
+         if (in_array($type, PluginTypologyTypology::getTypes(true))) {
+            return [
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material', 'typology'),
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material', 'typology'),
+            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements', 'typology')];
+         }
       break;
    }
-   return array();
+   return [];
 }
 
 ////// SEARCH FUNCTIONS ///////(){
@@ -202,7 +205,7 @@ function plugin_typology_MassiveActions($type) {
 function plugin_typology_getAddSearchOptions($itemtype) {
 
    $plugin = new Plugin();
-   $sopt = array();
+   $sopt = [];
 
    if ($plugin->isActivated('typology')
          && Session::haveRight("plugin_typology", READ)) {
@@ -210,38 +213,38 @@ function plugin_typology_getAddSearchOptions($itemtype) {
          $sopt[4650]['table']         = 'glpi_plugin_typology_typologies';
          $sopt[4650]['field']         = 'name';
          $sopt[4650]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
-                                         __('Typology\'s name','typology');
+                                         __('Typology\'s name', 'typology');
          $sopt[4650]['forcegroupby']  = true;
          $sopt[4650]['datatype']      = 'itemlink';
          $sopt[4650]['massiveaction'] = false;
          $sopt[4650]['itemlink_type'] = 'PluginTypologyTypology';
-         $sopt[4650]['joinparams']    = array('beforejoin'
-                                                => array('table'      => 'glpi_plugin_typology_typologies_items',
-                                                         'joinparams' => array('jointype' => 'itemtype_item')));
-         
+         $sopt[4650]['joinparams']    = ['beforejoin'
+                                                => ['table'      => 'glpi_plugin_typology_typologies_items',
+                                                         'joinparams' => ['jointype' => 'itemtype_item']]];
+
          $sopt[4651]['table']         = 'glpi_plugin_typology_typologies_items';
          $sopt[4651]['field']         = 'is_validated';
          $sopt[4651]['datatype']      = 'bool';
          $sopt[4651]['massiveaction'] = false;
          $sopt[4651]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
-                                          __('Responding to typology\'s criteria','typology');
+                                          __('Responding to typology\'s criteria', 'typology');
          $sopt[4651]['forcegroupby']  = true;
-         $sopt[4651]['joinparams']    = array('jointype' => 'itemtype_item');
-         
+         $sopt[4651]['joinparams']    = ['jointype' => 'itemtype_item'];
+
          $sopt[4652]['table']         = 'glpi_plugin_typology_typologies_items';
          $sopt[4652]['field']         = 'error';
          $sopt[4652]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
                                           __('Result details');
          $sopt[4652]['forcegroupby']  = true;
          $sopt[4652]['massiveaction'] = false;
-         $sopt[4652]['joinparams']    = array('jointype' => 'itemtype_item');
+         $sopt[4652]['joinparams']    = ['jointype' => 'itemtype_item'];
 
       }
    }
    return $sopt;
 }
 
-function plugin_typology_giveItem($type,$ID,$data,$num) {
+function plugin_typology_giveItem($type, $ID, $data, $num) {
 
    $searchopt=&Search::getOptions($type);
    $table=$searchopt[$ID]["table"];
@@ -249,7 +252,7 @@ function plugin_typology_giveItem($type,$ID,$data,$num) {
 
    switch ($type) {
       case 'Computer':
-      switch ($table.'.'.$field) {
+         switch ($table.'.'.$field) {
 
             case "glpi_plugin_typology_typologies_items.is_validated" :
                if (empty($data[$num][0]['name'])) {
@@ -278,4 +281,3 @@ function plugin_typology_dynamicReport($parm) {
    return false;
 }
 
-?>

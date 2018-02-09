@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -39,21 +39,21 @@ class PluginTypologyTypology extends CommonDBTM {
    static $rightname                   = "plugin_typology";
    protected $usenotepad         = true;
    protected $usenotepadrights         = true;
-   protected static $forward_entity_to = array('PluginTypologyTypologyCriteria');
+   protected static $forward_entity_to = ['PluginTypologyTypologyCriteria'];
 
-   static $types = array('Computer');
+   static $types = ['Computer'];
 
-   static $types_criteria = array(
+   static $types_criteria = [
       'Computer',
       'Monitor',
       'Software',
       'Peripheral',
       'Printer',
       'IPAddress'
-//      'NetworkPort'
-      /*'Phone'*/);
+   //      'NetworkPort'
+      /*'Phone'*/];
 
-   public static function getTypeName($nb=0) {
+   public static function getTypeName($nb = 0) {
 
       return _n('Typology', 'Typologies', $nb, 'typology');
    }
@@ -61,15 +61,15 @@ class PluginTypologyTypology extends CommonDBTM {
    /**
     * Display tab for each typology
     * */
-   function defineTabs($options=array()) {
+   function defineTabs($options = []) {
 
-      $ong    = array();
+      $ong    = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginTypologyTypologyCriteria', $ong, $options);
       $this->addStandardTab('PluginTypologyTypology_Item', $ong, $options);
-      $this->addStandardTab('Document',$ong,$options);
-      $this->addStandardTab('Notepad',$ong,$options);
-      $this->addStandardTab('Log',$ong,$options);
+      $this->addStandardTab('Document', $ong, $options);
+      $this->addStandardTab('Notepad', $ong, $options);
+      $this->addStandardTab('Log', $ong, $options);
       return $ong;
    }
 
@@ -78,15 +78,15 @@ class PluginTypologyTypology extends CommonDBTM {
     *
     * @return nothing
     **/
-   function cleanDBonPurge(){
+   function cleanDBonPurge() {
 
       //Clean typology_item
       $temp1 = new PluginTypologyTypology_Item();
-      $temp1->deleteByCriteria(array('plugin_typology_typologies_id' => $this->fields['id']));
+      $temp1->deleteByCriteria(['plugin_typology_typologies_id' => $this->fields['id']]);
 
       //Clean typologycriteria
       $temp2 = new PluginTypologyTypologyCriteria();
-      $temp2->deleteByCriteria(array('plugin_typology_typologies_id' => $this->fields['id']));
+      $temp2->deleteByCriteria(['plugin_typology_typologies_id' => $this->fields['id']]);
 
       //Clean rule
       Rule::cleanForItemAction($this);
@@ -112,7 +112,7 @@ class PluginTypologyTypology extends CommonDBTM {
     *
     * @return array of types
     **/
-   static function getTypes($all=false) {
+   static function getTypes($all = false) {
 
       if ($all) {
          return self::$types;
@@ -164,14 +164,14 @@ class PluginTypologyTypology extends CommonDBTM {
             continue;
          }
 
-//         if (!$item->canView()) {
-//            unset($types_criteria[$key]);
-//         }
+         //         if (!$item->canView()) {
+         //            unset($types_criteria[$key]);
+         //         }
       }
 
       foreach ($devtypes as $itemtype) {
          $device        = new $itemtype();
-         if ($device->can(-1,'r')) {
+         if ($device->can(-1, 'r')) {
             $types_criteria[] = $itemtype;
          }
       }
@@ -189,7 +189,7 @@ class PluginTypologyTypology extends CommonDBTM {
     *
     *@return boolean item found
    **/
-   function showForm($ID, $options=array()) {
+   function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -197,7 +197,7 @@ class PluginTypologyTypology extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", array('value' => $this->fields["name"]));
+      Html::autocompletionTextField($this, "name", ['value' => $this->fields["name"]]);
       echo "</td>";
       echo "<td rowspan=2>".__('Comments')."</td>";
       echo "<td rowspan=2>";
@@ -227,7 +227,7 @@ class PluginTypologyTypology extends CommonDBTM {
 
    function getSearchOptions() {
 
-      $tab = array();
+      $tab = [];
       $tab['common'] = PluginTypologyTypology::getTypeName(1);
 
       $tab[1]['table']           = $this->getTable();
@@ -242,13 +242,13 @@ class PluginTypologyTypology extends CommonDBTM {
       $tab[2]['name']            = __('ID');
       $tab[2]['massiveaction']   = false;
       $tab[2]['datatype']        = 'number';
-      
+
       $tab[14]['table']          = $this->getTable();
       $tab[14]['field']          ='date_mod';
       $tab[14]['name']           =__('Last update');
       $tab[14]['massiveaction']  = false;
       $tab[14]['datatype']       ='datetime';
-      
+
       $tab[16]['table']          = $this->getTable();
       $tab[16]['field']          = 'comment';
       $tab[16]['name']           = __('Comments');
@@ -271,28 +271,28 @@ class PluginTypologyTypology extends CommonDBTM {
    }
 
 
-   static function getComputerDeviceTypes(){
-      return array(/*1 => 'DeviceMotherboard', */2 => 'DeviceProcessor',   3 => 'DeviceMemory',
+   static function getComputerDeviceTypes() {
+      return [/*1 => 'DeviceMotherboard', */2 => 'DeviceProcessor',   3 => 'DeviceMemory',
                    4 => 'DeviceHardDrive'/*,   5 => 'DeviceNetworkCard', 6 => 'DeviceDrive',
                    7 => 'DeviceControl',     8 => 'DeviceGraphicCard', 9 => 'DeviceSoundCard',
-                   10 => 'DevicePci',        11 => 'DeviceCase',       12 => 'DevicePowerSupply'*/);
+                   10 => 'DevicePci',        11 => 'DeviceCase',       12 => 'DevicePowerSupply'*/];
    }
 
    ////// CRON FUNCTIONS ///////
    //Cron action
-   static function cronInfo($name){
+   static function cronInfo($name) {
 
       switch ($name) {
          case 'UpdateTypology':
-            return array (
-               'description' => __('Recalculate typology for the elements','typology'));   // Optional
+            return  [
+               'description' => __('Recalculate typology for the elements', 'typology')];   // Optional
             break;
          case 'NotValidated':
-            return array (
-               'description' => __('Elements not match with the typology','typology'));   // Optional
+            return  [
+               'description' => __('Elements not match with the typology', 'typology')];   // Optional
             break;
       }
-      return array();
+      return [];
    }
 
    function queryUpdateTypology() {
@@ -303,7 +303,7 @@ class PluginTypologyTypology extends CommonDBTM {
       return $query;
 
    }
-   
+
    function queryNotValidated() {
 
       $query = "SELECT `glpi_plugin_typology_typologies_items`.*,
@@ -326,22 +326,22 @@ class PluginTypologyTypology extends CommonDBTM {
     * @param $task for log, if NULL display
     *
     **/
-   static function cronUpdateTypology($task=NULL) {
+   static function cronUpdateTypology($task = null) {
       global $DB;
-      
+
       $cron_status = 0;
-      $message=array();
+      $message=[];
 
       $typo = new self();
       $query_items = $typo->queryUpdateTypology();
 
-      $querys = array(Alert::END=>$query_items);
+      $querys = [Alert::END=>$query_items];
 
-      $task_infos = array();
-      $task_messages = array();
+      $task_infos = [];
+      $task_messages = [];
 
       foreach ($querys as $type => $query) {
-         $task_infos[$type] = array();
+         $task_infos[$type] = [];
          foreach ($DB->request($query) as $data) {
 
             //update all linked item to a typology
@@ -349,21 +349,21 @@ class PluginTypologyTypology extends CommonDBTM {
                $input=PluginTypologyTypology_Item::checkValidated($data);
             }
 
-            if($data['error'] != $input['error']){
+            if ($data['error'] != $input['error']) {
                $typo_item = new PluginTypologyTypology_Item();
                $typo_item->getFromDB($data['id']);
-               $values = array('id' =>  $data['id'],
+               $values = ['id' =>  $data['id'],
                                'is_validated' => $input['is_validated'],
-                               'error' => $input['error']);
+                               'error' => $input['error']];
                $typo_item->update($input);
                $typo->getFromDB($data['plugin_typology_typologies_id']);
                $entity = $typo->fields['entities_id'];
-               if(!isset($message[$entity])){
-                  $message=array($entity=>'');
+               if (!isset($message[$entity])) {
+                  $message=[$entity=>''];
                }
                $task_infos[$type][$entity][] = $data;
                if (!isset($task_messages[$type][$entity])) {
-                  $task_messages[$type][$entity] = __('Typology of the linked elements is updated.','typology')."<br />";
+                  $task_messages[$type][$entity] = __('Typology of the linked elements is updated.', 'typology')."<br />";
                }
                $task_messages[$type][$entity] .= $message[$entity];
             }
@@ -390,34 +390,33 @@ class PluginTypologyTypology extends CommonDBTM {
 
       return $cron_status;
    }
-   
+
    /**
     * Cron action on tasks : UpdateTypology
     *
     * @param $task for log, if NULL display
     *
     **/
-   static function cronNotValidated($task=NULL) {
+   static function cronNotValidated($task = null) {
       global $DB,$CFG_GLPI;
-      
-      
+
       if (!$CFG_GLPI["notifications_mailing"]) {
          return 0;
       }
-      
+
       $cron_status = 0;
-      $message=array();
+      $message=[];
 
       $typo = new self();
       $query_items = $typo->queryNotValidated();
 
-      $querys = array(Alert::END=>$query_items);
+      $querys = [Alert::END=>$query_items];
 
-      $task_infos = array();
-      $task_messages = array();
+      $task_infos = [];
+      $task_messages = [];
 
       foreach ($querys as $type => $query) {
-         $task_infos[$type] = array();
+         $task_infos[$type] = [];
          foreach ($DB->request($query) as $data) {
 
             // Get items entity
@@ -446,11 +445,11 @@ class PluginTypologyTypology extends CommonDBTM {
 
             $message = $task_messages[$type][$entity];
             $cron_status = 1;
-            
+
             if (NotificationEvent::raiseEvent("AlertNotValidatedTypology",
                                               new PluginTypologyTypology(),
-                                              array('entities_id'=>$entity,
-                                                    'items'=>$items))) {
+                                              ['entities_id'=>$entity,
+                                                    'items'=>$items])) {
                $message = $task_messages[$type][$entity];
                $cron_status = 1;
                if ($task) {
@@ -488,19 +487,19 @@ class PluginTypologyTypology extends CommonDBTM {
     **/
    /**
     * Get the specific massive actions
-    * 
+    *
     * @since version 0.84
     * @param $checkitem link item to check right   (default NULL)
-    * 
+    *
     * @return an array of massive actions
     **/
-   public function getSpecificMassiveActions($checkitem = NULL) {
+   public function getSpecificMassiveActions($checkitem = null) {
       $isadmin = static::canUpdate();
       $actions = parent::getSpecificMassiveActions($checkitem);
 
       if ($_SESSION['glpiactiveprofile']['interface'] == 'central') {
          if ($isadmin) {
-            $actions['PluginTypologyTypology'.MassiveAction::CLASS_ACTION_SEPARATOR.'duplicate']    = _sx('button','Duplicate');
+            $actions['PluginTypologyTypology'.MassiveAction::CLASS_ACTION_SEPARATOR.'duplicate']    = _sx('button', 'Duplicate');
 
             if (Session::haveRight('transfer', READ)
                      && Session::isMultiEntitiesMode()) {
@@ -510,17 +509,17 @@ class PluginTypologyTypology extends CommonDBTM {
       }
       return $actions;
    }
-   
+
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       switch ($ma->getAction()) {
          case "duplicate" :
-            echo Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
+            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
             break;
          case "transfer" :
             Dropdown::show('Entity');
-            echo Html::submit(_x('button','Post'), array('name' => 'massiveaction'));
+            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
             return true;
             break;
       }
@@ -541,12 +540,12 @@ class PluginTypologyTypology extends CommonDBTM {
 
       switch ($ma->getAction()) {
 
-          case "transfer" :
+         case "transfer" :
             $input = $ma->getInput();
             if ($item->getType() == 'PluginTypologyTypology') {
                foreach ($ids as $key) {
                   $item->getFromDB($key);
-                  
+
                   $restrict = "`plugin_typology_typologies_id` = '".$key."'";
                   $crits = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriterias", $restrict);
                   if (!empty($crits)) {
@@ -586,7 +585,7 @@ class PluginTypologyTypology extends CommonDBTM {
                }
             }
             break;
-            
+
          case 'duplicate':
             $input = $ma->getInput();
             if ($item->getType() == 'PluginTypologyTypology') {
@@ -601,7 +600,7 @@ class PluginTypologyTypology extends CommonDBTM {
                   $item->fields["name"]    = addslashes($item->fields["name"] . " Copy");
                   $item->fields["comment"] = addslashes($item->fields["comment"]);
                   //TODO duplicate notes
-//                  $item->fields["notepad"] = addslashes($item->fields["notepad"]);
+                  //                  $item->fields["notepad"] = addslashes($item->fields["notepad"]);
                   $newIDtypo               = $item->add($item->fields);
 
                   if (!empty($crits)) {
@@ -641,4 +640,3 @@ class PluginTypologyTypology extends CommonDBTM {
    }
 }
 
-?>

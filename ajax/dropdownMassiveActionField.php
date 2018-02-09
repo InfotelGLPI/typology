@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -42,4 +42,3 @@ if (isset($_POST["field"]) && $_POST["field"]) {
    Dropdown::showYesNo('is_active');
    echo "&nbsp;<input type='submit' name='massiveaction' class='submit' value='"._sx('button', 'Post')."'>";
 }
-?>

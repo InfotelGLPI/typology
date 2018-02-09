@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -34,13 +34,13 @@ $criteria = new PluginTypologyTypologyCriteria();
 
 if (isset($_POST["update"])) {
 
-   $criteria->check($_POST['id'],UPDATE);
+   $criteria->check($_POST['id'], UPDATE);
    $criteria->update($_POST);
    Html::back();
 
 } else if (isset($_POST["add"])) {
-   
-   if (isset($_POST["itemtype"]) 
+
+   if (isset($_POST["itemtype"])
          && !empty($_POST["itemtype"])) {
       $criteria->check(-1, CREATE, $_POST);
       $newID = $criteria->add($_POST);
@@ -63,8 +63,8 @@ if (isset($_POST["update"])) {
    $definition->add($_POST);
 
    // Mise à jour de l'heure de modification pour le critère
-   $criteria->update(array('id'       => $_POST['plugin_typology_typologycriterias_id'],
-                           'date_mod' => $_SESSION['glpi_currenttime']));
+   $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
+                           'date_mod' => $_SESSION['glpi_currenttime']]);
    Html::back();
 
 } else if (isset($_POST["delete_action"])) {
@@ -75,7 +75,7 @@ if (isset($_POST["update"])) {
       foreach ($_POST["item"] as $key => $val) {
          if ($val == 1) {
             if ($definition->can($key, UPDATE)) {
-               $definition->delete(array('id' => $key));
+               $definition->delete(['id' => $key]);
             }
          }
       }
@@ -87,15 +87,14 @@ if (isset($_POST["update"])) {
    $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
 
    // Can't do this in RuleAction, so do it here
-   $criteria->update(array('id'       => $_POST['plugin_typology_typologycriterias_id'],
-                           'date_mod' => $_SESSION['glpi_currenttime']));
+   $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
+                           'date_mod' => $_SESSION['glpi_currenttime']]);
    Html::back();
 
- } else {
+} else {
    $typo->checkGlobal(READ);
-   Html::header(PluginTypologyTypology::getTypeName(2),'',"tools","plugintypologymenu");
+   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologymenu");
 
    $criteria->display($_GET);
    Html::footer();
 }
-?>

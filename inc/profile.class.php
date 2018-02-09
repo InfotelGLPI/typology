@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -32,39 +32,39 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginTypologyProfile extends CommonDBTM {
-   
-   static $rightname = "profile";
-   
-   public function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
 
-      if ($item->getType()=='Profile' 
+   static $rightname = "profile";
+
+   public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+
+      if ($item->getType()=='Profile'
             && $item->getField('interface')!='helpdesk') {
          return PluginTypologyTypology::getTypeName(2);
-   }
+      }
       return '';
    }
 
-   public static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
       global $CFG_GLPI;
 
       if ($item->getType()=='Profile') {
          $ID = $item->getID();
          $prof = new self();
 
-         self::addDefaultProfileInfos($ID, 
-                                    array('plugin_typology' => 0));
+         self::addDefaultProfileInfos($ID,
+                                    ['plugin_typology' => 0]);
          $prof->showForm($ID);
       }
       return true;
    }
-   
+
    static function createFirstAccess($ID) {
       //85
       self::addDefaultProfileInfos($ID,
-                                    array('plugin_typology'               => 127), true);
+                                    ['plugin_typology'               => 127], true);
    }
-   
-   
+
+
     /**
     * @param $profile
    **/
@@ -74,7 +74,7 @@ class PluginTypologyProfile extends CommonDBTM {
       foreach ($rights as $right => $value) {
          if ($dbu->countElementsInTable('glpi_profilerights',
                                    "`profiles_id`='$profiles_id' AND `name`='$right'") && $drop_existing) {
-            $profileRight->deleteByCriteria(array('profiles_id' => $profiles_id, 'name' => $right));
+            $profileRight->deleteByCriteria(['profiles_id' => $profiles_id, 'name' => $right]);
          }
          if (!$dbu->countElementsInTable('glpi_profilerights',
                                    "`profiles_id`='$profiles_id' AND `name`='$right'")) {
@@ -97,10 +97,10 @@ class PluginTypologyProfile extends CommonDBTM {
     *
     * @return nothing
     **/
-   function showForm($profiles_id=0, $openform=TRUE, $closeform=TRUE) {
+   function showForm($profiles_id = 0, $openform = true, $closeform = true) {
 
       echo "<div class='firstbloc'>";
-      if (($canedit = Session::haveRightsOr(self::$rightname, array(CREATE, UPDATE, PURGE)))
+      if (($canedit = Session::haveRightsOr(self::$rightname, [CREATE, UPDATE, PURGE]))
           && $openform) {
          $profile = new Profile();
          echo "<form method='post' action='".$profile->getFormURL()."'>";
@@ -110,16 +110,16 @@ class PluginTypologyProfile extends CommonDBTM {
       $profile->getFromDB($profiles_id);
       if ($profile->getField('interface') == 'central') {
          $rights = $this->getAllRights();
-         $profile->displayRightsChoiceMatrix($rights, array('canedit'       => $canedit,
+         $profile->displayRightsChoiceMatrix($rights, ['canedit'       => $canedit,
                                                          'default_class' => 'tab_bg_2',
-                                                         'title'         => __('General')));
+                                                         'title'         => __('General')]);
       }
-      
+
       if ($canedit
           && $closeform) {
          echo "<div class='center'>";
-         echo Html::hidden('id', array('value' => $profiles_id));
-         echo Html::submit(_sx('button', 'Save'), array('name' => 'update'));
+         echo Html::hidden('id', ['value' => $profiles_id]);
+         echo Html::submit(_sx('button', 'Save'), ['name' => 'update']);
          echo "</div>\n";
          Html::closeForm();
       }
@@ -127,13 +127,13 @@ class PluginTypologyProfile extends CommonDBTM {
    }
 
    static function getAllRights($all = false) {
-      $rights = array(
-          array('itemtype'  => 'PluginTypologyTypology',
+      $rights = [
+          ['itemtype'  => 'PluginTypologyTypology',
                 'label'     => _n('Typology', 'Typologies', 2, 'typology'),
                 'field'     => 'plugin_typology'
-          ),
-      );
-      
+          ],
+      ];
+
       return $rights;
    }
 
@@ -141,10 +141,10 @@ class PluginTypologyProfile extends CommonDBTM {
     * Init profiles
     *
     **/
-    
+
    static function translateARight($old_right) {
       switch ($old_right) {
-         case '': 
+         case '':
             return 0;
          case 'r' :
             return READ;
@@ -153,12 +153,12 @@ class PluginTypologyProfile extends CommonDBTM {
          case '0':
          case '1':
             return $old_right;
-            
+
          default :
             return 0;
       }
    }
-   
+
    /**
    * @since 0.85
    * Migration rights from old system to the new one for one profile
@@ -168,13 +168,13 @@ class PluginTypologyProfile extends CommonDBTM {
       global $DB;
       //Cannot launch migration if there's nothing to migrate...
       if (!$DB->tableExists('glpi_plugin_typology_profiles')) {
-      return true;
+         return true;
       }
-      
-      foreach ($DB->request('glpi_plugin_typology_profiles', 
+
+      foreach ($DB->request('glpi_plugin_typology_profiles',
                             "`profiles_id`='$profiles_id'") as $profile_data) {
 
-         $matching = array('typology'    => 'plugin_typology');
+         $matching = ['typology'    => 'plugin_typology'];
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
             if (!isset($current_rights[$old])) {
@@ -186,7 +186,7 @@ class PluginTypologyProfile extends CommonDBTM {
          }
       }
    }
-   
+
    /**
    * Initialize profiles, and migrate it necessary
    */
@@ -198,10 +198,10 @@ class PluginTypologyProfile extends CommonDBTM {
       foreach ($profile->getAllRights(true) as $data) {
          if ($dbu->countElementsInTable("glpi_profilerights",
                                   "`name` = '".$data['field']."'") == 0) {
-            ProfileRight::addProfileRights(array($data['field']));
+            ProfileRight::addProfileRights([$data['field']]);
          }
       }
-      
+
       //Migration old rights in new ones
       foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
          self::migrateOneProfile($prof['id']);
@@ -210,11 +210,11 @@ class PluginTypologyProfile extends CommonDBTM {
                            FROM `glpi_profilerights` 
                            WHERE `profiles_id`='".$_SESSION['glpiactiveprofile']['id']."' 
                               AND `name` LIKE '%plugin_typology%'") as $prof) {
-         $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights']; 
+         $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
       }
    }
 
-   
+
    static function removeRightsFromSession() {
       foreach (self::getAllRights(true) as $right) {
          if (isset($_SESSION['glpiactiveprofile'][$right['field']])) {
@@ -223,4 +223,3 @@ class PluginTypologyProfile extends CommonDBTM {
       }
    }
 }
-?>

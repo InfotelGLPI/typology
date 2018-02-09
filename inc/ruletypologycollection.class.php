@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -37,24 +37,23 @@ class PluginTypologyRuleTypologyCollection extends RuleCollection {
    public $stop_on_first_match=true;
    public static $right='plugin_typology';
    public $menu_option='typologies';
-   
+
    function getTitle() {
 
-      return __('Rules for assigning a typology to a computer','typology');
+      return __('Rules for assigning a typology to a computer', 'typology');
    }
-   
-   function __construct($entity=0) {
+
+   function __construct($entity = 0) {
       $this->entity = $entity;
    }
-   
+
    function showInheritedTab() {
-      return Session::haveRight("plugin_typology", UPDATE) 
+      return Session::haveRight("plugin_typology", UPDATE)
                && ($this->entity);
    }
 
    function showChildrensTab() {
-      return Session::haveRight("plugin_typology", UPDATE) 
+      return Session::haveRight("plugin_typology", UPDATE)
                && (count($_SESSION['glpiactiveentities']) > 1);
    }
 }
-?>

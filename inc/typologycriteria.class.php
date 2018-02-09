@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -32,16 +32,16 @@ if (!defined('GLPI_ROOT')) {
 
 /// Class TypologyCriteria
 class PluginTypologyTypologyCriteria extends CommonDBTM {
-   
+
    // From CommonDBTM
    var $dohistory = true;
    static $rightname                = "plugin_typology";
    protected $criteria_id_field     = 'plugin_typology_typologycriterias_id';
    protected $critdefinitionclass   = 'PluginTypologyTypologyCriteriaDefinition';
 
-   var $definitions = array();
+   var $definitions = [];
 
-   public static function getTypeName($nb=0) {
+   public static function getTypeName($nb = 0) {
 
       return _n('Criterion', 'Criteria', $nb);
    }
@@ -72,7 +72,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
    function cleanDBonPurge() {
 
       $temp1 = new PluginTypologyTypologyCriteriaDefinition();
-      $temp1->deleteByCriteria(array('plugin_typology_typologycriterias_id' => $this->fields['id']));
+      $temp1->deleteByCriteria(['plugin_typology_typologycriterias_id' => $this->fields['id']]);
 
    }
 
@@ -83,7 +83,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     * @param int $withtemplate
     * @return array|string
     */
-   function getTabNameForItem(CommonGLPI $item, $withtemplate=0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
 
       if (!$withtemplate) {
          switch ($item->getType()) {
@@ -109,7 +109,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     * @param int $withtemplate
     * @return bool|true
     */
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum=1, $withtemplate=0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
 
       if ($item->getType()=='PluginTypologyTypology') {
          if ($item->canView()) {
@@ -122,9 +122,9 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
    /**
     * display tab for typologycriteria
     **/
-   function defineTabs($options=array()) {
+   function defineTabs($options = []) {
 
-      $ong = array();
+      $ong = [];
       $this->addDefaultFormTab($ong);
       $this->addStandardTab('PluginTypologyTypologyCriteriaDefinition', $ong, $options);
       $this->addStandardTab('Log', $ong, $options);
@@ -138,7 +138,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     * @param PluginTypologyTypology $typo
     * @param bool $showAdd
     */
-   public static function showForTypology(PluginTypologyTypology $typo, $showAdd=true) {
+   public static function showForTypology(PluginTypologyTypology $typo, $showAdd = true) {
 
       $ID = $typo->getField('id');
       $crit = new PluginTypologyTypologyCriteria();
@@ -146,14 +146,14 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
       $canedit = $typo->can($ID, UPDATE);
 
       $rand=mt_rand();
-      
+
       if ($canedit) {
-         if ($showAdd){
+         if ($showAdd) {
             echo "<div class='center first-bloc'>";
             echo "<form name='typocrit_form$rand' id='typocrit_form$rand' method='post' action='";
             echo Toolbox::getItemTypeFormURL(__CLASS__)."'>";
             echo "<table class='tab_cadre_fixe'>";
-            echo "<tr class='tab_bg_1'><th colspan='7'>".__('Add a criterion','typology')."</tr>";
+            echo "<tr class='tab_bg_1'><th colspan='7'>".__('Add a criterion', 'typology')."</tr>";
 
             echo "<tr class='tab_bg_2'><td class='center'>".__('Name')."</td>";
             echo "<input type='hidden' name='plugin_typology_typologies_id' value='$ID'>";
@@ -164,10 +164,10 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
             echo "</td><td class='center'>". __('Item') . "</td><td class='center' width='20%'>";
             PluginTypologyTypologyCriteria::dropdownItemtype();
             echo "</td><td>".__('Logical operator')."</td><td>";
-            Dropdown::showFromArray('link',array(0=>__('and'),1=>__('or')));
+            Dropdown::showFromArray('link', [0=>__('and'),1=>__('or')]);
             echo "</td><td>";
             echo "<input type='hidden' name='is_active' value='1'>";
-            echo "<input type='submit' name='add' value=\""._sx('button','Add')."\" class='submit'>";
+            echo "<input type='submit' name='add' value=\""._sx('button', 'Add')."\" class='submit'>";
             echo "</td></tr>";
 
             echo "</table>";
@@ -176,42 +176,42 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
             echo "</div>";
          }
 
-//         echo "<form name='massiveaction_form$rand' id='massiveaction_form$rand' method='post'
-//                     action=\"../ajax/massiveaction.php\">";
-                     
+         //         echo "<form name='massiveaction_form$rand' id='massiveaction_form$rand' method='post'
+         //                     action=\"../ajax/massiveaction.php\">";
+
          $restrict = "`plugin_typology_typologies_id` = '$ID'
                      ORDER BY `itemtype`";
          $dbu = new DbUtils();
          $criterias = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriterias', $restrict);
 
-         Session::initNavigateListItems("PluginTypologyTypologyCriteria",PluginTypologyTypology::getTypeName(1).
+         Session::initNavigateListItems("PluginTypologyTypologyCriteria", PluginTypologyTypology::getTypeName(1).
             " = ".$typo->getName());
-         if(!empty($criterias)){
+         if (!empty($criterias)) {
 
             echo "<div class='spaced'>";
             if ($canedit) {
                Html::openMassiveActionsForm('mass'.__CLASS__.$rand);
-               $massiveactionparams = array();
+               $massiveactionparams = [];
                Html::showMassiveActions($massiveactionparams);
             }
             echo "<table class='tab_cadre_fixe'>";
             if ($canedit) {
                echo "<tr>";
                echo "<th width='10'>".Html::getCheckAllAsCheckbox('mass'.__CLASS__.$rand)."</th>";
-               echo "<th colspan=5>".__('Criteria\'s list','typology')."</th>";
+               echo "<th colspan=5>".__('Criteria\'s list', 'typology')."</th>";
                echo "</tr>";
             }
-            foreach ($criterias as $criteria){
+            foreach ($criterias as $criteria) {
 
-               Session::addToNavigateListItems("PluginTypologyTypologyCriteria",$criteria["id"]);
+               Session::addToNavigateListItems("PluginTypologyTypologyCriteria", $criteria["id"]);
 
-               if ($showAdd){
+               if ($showAdd) {
                   $colspan = 6;
                } else {
                   $colspan = 5;
                }
 
-               if ($showAdd){
+               if ($showAdd) {
                   $type = 'tab_cadre_fixehov';
                } else {
                   $type = 'tab_cadre';
@@ -222,12 +222,12 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                if ($showAdd) {
                   echo "<tr><th colspan=$colspan>".PluginTypologyTypologyCriteria::getTypeName(1)."</th>";
                } else {
-                  echo "<tr><th colspan=$colspan>".__('Detail of the assigned typology','typology')."</th>";
+                  echo "<tr><th colspan=$colspan>".__('Detail of the assigned typology', 'typology')."</th>";
                }
                echo "</tr>";
 
                echo "<tr class='tab_bg_2'>";
-               if ($showAdd){
+               if ($showAdd) {
                   echo "<th colspan='2'>".__('Name')."</th>";
                }
                echo "<th class='center b'>".__('Active')."</th>";
@@ -240,7 +240,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
                if ($canedit && $showAdd) {
                   echo "<td width='10'>";
-//                  echo "<input type='checkbox' name='item[".$criteria["id"]."]' value='1'>";
+                  //                  echo "<input type='checkbox' name='item[".$criteria["id"]."]' value='1'>";
                   Html::showMassiveActionCheckBox(__CLASS__, $criteria["id"]);
                   echo "</td>";
                }
@@ -259,19 +259,19 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                   echo "</a>";
                }
                echo "</td>";
-               
+
                echo "<td width='10%' align='center'>";
                echo Dropdown::getYesNo($criteria['is_active']);
                echo "</td>";
-               
+
                $item = new $criteria['itemtype']();
-               
+
                echo "<td width='10%'>".$item::getTypeName(0)."</td>";
-               
+
                echo "<td width='10%' align='center'>";
-               if($criteria['link'] == 0){
+               if ($criteria['link'] == 0) {
                   echo __('and');
-               } else if ($criteria['link'] == 1){
+               } else if ($criteria['link'] == 1) {
                   echo __('or');
                }
                echo "</td><td>";
@@ -280,15 +280,15 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                   " = '".$criteria['id']."' ORDER BY `glpi_plugin_typology_typologycriteriadefinitions`.`id`";
                $definitions = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriteriadefinitions',
                   $condition);
-               if(!empty($definitions)){
+               if (!empty($definitions)) {
                   echo "<table class='tab_cadre' width='100%'>";
                   echo "<tr>";
-                  echo "<th class='center b' width='33%'>"._n('Field','Fields',2)."</th>";
+                  echo "<th class='center b' width='33%'>"._n('Field', 'Fields', 2)."</th>";
                   echo "<th class='center b' width='33%'>".__('Logical operator')."</th>";
                   echo "<th class='center b'>".__('Value')."</th>";
                   echo "</tr>";
 
-                  foreach ($definitions as $definition){
+                  foreach ($definitions as $definition) {
                      echo "<tr>";
                      $definition['itemtype'] = $criteria['itemtype'];
                      PluginTypologyTypologyCriteriaDefinition::showMinimalDefinitionForm($definition);
@@ -307,34 +307,34 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
             echo "</div>";
 
-//            if ($showAdd){
-//               Html::openArrowMassives("massiveaction_form$rand",true);
-//               self::dropdownMassiveAction($rand);
-//               Html::closeArrowMassives(array());
-//            }
+            //            if ($showAdd){
+            //               Html::openArrowMassives("massiveaction_form$rand",true);
+            //               self::dropdownMassiveAction($rand);
+            //               Html::closeArrowMassives(array());
+            //            }
          }
       }
-//      Html::closeForm();
+      //      Html::closeForm();
    }
 
-//   static function dropdownMassiveAction($rand) {
-//      global $CFG_GLPI;
-//
-//      echo "<select name=\"massiveaction\" id='massiveaction$rand'>";
-//      echo "<option value=\"-1\" selected>".Dropdown::EMPTY_VALUE."</option>";
-//      echo "<option value=\"deleteAll\">".__('Delete permantly')."</option>";
-//      echo "<option value=\"updateAll\">".__('Update')."</option>";
-//      echo "</select>";
-//
-//      $params=array('action'=>'__VALUE__',
-//      );
-//
-//      Ajax::updateItemOnSelectEvent("massiveaction$rand","show_massiveaction$rand",
-//         $CFG_GLPI["root_doc"]."/plugins/typology/ajax/dropdownMassiveAction.php",$params);
-//
-//      echo "<span id='show_massiveaction$rand'>&nbsp;</span>\n";
-//
-//   }
+   //   static function dropdownMassiveAction($rand) {
+   //      global $CFG_GLPI;
+   //
+   //      echo "<select name=\"massiveaction\" id='massiveaction$rand'>";
+   //      echo "<option value=\"-1\" selected>".Dropdown::EMPTY_VALUE."</option>";
+   //      echo "<option value=\"deleteAll\">".__('Delete permantly')."</option>";
+   //      echo "<option value=\"updateAll\">".__('Update')."</option>";
+   //      echo "</select>";
+   //
+   //      $params=array('action'=>'__VALUE__',
+   //      );
+   //
+   //      Ajax::updateItemOnSelectEvent("massiveaction$rand","show_massiveaction$rand",
+   //         $CFG_GLPI["root_doc"]."/plugins/typology/ajax/dropdownMassiveAction.php",$params);
+   //
+   //      echo "<span id='show_massiveaction$rand'>&nbsp;</span>\n";
+   //
+   //   }
 
    /**
     * Show the criteria form
@@ -344,7 +344,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     *
     * @return nothing
     **/
-   function showForm($ID, $options=array()) {
+   function showForm($ID, $options = []) {
 
       $this->initForm($ID, $options);
       $this->showFormHeader($options);
@@ -353,35 +353,34 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>".__('Name')."</td><td>";
-      Html::autocompletionTextField($this,"name");
+      Html::autocompletionTextField($this, "name");
       echo "</td>";
       echo "<td>".__('Item')."</td><td>";
       echo $itemtype::getTypeName(0)."</td>";
       echo "</td></tr>";
-      
-      
+
       echo "<tr class='tab_bg_1'>";
 
       echo "<td>".__('Logical operator')."</td><td>";
       Dropdown::showFromArray('link',
-                              array(0=>__('and'),1=>__('or')),
-                              array('value' => $this->fields["link"]));
+                              [0=>__('and'),1=>__('or')],
+                              ['value' => $this->fields["link"]]);
       echo "</td>";
-      
+
       echo "<td>".__('Active')."</td><td>";
       Dropdown::showYesNo('is_active', $this->fields['is_active']);
       echo "</td>";
       echo "</tr>\n";
-      
+
       echo "<tr class='tab_bg_1'>";
-      
+
       $typo=new PluginTypologyTypology();
       $typo->getFromDB($this->fields['plugin_typology_typologies_id']);
       echo "<td>".PluginTypologyTypology::getTypeName(1)."</td>";
       echo "<td>";
       echo $typo->getLink();
       echo "</td>";
-      
+
       echo "<td>".__('Last update')."</td>";
          echo "<td>".($this->fields["date_mod"] ? Html::convDateTime($this->fields["date_mod"])
                                                 : __('Never'));
@@ -438,12 +437,12 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     *
     * @return an array of massive actions
     **/
-   function getSpecificMassiveActions($checkitem=NULL) {
+   function getSpecificMassiveActions($checkitem = null) {
       $isadmin = static::canUpdate();
       $actions = parent::getSpecificMassiveActions($checkitem);
       if ($isadmin) {
-         $actions['deleteAll'] = _sx('button','Delete permanently');
-         $actions['updateAll'] = _sx('button','Upgrade');
+         $actions['deleteAll'] = _sx('button', 'Delete permanently');
+         $actions['updateAll'] = _sx('button', 'Upgrade');
       }
 
       return $actions;
@@ -458,7 +457,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     *
     * @return boolean if parameters displayed ?
     **/
-   function showSpecificMassiveActionsParameters($input = array()) {
+   function showSpecificMassiveActionsParameters($input = []) {
       global $CFG_GLPI;
 
       switch ($input['action']) {
@@ -473,11 +472,11 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
             echo "<option value='is_active'>".__('Active')."</option>";
             echo "</select>";
 
-            $params = array('field' => '__VALUE__',
-               'action' => $_POST["action"]);
+            $params = ['field' => '__VALUE__',
+               'action' => $_POST["action"]];
 
-            Ajax::updateItemOnSelectEvent("field","show_massiveaction_field",
-               $CFG_GLPI["root_doc"]."/plugins/typology/ajax/dropdownMassiveActionField.php",$params);
+            Ajax::updateItemOnSelectEvent("field", "show_massiveaction_field",
+               $CFG_GLPI["root_doc"]."/plugins/typology/ajax/dropdownMassiveActionField.php", $params);
 
             echo "&nbsp;<span id='show_massiveaction_field'>&nbsp;</span>\n";
             return true;
@@ -499,11 +498,11 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
     *
     * @return an array of results (nbok, nbko, nbnoright counts)
     **/
-   function doSpecificMassiveActions($input = array()) {
+   function doSpecificMassiveActions($input = []) {
 
-      $res = array('ok'      => 0,
+      $res = ['ok'      => 0,
          'ko'      => 0,
-         'noright' => 0);
+         'noright' => 0];
 
       $criteria=new PluginTypologyTypologyCriteria();
 
@@ -514,7 +513,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                foreach ($input["item"] as $key => $val) {
                   if ($val== 1) {
                      if ($criteria->can($key, 'w')) {
-                        if ($criteria->delete(array('id' => $key))) {
+                        if ($criteria->delete(['id' => $key])) {
                            $res['ok']++;
                         } else {
                            $res['ko']++;
@@ -529,9 +528,9 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
                foreach ($input["item"] as $key => $val) {
                   if ($val== 1) {
-                     $values=array('id'=>$key,
-                     'is_active'=>$input['is_active']);
-                     if($criteria->update($values)){
+                     $values=['id'=>$key,
+                     'is_active'=>$input['is_active']];
+                     if ($criteria->update($values)) {
                         $res['ok']++;
                      } else {
                         $res['ko']++;
@@ -548,4 +547,3 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
    }
 
 }
-?>

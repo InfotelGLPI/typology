@@ -9,7 +9,7 @@
  -------------------------------------------------------------------------
 
  LICENSE
-      
+
  This file is part of typology.
 
  typology is free software; you can redistribute it and/or modify
@@ -29,7 +29,7 @@
 
 
 // Direct access to file
-if (strpos($_SERVER['PHP_SELF'],"dropdownAction.php")) {
+if (strpos($_SERVER['PHP_SELF'], "dropdownAction.php")) {
    include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -42,4 +42,3 @@ PluginTypologyTypologyCriteriaDefinition::dropdownSelect($_POST['itemtype'],
                                                          $_POST['typocrit_id'],
                                                          $_POST['field']);
 
-?>
