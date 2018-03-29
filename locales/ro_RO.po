@@ -1,6 +1,6 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Typology Development Team
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the GLPI - Typology plugin package.
 # 
 # Translators:
 # Doru  DEACONU <dumitrudeaconu@yahoo.com>, 2013
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 14:46+0200\n"
+"POT-Creation-Date: 2018-03-29 15:30+0200\n"
 "PO-Revision-Date: 2017-10-10 13:03+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: Romanian (Romania) (http://www.transifex.com/tsmr/GLPI_typology/language/ro_RO/)\n"
@@ -17,25 +17,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ro_RO\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"X-Generator: Poedit 2.0.6\n"
 
-#: hook.php:190 inc/typology_item.class.php:561
+#: hook.php:193 inc/typology_item.class.php:567
 msgid "Assign a typology to this material"
 msgstr "Atribuie o tipologie la acest material"
 
-#: hook.php:191
+#: hook.php:194
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:192 inc/typology.class.php:288
+#: hook.php:195 inc/typology.class.php:288
 msgid "Recalculate typology for the elements"
 msgstr "Recalculează tipologia pentru elementele"
 
-#: hook.php:213
+#: hook.php:216
 msgid "Typology's name"
 msgstr "Nume Tipologie"
 
-#: hook.php:227 inc/typology_item.class.php:491
-#: inc/typology_item.class.php:749
+#: hook.php:230 inc/typology_item.class.php:494
+#: inc/typology_item.class.php:757
 msgid "Responding to typology's criteria"
 msgstr "Răspunzând la criteriile tipologiei"
 
@@ -47,18 +48,18 @@ msgstr[0] "Tipologie"
 msgstr[1] "Tipologii"
 msgstr[2] "Tipologii"
 
-#: front/typology.form.php:82
+#: front/typology.form.php:84
 msgid "Element not match with the rule for assigning the typology:"
 msgstr "Element necorespunzător cu regula privind atribuirea tipologiei:"
 
-#: front/typology.form.php:97 inc/typology_item.class.php:1056
-#: inc/typology_item.class.php:1072
+#: front/typology.form.php:99 inc/typology_item.class.php:1069
+#: inc/typology_item.class.php:1085
 msgid "Element not match with rules for assigning a typology"
 msgstr "Element necorespunzător  cu regulile privind atribuirea tipologiei"
 
 #: inc/notificationtargettypology.class.php:39
 #: inc/notificationtargettypology.class.php:51 inc/typology.class.php:292
-#: inc/typology.class.php:435
+#: inc/typology.class.php:434
 msgid "Elements not match with the typology"
 msgstr "Elemente necorespunzătoare cu tipologia "
 
@@ -88,7 +89,7 @@ msgstr "Adaugă un criteriu"
 msgid "Criteria's list"
 msgstr "Listă criterii"
 
-#: inc/typologycriteria.class.php:225 inc/typology_item.class.php:925
+#: inc/typologycriteria.class.php:225 inc/typology_item.class.php:937
 msgid "Detail of the assigned typology"
 msgstr "Detaliu al tipologiei atribuite"
 
@@ -105,14 +106,14 @@ msgid ""
 "contact a person having this right."
 msgstr "Nu aveţi drepturi de a crea definţii pentru acest criteriu. Contactaţi o persoană cu aceste drepturi."
 
-#: inc/typologycriteriadefinition.class.php:553
-#: inc/typologycriteriadefinition.class.php:559
+#: inc/typologycriteriadefinition.class.php:554
+#: inc/typologycriteriadefinition.class.php:560
 #: inc/typologycriteriadefinition.class.php:794
 msgid "Less than"
 msgstr "Mai mic de"
 
-#: inc/typologycriteriadefinition.class.php:554
-#: inc/typologycriteriadefinition.class.php:560
+#: inc/typologycriteriadefinition.class.php:555
+#: inc/typologycriteriadefinition.class.php:561
 #: inc/typologycriteriadefinition.class.php:796
 msgid "More than"
 msgstr "Mai mult de"
@@ -142,46 +143,46 @@ msgid ""
 "typology : "
 msgstr "Nu puteţi atribui această tipologie la acest material seoarece el are deja o tipologie :"
 
-#: inc/typology_item.class.php:486
+#: inc/typology_item.class.php:488
 msgid "Typology assigned to this material"
 msgstr "Tipologie atribuită la acest material"
 
-#: inc/typology_item.class.php:493
+#: inc/typology_item.class.php:496
 msgid "Actions"
 msgstr "Actiuni"
 
-#: inc/typology_item.class.php:525 inc/typology_item.class.php:807
+#: inc/typology_item.class.php:531 inc/typology_item.class.php:817
 msgid "for the criteria"
 msgstr "pentru criteriu"
 
-#: inc/typology_item.class.php:686 inc/typology_item.class.php:733
+#: inc/typology_item.class.php:694 inc/typology_item.class.php:741
 msgid "Linked elements"
 msgstr "Elemente legate"
 
-#: inc/typology_item.class.php:708
+#: inc/typology_item.class.php:716
 msgid "Select a type"
 msgstr ""
 
-#: inc/typology_item.class.php:731
+#: inc/typology_item.class.php:739
 msgid "No linked element"
 msgstr "Niciun element legat"
 
-#: inc/typology_item.class.php:917
+#: inc/typology_item.class.php:929
 msgid "Management console"
 msgstr "Consolă management"
 
-#: inc/typology_item.class.php:924
+#: inc/typology_item.class.php:936
 msgid "Comparison"
 msgstr "Comparare"
 
-#: inc/typology_item.class.php:926
+#: inc/typology_item.class.php:938
 msgid "Detail of the encountered configuration"
 msgstr "Detaliu al configuraţiei intâlnite"
 
-#: inc/typology_item.class.php:932
+#: inc/typology_item.class.php:944
 msgid "Waiting value"
 msgstr "Valoarea aşteptată"
 
-#: inc/typology_item.class.php:933
+#: inc/typology_item.class.php:945
 msgid "Real value"
 msgstr "Valoarea reală"
