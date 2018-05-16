@@ -1133,4 +1133,3 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       parent::processMassiveActionsForOneItemtype($ma, $item, $ids);
    }
 }
-

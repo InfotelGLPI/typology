@@ -47,4 +47,3 @@ $options=['itemtype'     =>$_POST['itemtype'],
 
 //Display list of values or text field depending on action_type
 PluginTypologyTypologyCriteriaDefinition::dropdownValues($options);
-

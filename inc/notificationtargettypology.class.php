@@ -189,4 +189,3 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
 
    }
 }
-

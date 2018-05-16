@@ -210,34 +210,43 @@ function plugin_typology_getAddSearchOptions($itemtype) {
    if ($plugin->isActivated('typology')
          && Session::haveRight("plugin_typology", READ)) {
       if (in_array($itemtype, PluginTypologyTypology::getTypes(true))) {
-         $sopt[4650]['table']         = 'glpi_plugin_typology_typologies';
-         $sopt[4650]['field']         = 'name';
-         $sopt[4650]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
-                                         __('Typology\'s name', 'typology');
-         $sopt[4650]['forcegroupby']  = true;
-         $sopt[4650]['datatype']      = 'itemlink';
-         $sopt[4650]['massiveaction'] = false;
-         $sopt[4650]['itemlink_type'] = 'PluginTypologyTypology';
-         $sopt[4650]['joinparams']    = ['beforejoin'
-                                                => ['table'      => 'glpi_plugin_typology_typologies_items',
-                                                         'joinparams' => ['jointype' => 'itemtype_item']]];
+         $spot[] =  [];
 
-         $sopt[4651]['table']         = 'glpi_plugin_typology_typologies_items';
-         $sopt[4651]['field']         = 'is_validated';
-         $sopt[4651]['datatype']      = 'bool';
-         $sopt[4651]['massiveaction'] = false;
-         $sopt[4651]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
-                                          __('Responding to typology\'s criteria', 'typology');
-         $sopt[4651]['forcegroupby']  = true;
-         $sopt[4651]['joinparams']    = ['jointype' => 'itemtype_item'];
-
-         $sopt[4652]['table']         = 'glpi_plugin_typology_typologies_items';
-         $sopt[4652]['field']         = 'error';
-         $sopt[4652]['name']          = PluginTypologyTypology::getTypeName(1)." - ".
-                                          __('Result details');
-         $sopt[4652]['forcegroupby']  = true;
-         $sopt[4652]['massiveaction'] = false;
-         $sopt[4652]['joinparams']    = ['jointype' => 'itemtype_item'];
+         $spot[] = [
+            'id'              => 4650,
+            'table'           => 'glpi_plugin_typology_typologies',
+            'field'           => 'name',
+            'name'            => PluginTypologyTypology::getTypeName(1)." - ".
+                                __('Typology\'s name', 'typology'),
+            'forcegroupby'    =>true,
+            'datatype'        => 'itemlink',
+            'massiveaction'   => false,
+            'itemlink_type'   => 'PluginTypologyTypology',
+            'joinparams'      => ['beforejoin'
+                                       => ['table'      => 'glpi_plugin_typology_typologies_items',
+                                                'joinparams' => ['jointype' => 'itemtype_item']]]
+         ];
+         $spot[] =  [
+            'id'              => 4651,
+            'table'           => 'glpi_plugin_typology_typologies_items',
+            'field'           => 'is_validated',
+            'datatype'        => 'bool',
+            'massiveaction'   => false,
+            'name'            => PluginTypologyTypology::getTypeName(1)." - ".
+                                 __('Responding to typology\'s criteria', 'typology'),
+            'forcegroupby'   => true,
+            'joinparams'     => ['jointype' => 'itemtype_item']
+         ];
+         $spot[] =  [
+            'id'              => 4652,
+            'table'          => 'glpi_plugin_typology_typologies_items',
+            'field'          => 'error',
+            'name'           => PluginTypologyTypology::getTypeName(1)." - ".
+                                __('Result details'),
+            'forcegroupby'   => true,
+            'massiveaction'  => false,
+            'joinparams'     => ['jointype' => 'itemtype_item']
+         ];
 
       }
    }
@@ -280,4 +289,3 @@ function plugin_typology_dynamicReport($parm) {
    // Return false if no specific display is done, then use standard display
    return false;
 }
-

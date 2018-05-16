@@ -545,5 +545,4 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
       }
       return $res;
    }
-
 }

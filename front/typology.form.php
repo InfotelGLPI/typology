@@ -149,4 +149,3 @@ if (isset($_POST["add"])) {
    $typo->display($_GET);
    Html::footer();
 }
-

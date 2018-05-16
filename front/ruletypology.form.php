@@ -32,4 +32,3 @@ include ('../../../inc/includes.php');
 $rulecollection = new PluginTypologyRuleTypologyCollection($_SESSION['glpiactive_entity']);
 
 include (GLPI_ROOT . "/front/rule.common.form.php");
-
