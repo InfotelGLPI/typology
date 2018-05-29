@@ -1091,8 +1091,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             $input = $ma->getInput();
             foreach ($ids as $id) {
 
-               if ($typo_item->getFromDBByQuery("WHERE `items_id` = $id 
-                                                AND `itemtype` = '".$item->getType()."'")) {
+               if ($typo_item->getFromDBByCrit(["`items_id` = $id
+                                                AND `itemtype` = '".$item->getType()."'"])) {
                   $values = ['plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
                                  'items_id'      => $typo_item->fields['items_id'],
                                  'itemtype'      => $typo_item->fields['itemtype']];
@@ -1110,8 +1110,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          return;
          case "update_allitem":
             foreach ($ids as $id) {
-               if ($typo_item->getFromDBByQuery("WHERE `items_id` = $id 
-                                                AND `itemtype` = '".$item->getType()."'")) {
+               if ($typo_item->getFromDBByCrit(["`items_id` = $id 
+                                                AND `itemtype` = '".$item->getType()."'"])) {
                   $result = PluginTypologyTypology_Item::checkValidated(['items_id' => $typo_item->fields['items_id'],
                                                                               'plugin_typology_typologies_id'=>$typo_item->fields['plugin_typology_typologies_id'],
                                                                               'id'=>$typo_item->fields['id']]);
