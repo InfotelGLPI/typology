@@ -35,7 +35,7 @@ function plugin_typology_install() {
    if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
 
       // table sql creation
-      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-1.2.0.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-2.5.0.sql");
 
       // Add record notification
       include_once(GLPI_ROOT . "/plugins/typology/inc/notificationtargettypology.class.php");
