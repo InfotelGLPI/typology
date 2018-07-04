@@ -1091,7 +1091,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             $input = $ma->getInput();
             foreach ($ids as $id) {
 
-               if ($typo_item->getFromDBByCrit([" `items_id` = $id 
+               if ($typo_item->getFromDBByCrit(["`items_id` = $id
                                                 AND `itemtype` = '".$item->getType()."'"])) {
                   $values = ['plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
                                  'items_id'      => $typo_item->fields['items_id'],
