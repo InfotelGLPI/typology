@@ -9,16 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-29 15:30+0200\n"
-"PO-Revision-Date: 2018-03-26 16:15+0000\n"
+"POT-Creation-Date: 2018-07-05 10:10+0200\n"
+"PO-Revision-Date: 2018-06-26 12:19+0000\n"
 "Last-Translator: Pavel Borecki <pavel.borecki@gmail.com>\n"
 "Language-Team: Czech (Czech Republic) (http://www.transifex.com/tsmr/GLPI_typology/language/cs_CZ/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: cs_CZ\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 2.0.6\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #: hook.php:193 inc/typology_item.class.php:567
 msgid "Assign a typology to this material"
@@ -28,18 +27,18 @@ msgstr "Přiřadit typologii k tomuto materiálu"
 msgid "Delete the typology of this material"
 msgstr "Smazat typologii tohoto materiálu"
 
-#: hook.php:195 inc/typology.class.php:288
+#: hook.php:195 inc/typology.class.php:306
 msgid "Recalculate typology for the elements"
 msgstr "Přepočítat typologii pro prvky"
 
-#: hook.php:216
+#: hook.php:220
 msgid "Typology's name"
 msgstr "Název typologie"
 
-#: hook.php:230 inc/typology_item.class.php:494
+#: hook.php:236 inc/typology_item.class.php:494
 #: inc/typology_item.class.php:757
 msgid "Responding to typology's criteria"
-msgstr "Odpovídá kritériu typologie"
+msgstr "Splňuje kritéria typologie"
 
 #: setup.php:74 inc/menu.class.php:34 inc/profile.class.php:132
 #: inc/typology.class.php:58
@@ -48,6 +47,7 @@ msgid_plural "Typologies"
 msgstr[0] "Typologie"
 msgstr[1] "Typologie"
 msgstr[2] "Typologií"
+msgstr[3] "Typologie"
 
 #: front/typology.form.php:84
 msgid "Element not match with the rule for assigning the typology:"
@@ -59,8 +59,8 @@ msgid "Element not match with rules for assigning a typology"
 msgstr "Prvek se neshoduje s pravidly pro přiřazení typologie"
 
 #: inc/notificationtargettypology.class.php:39
-#: inc/notificationtargettypology.class.php:51 inc/typology.class.php:292
-#: inc/typology.class.php:434
+#: inc/notificationtargettypology.class.php:51 inc/typology.class.php:310
+#: inc/typology.class.php:452
 msgid "Elements not match with the typology"
 msgstr "Prvky se neshodují s typologií"
 
@@ -78,19 +78,19 @@ msgstr "Připojit k prvku"
 msgid "Rules for assigning a typology to a computer"
 msgstr "Pravidla pro přiřazení typologie k počítači"
 
-#: inc/typology.class.php:366
+#: inc/typology.class.php:384
 msgid "Typology of the linked elements is updated."
 msgstr "Typologie připojených prvků byla aktualizována."
 
-#: inc/typologycriteria.class.php:156
+#: inc/typologycriteria.class.php:159
 msgid "Add a criterion"
 msgstr "Přidat kritérium"
 
-#: inc/typologycriteria.class.php:201
+#: inc/typologycriteria.class.php:204
 msgid "Criteria's list"
 msgstr "Seznam kritérií"
 
-#: inc/typologycriteria.class.php:225 inc/typology_item.class.php:937
+#: inc/typologycriteria.class.php:228 inc/typology_item.class.php:937
 msgid "Detail of the assigned typology"
 msgstr "Podrobnosti přiřazené typologie"
 
@@ -100,12 +100,13 @@ msgid_plural "Definitions"
 msgstr[0] "Definice"
 msgstr[1] "Definice"
 msgstr[2] "Definic"
+msgstr[3] "Definice"
 
 #: inc/typologycriteriadefinition.class.php:92
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
-msgstr "Nemáte oprávnění pro vytváření definice pro toto kritérium.\nObraťte se na osobu která má toto oprávnění."
+msgstr "Nemáte oprávnění pro vytváření definice pro tato kritéria.\nObraťte se na osobu která má toto oprávnění."
 
 #: inc/typologycriteriadefinition.class.php:554
 #: inc/typologycriteriadefinition.class.php:560
@@ -125,6 +126,7 @@ msgid_plural "Elements"
 msgstr[0] "Prvek"
 msgstr[1] "Prvky"
 msgstr[2] "Prvků"
+msgstr[3] "Prvky"
 
 #: inc/typology_item.class.php:137
 msgid "Add element to the typology"
@@ -132,17 +134,17 @@ msgstr "Přidat prvek k typologii"
 
 #: inc/typology_item.class.php:139
 msgid "Update element to the typology"
-msgstr "Aktualizovat prvek v typologii"
+msgstr "Změnit prvek k typologii"
 
 #: inc/typology_item.class.php:141
 msgid "Element out of the typology"
-msgstr "Prvek byl odstraněn z typologie"
+msgstr "Prvek mimo typologii"
 
 #: inc/typology_item.class.php:224
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
-msgstr "Tomuto materiálu není možné přiřadit typologii protože už má nějakou přiřazenou:"
+msgstr "Tomuto materiálu není možné přiřadit tuto typologii protože už má nějakou přiřazenou:"
 
 #: inc/typology_item.class.php:488
 msgid "Typology assigned to this material"

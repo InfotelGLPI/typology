@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI Project - typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-29 15:30+0200\n"
+"POT-Creation-Date: 2018-07-05 10:10+0200\n"
 "PO-Revision-Date: 2017-10-10 13:03+0000\n"
 "Last-Translator: Amandine Manceau\n"
 "Language-Team: Spanish (Argentina) (http://www.transifex.com/tsmr/GLPI_typology/language/es_AR/)\n"
@@ -18,7 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_AR\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
 
 #: hook.php:193 inc/typology_item.class.php:567
 msgid "Assign a typology to this material"
@@ -28,15 +27,15 @@ msgstr "Asignar una tipología para este componente"
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:195 inc/typology.class.php:288
+#: hook.php:195 inc/typology.class.php:306
 msgid "Recalculate typology for the elements"
 msgstr "Recalcular tipología para los elementos"
 
-#: hook.php:216
+#: hook.php:220
 msgid "Typology's name"
 msgstr "Nombre de la tipología"
 
-#: hook.php:230 inc/typology_item.class.php:494
+#: hook.php:236 inc/typology_item.class.php:494
 #: inc/typology_item.class.php:757
 msgid "Responding to typology's criteria"
 msgstr "Respondiendo a los criterios de tipologías"
@@ -58,8 +57,8 @@ msgid "Element not match with rules for assigning a typology"
 msgstr "Los elementos no coinciden con las reglas asignadas a la tipología"
 
 #: inc/notificationtargettypology.class.php:39
-#: inc/notificationtargettypology.class.php:51 inc/typology.class.php:292
-#: inc/typology.class.php:434
+#: inc/notificationtargettypology.class.php:51 inc/typology.class.php:310
+#: inc/typology.class.php:452
 msgid "Elements not match with the typology"
 msgstr "Los elementos no coinciden con la tipología"
 
@@ -77,19 +76,19 @@ msgstr "Vincular a un elemento"
 msgid "Rules for assigning a typology to a computer"
 msgstr "Reglas de asignación de tipología para una computadora"
 
-#: inc/typology.class.php:366
+#: inc/typology.class.php:384
 msgid "Typology of the linked elements is updated."
 msgstr "La tipología de los elementos vinculados está actualizada"
 
-#: inc/typologycriteria.class.php:156
+#: inc/typologycriteria.class.php:159
 msgid "Add a criterion"
 msgstr "Agregar un criterio"
 
-#: inc/typologycriteria.class.php:201
+#: inc/typologycriteria.class.php:204
 msgid "Criteria's list"
 msgstr "Lista de criterios"
 
-#: inc/typologycriteria.class.php:225 inc/typology_item.class.php:937
+#: inc/typologycriteria.class.php:228 inc/typology_item.class.php:937
 msgid "Detail of the assigned typology"
 msgstr "Detalle de las tipologías asignadas"
 
