@@ -40,5 +40,5 @@ if (!isset($_POST["field"])) {
 
 if (isset($_POST["field"]) && $_POST["field"]) {
    Dropdown::showYesNo('is_active');
-   echo "&nbsp;<input type='submit' name='massiveaction' class='submit' value='"._sx('button', 'Post')."'>";
+   echo "<br>&nbsp;<input type='submit' name='massiveaction' class='submit' value='"._sx('button', 'Post')."'>";
 }
