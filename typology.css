@@ -3,3 +3,13 @@
     font-style:italic;
     color:grey
 }
+.typology_font_red{
+    color: red;
+}
+.typology_font_red_bold{
+    color: red;
+    font-weight: bold;
+}
+.typology_font_green{
+    color: green;
+}

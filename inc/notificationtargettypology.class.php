@@ -32,13 +32,33 @@ if (!defined('GLPI_ROOT')) {
 }
 
 // Class NotificationTarget
+
+/**
+ * Class PluginTypologyNotificationTargetTypology
+ */
 class PluginTypologyNotificationTargetTypology extends NotificationTarget {
 
+   /**
+    * Return main notification events for the object type
+    * Internal use only => should use getAllEvents
+    *
+    * @return an array which contains : event => event label
+    **/
    function getEvents() {
 
       return  ['AlertNotValidatedTypology' => __('Elements not match with the typology', 'typology')];
    }
 
+   /**
+    * Get all data needed for template processing
+    * Provides minimum information for alerts
+    * Can be overridden by each NotificationTartget class if needed
+    *
+    * @param string $event   Event name
+    * @param array  $options Options
+    *
+    * @return void
+    **/
    function addDataForTemplate($event, $options = []) {
       global $CFG_GLPI;
 
@@ -59,6 +79,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
          $this->data['##lang.typology.itemuser##'] = __('User');
          $this->data['##lang.typology.itemlocation##'] = __('Location');
 
+         $dbu = new DbUtils();
          foreach ($options['items'] as $id => $item) {
             $tmp = [];
 
@@ -72,7 +93,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
                $item['plugin_typology_typologies_id']);
             $tmp['##typology.itemurl##'] = urldecode($CFG_GLPI["url_base"]."/index.php?redirect=".
                Toolbox::strtolower($item['itemtype'])."_".$item["items_id"]);
-            $tmp['##typology.itemuser##'] = getUserName($itemtype->fields["users_id"]);
+            $tmp['##typology.itemuser##'] = $dbu->getUserName($itemtype->fields["users_id"]);
             $tmp['##typology.itemlocation##'] = Dropdown::getDropdownName("glpi_locations",
                $itemtype->fields['locations_id']);
 
@@ -81,6 +102,9 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       }
    }
 
+   /**
+    * @return array|void
+    */
    function getTags() {
 
       $tags = ['typology.name'             => PluginTypologyTypology::getTypeName(1),
@@ -122,8 +146,9 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       }
 
       if ($templates_id) {
+         $dbu = new DbUtils();
          $translation = new NotificationTemplateTranslation();
-         if (!countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##typology.action## : ##typology.entity##';
@@ -166,8 +191,9 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
          ];
          $notification = new Notification();
          $notificationtemplate = new Notification_NotificationTemplate();
+         $dbu = new DbUtils();
          foreach ($notifs as $label => $name) {
-            if (!countElementsInTable("glpi_notifications", "`itemtype`='PluginTypologyTypology' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginTypologyTypology' AND `event`='$name'")) {
                $tmp = [
                   'name'                     => $label,
                   'entities_id'              => 0,

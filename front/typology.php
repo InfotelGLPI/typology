@@ -32,7 +32,7 @@ include ('../../../inc/includes.php');
 Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologymenu");
 
 $typo = new PluginTypologyTypology();
-if ($typo->canView() || haveRight("config", UPDATE)) {
+if ($typo->canView() || Session::haveRight("config", UPDATE)) {
    Search::show("PluginTypologyTypology");
 
 } else {

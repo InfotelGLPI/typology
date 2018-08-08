@@ -68,6 +68,9 @@ function plugin_init_typology() {
 }
 
 // Get the name and the version of the plugin - Needed
+/**
+ * @return array
+ */
 function plugin_version_typology() {
 
    return  [
@@ -81,6 +84,9 @@ function plugin_version_typology() {
 }
 
 // Optional : check prerequisites before install : may print errors or add to message after redirect
+/**
+ * @return bool
+ */
 function plugin_typology_check_prerequisites() {
    if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.4', 'ge')) {
       echo __('This plugin requires GLPI >= 9.3');
@@ -90,6 +96,9 @@ function plugin_typology_check_prerequisites() {
 }
 
 // Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
+/**
+ * @return bool
+ */
 function plugin_typology_check_config() {
    return true;
 }

@@ -27,15 +27,31 @@
  --------------------------------------------------------------------------
  */
 
+/**
+ * Class PluginTypologyMenu
+ */
 class PluginTypologyMenu extends CommonGLPI {
    static $rightname = 'plugin_typology';
 
+   /**
+    * Get menu name
+    *
+    * @since 0.85
+    *
+    * @return string character menu shortcut key
+    **/
    static function getMenuName() {
       return _n('Typology', 'Typologies', 2, 'typology');
    }
 
+   /**
+    * get menu content
+    *
+    * @since 0.85
+    *
+    * @return array array for menu
+    **/
    static function getMenuContent() {
-      global $CFG_GLPI;
 
       $menu                                           = [];
       $menu['title']                                  = self::getMenuName();

@@ -31,7 +31,10 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-/// Class Typology
+
+/**
+ * Class PluginTypologyTypology
+ */
 class PluginTypologyTypology extends CommonDBTM {
 
    // From CommonDBTM
@@ -53,6 +56,14 @@ class PluginTypologyTypology extends CommonDBTM {
       //      'NetworkPort'
       /*'Phone'*/];
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    public static function getTypeName($nb = 0) {
 
       return _n('Typology', 'Typologies', $nb, 'typology');
@@ -120,9 +131,9 @@ class PluginTypologyTypology extends CommonDBTM {
 
       // Only allowed types
       $types = self::$types;
-
+      $dbu = new DbUtils();
       foreach ($types as $key => $type) {
-         if (!($item = getItemForItemtype($type))) {
+         if (!($item = $dbu->getItemForItemtype($type))) {
             continue;
          }
 
@@ -158,9 +169,9 @@ class PluginTypologyTypology extends CommonDBTM {
       // Only allowed types
       $types_criteria = self::$types_criteria;
       $devtypes       = self::getComputerDeviceTypes();
-
+      $dbu = new DbUtils();
       foreach ($types_criteria as $key => $type_criteria) {
-         if (!($item = getItemForItemtype($type_criteria))) {
+         if (!($item = $dbu->getItemForItemtype($type_criteria))) {
             continue;
          }
 
@@ -225,6 +236,18 @@ class PluginTypologyTypology extends CommonDBTM {
       return true;
    }
 
+   /**
+    * Provides search options configuration. Do not rely directly
+    * on this, @see CommonDBTM::searchOptions instead.
+    *
+    * @since 9.3
+    *
+    * This should be overloaded in Class
+    *
+    * @return array a *not indexed* array of search options
+    *
+    * @see https://glpi-developer-documentation.rtfd.io/en/master/devapi/search.html
+    **/
    function rawSearchOptions() {
 
       $tab = [];
@@ -288,6 +311,9 @@ class PluginTypologyTypology extends CommonDBTM {
    }
 
 
+   /**
+    * @return array
+    */
    static function getComputerDeviceTypes() {
       return [/*1 => 'DeviceMotherboard', */
               2 => 'DeviceProcessor', 3 => 'DeviceMemory',
@@ -298,6 +324,11 @@ class PluginTypologyTypology extends CommonDBTM {
 
    ////// CRON FUNCTIONS ///////
    //Cron action
+   /**
+    * @param $name
+    *
+    * @return array
+    */
    static function cronInfo($name) {
 
       switch ($name) {
@@ -313,6 +344,9 @@ class PluginTypologyTypology extends CommonDBTM {
       return [];
    }
 
+   /**
+    * @return string
+    */
    function queryUpdateTypology() {
 
       $query = "SELECT *
@@ -322,6 +356,9 @@ class PluginTypologyTypology extends CommonDBTM {
 
    }
 
+   /**
+    * @return string
+    */
    function queryNotValidated() {
 
       $query = "SELECT `glpi_plugin_typology_typologies_items`.*,
@@ -370,9 +407,7 @@ class PluginTypologyTypology extends CommonDBTM {
             if ($data['error'] != $input['error']) {
                $typo_item = new PluginTypologyTypology_Item();
                $typo_item->getFromDB($data['id']);
-               $values = ['id'           => $data['id'],
-                          'is_validated' => $input['is_validated'],
-                          'error'        => $input['error']];
+
                $typo_item->update($input);
                $typo->getFromDB($data['plugin_typology_typologies_id']);
                $entity = $typo->fields['entities_id'];
@@ -432,13 +467,14 @@ class PluginTypologyTypology extends CommonDBTM {
 
       $task_infos    = [];
       $task_messages = [];
+      $dbu = new DbUtils();
 
       foreach ($querys as $type => $query) {
          $task_infos[$type] = [];
          foreach ($DB->request($query) as $data) {
 
             // Get items entity
-            $item = getItemForItemtype($data['itemtype']);
+            $item = $dbu->getItemForItemtype($data['itemtype']);
             $item->getFromDB($data['items_id']);
 
             if (!$item->fields['is_deleted']) {
@@ -530,6 +566,15 @@ class PluginTypologyTypology extends CommonDBTM {
       return $actions;
    }
 
+   /**
+    * Class-specific method used to show the fields to specify the massive action
+    *
+    * @since 0.85
+    *
+    * @param MassiveAction $ma the current massive action object
+    *
+    * @return boolean false if parameters displayed ?
+    **/
    static function showMassiveActionsSubForm(MassiveAction $ma) {
 
       switch ($ma->getAction()) {

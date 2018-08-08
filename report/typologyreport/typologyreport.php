@@ -87,7 +87,8 @@ $styleItemTitle = 'font-size: 12px;
 
 //to verify if typology exist in this entity
 // SQL statement
-$condition = getEntitiesRestrictRequest('', "glpi_plugin_typology_typologies", '', '', true);
+$dbu = new DbUtils();
+$condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_typology_typologies", '', '', true);
 $sqltypo = $typocrit->getSqlCriteriasRestriction('AND');
 
 $query = "SELECT *
@@ -113,7 +114,7 @@ if ($nbtot == 0) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
       Report::title();
    }
-   echo "<div class='center'><font class='red b'>".__('No item found')."</font></div>";
+   echo "<div class='center'><span class='typology_font_red_bold'>".__('No item found')."</span></div>";
    Html::footer();
 } else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
    include (GLPI_ROOT . "/lib/ezpdf/class.ezpdf.php");
@@ -281,19 +282,19 @@ if ($res && $nbtot >0) {
          $computer = new Computer();
          $computer->getFromDB($dataComputer["items_id"]);
 
-         $userName = getUserName($computer->fields["users_id"]);
+         $userName = $dbu->getUserName($computer->fields["users_id"]);
 
          if ($dataComputer["is_validated"] > 0) {
             $critTypOK = __('Yes');
             $computeOK++;
          } else {
-            $critTypOK = "<font color='red'>".__('No')." ".
+            $critTypOK = "<span typology_font_red>".__('No')." ".
                            __('for the criteria', 'typology')." ";
             $i=0;
 
             $critTypOK.=PluginTypologyTypology_Item::displayErrors($dataComputer["error"]);
 
-            $critTypOK.="</font>";
+            $critTypOK.="</span>";
             $computeNOTOK++;
          }
 
@@ -310,9 +311,9 @@ if ($res && $nbtot >0) {
       $row_num++;
       $num=1;
 
-      $message = "<b><font color='green'>".__('Responding', 'typology')." ".
-         $computeOK." / ".$dataService["COUNT"]."</font>".", "."<font color='red'>".
-         __('Not responding', 'typology')." ".$computeNOTOK." / ".$dataService["COUNT"]."</font></b>";
+      $message = "<b><span typology_font_green>".__('Responding', 'typology')." ".
+         $computeOK." / ".$dataService["COUNT"]."</span>".", "."<span class='typology_font_red'>".
+         __('Not responding', 'typology')." ".$computeNOTOK." / ".$dataService["COUNT"]."</span></b>";
       echo Search::showNewLine($output_type);
       echo Search::showItem($output_type, '', $num, $row_num);
       echo Search::showItem($output_type, '', $num, $row_num);

@@ -31,7 +31,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-/// Class TypologyCriteriaDefinition
+/**
+ * Class PluginTypologyTypologyCriteriaDefinition
+ */
 class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
    public static $itemtype = 'PluginTypologyTypologyCriteria';
@@ -39,6 +41,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
    public $dohistory = true;
    static $rightname                = "plugin_typology";
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    public static function getTypeName($nb = 0) {
 
       return _n('Definition', 'Definitions', $nb, 'typology');
@@ -225,6 +235,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       $typoCrit->getFromDB($typocrit_id);
       $itemtype = $typoCrit->fields['itemtype'];
 
+      $dbu = new DbUtils();
+
       if (!isset($typoCritDef->fields['entities_id'])) {
          $typoCritDef->fields['entities_id'] = $_SESSION['glpiactive_entity'];
       }
@@ -235,18 +247,17 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       echo "<select name='field' id='field'>";
       echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option>";
 
-      foreach ($DB->list_fields(getTableForItemType($itemtype)) as $field) {
+      foreach ($DB->list_fields($dbu->getTableForItemType($itemtype)) as $field) {
          $searchOption = $target->getSearchOptionByField('field', $field['Field']);
          if (empty($searchOption)) {
-            if ($table = getTableNameForForeignKeyField($field['Field'])) {
+            if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
                $searchOption = $target->getSearchOptionByField('field', 'name', $table);
             }
          }
 
          if (empty($searchOption)) {
-            $table = getTableNameForForeignKeyField($field['Field']);
-            if ($table = getTableNameForForeignKeyField($field['Field'])) {
-               $crit = getItemForItemtype(getItemTypeForTable($table));
+            if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
+               $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($table));
                if ($crit instanceof CommonTreeDropdown) {
                   $searchOption = $target->getSearchOptionByField('field', 'completename', $table);
                } else {
@@ -523,9 +534,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
    static function dropdownSelect($itemtype, $typocrit_id, $field, $value = 0) {
       global $CFG_GLPI;
       $test = explode(";", $field);
-      $itemField = $test[0];
       $itemTable = $test[1];
       $itemDataType = $test[2];
+
+      $dbu = new DbUtils();
 
       $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
       $typoCritDef->fields['plugin_typology_typologycriterias_id'] = $typocrit_id;
@@ -575,7 +587,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          //            echo "<option value='regex_not_match'>" . __('regular expression does not match') . "</option>";
          //            break;
          default :
-            $item = getItemForItemtype(getItemTypeForTable($itemTable));
+            $item = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
             switch ($itemTable) {
                case "glpi_users":
                   echo "<option value='equals'>" . __('is') . "</option>";
@@ -634,13 +646,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * @param $options
     * @param int $value
     */
-   static function dropdownValues($options, $value = 0) {
+   static function dropdownValues($options) {
 
       $itemtype = $options['itemtype'];
       $typocrit_id = $options['typocrit_id'];
       $field = $options['field'];
       $action = $options['action_type'];
-      $item = new $itemtype();
 
       $test = explode(";", $field);
       $itemField = $test[0];
@@ -697,7 +708,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                      Software::dropdownSoftwareToInstall("value", $typoCrit->fields['entities_id']);
                      break;
                   default :
-                     $itemclass = getItemTypeForTable($itemTable);
+                     $dbu = new DbUtils();
+                     $itemclass = $dbu->getItemTypeForTable($itemTable);
                      Dropdown::show($itemclass, ['name' => 'value','entity' => $typoCrit->fields['entities_id']]);
                      break;
                }
@@ -753,13 +765,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       $itemTable = $test[1];
       $itemDataType = $test[2];
 
+      $dbu = new DbUtils();
       if ($itemField == 'count') {
          echo _x('Quantity', 'Number');
       } else {
          $searchOption = $item->getSearchOptionByField('field', $itemField);
 
          if (empty($searchOption)) {
-            $crit = getItemForItemtype(getItemTypeForTable($itemTable));
+            $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
             if ($crit instanceof CommonTreeDropdown) {
                $searchOption = $item->getSearchOptionByField('field', 'completename', $itemTable);
                echo  $searchOption['name'];
@@ -850,7 +863,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             default :
                switch ($itemTable) {
                   case "glpi_users":
-                     echo getUserName($ligne["value"]);
+                     echo $dbu->getUserName($ligne["value"]);
                      break;
                   case "glpi_softwareversions":
                      $query = "SELECT `glpi_softwares`.`name` as softname,
@@ -961,7 +974,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       if ($display) {
          $valueFromDef=self::getComputeResultByDef($valueFromDef, $pcID);
       } else {
-         $valueFromDef=self::getComputeResultByCriteria($valueFromDef, $pcID);
+         $valueFromDef=self::getComputeResultByCriteria($valueFromDef);
       }
       return $valueFromDef;
    }
@@ -1006,6 +1019,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
    static function getRealValue($pcID, $valueFromDef) {
       global $DB;
 
+      $dbu = new DbUtils();
+
       foreach ($valueFromDef as $itemtype=>$allcrit) {
          if (!empty($allcrit)) {
             $item = new $itemtype();
@@ -1039,7 +1054,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            $searchOption = $item->getSearchOptionByField('field', $itemField);
 
                            if (empty($searchOption)) {
-                              $crit = getItemForItemtype(getItemTypeForTable($itemTable));
+                              $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
                               if ($crit instanceof CommonTreeDropdown) {
                                  $searchOption = $item->getSearchOptionByField('field', 'completename', $itemTable);
                               } else {
@@ -1059,7 +1074,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $queryReal .= " FROM `glpi_computers`";
                               if ($searchOption['table'] != 'glpi_computers') {
                                  $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $fk = getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryReal .= " ON (`glpi_computers`.`" . $fk . "`= `" . $searchOption['table'] . "`.`id`)";
                               }
                               $queryReal .= " WHERE `glpi_computers`.`id` = '$pcID'";
@@ -1070,22 +1085,22 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $queryReal .= " FROM `glpi_computers_items`";
                               if (strstr($searchOption['table'], 'types')) {
                                  $table = str_replace('types', 's', $searchOption['table']);
-                                 $fk        = getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryReal.= " INNER JOIN `".$table."`";
-                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                                  $queryReal.= " INNER JOIN `".$searchOption['table']."`";
                                  $queryReal.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
                               } else if ($searchOption['table']=='glpi_networks') {
-                                 $table = getTableForItemType($itemtype);
-                                 $fk        = getForeignKeyFieldForTable($searchOption['table']);
+                                 $table = $dbu->getTableForItemType($itemtype);
+                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryReal.= " INNER JOIN `".$table."`";
-                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                                  $queryReal.= " INNER JOIN `".$searchOption['table']."`";
                                  $queryReal.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
 
                               } else {
                                  $queryReal .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                               }
                               $queryReal .= " WHERE `glpi_computers_items`.`itemtype` = '".$itemtype."'
                                                 AND `glpi_computers_items`.`computers_id` = '$pcID'";
@@ -1124,8 +1139,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  $queryReal .= " WHERE `items_id` = '$pcID' AND `itemtype` = 'Computer'";
 
                               } else {
-                                 $linktable = getTableForItemType('items_'.$itemtype);
-                                 $fk        = getForeignKeyFieldForTable(getTableForItemType($itemtype));
+                                 $linktable = $dbu->getTableForItemType('items_'.$itemtype);
+                                 $fk        = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
 
                                  $queryReal .= " FROM `".$linktable."`";
                                  $queryReal .= " INNER JOIN `".$searchOption['table']."`";
@@ -1327,14 +1342,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               }
                            } else if ($def['action_type'] == 'under') {
 
-                              $sons = getSonsOf($itemTable, $def["value"]);
+                              $sons = $dbu->getSonsOf($itemTable, $def["value"]);
                               if (in_array($data['Field_id'], $sons)) {
                                  $nbok++;
                                  $list[]=$data['Field'];
                               }
                            } else if ($def['action_type'] == 'notunder') {
 
-                              $sons = getSonsOf($itemTable, $def["value"]);
+                              $sons = $dbu->getSonsOf($itemTable, $def["value"]);
 
                               if (!in_array($data['Field_id'], $sons)) {
                                  $nbok++;
@@ -1370,6 +1385,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
    static function getComputeResultByDef($valueFromDef, $pcID) {
       global $DB;
 
+      $dbu = new DbUtils();
+
       foreach ($valueFromDef as $itemtype=>$allcrit) {
          if (!empty($allcrit)) {
             $item = new $itemtype();
@@ -1399,7 +1416,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            $searchOption = $item->getSearchOptionByField('field', $itemField);
 
                            if (empty($searchOption)) {
-                              $crit = getItemForItemtype(getItemTypeForTable($itemTable));
+                              $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
                               if ($crit instanceof CommonTreeDropdown) {
                                  $searchOption = $item->getSearchOptionByField('field', 'completename', $itemTable);
                               } else {
@@ -1417,7 +1434,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $queryConsole .= " FROM `glpi_computers`";
                               if ($searchOption['table'] != 'glpi_computers') {
                                  $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $fk = getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryConsole .= " ON (`glpi_computers`.`" . $fk .
                                                   "`= `" . $searchOption['table'] . "`.`id`)";
                               }
@@ -1427,23 +1444,23 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "Peripheral":
                            case "Printer":
                               $queryConsole .= " FROM `glpi_computers_items`";
-                              $fk        = getForeignKeyFieldForTable($searchOption['table']);
+                              $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                               if (strstr($searchOption['table'], 'types')) {
                                  $table = str_replace('types', 's', $searchOption['table']);
                                  $queryConsole.= " INNER JOIN `".$table."`";
-                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                                  $queryConsole.= " INNER JOIN `".$searchOption['table']."`";
                                  $queryConsole.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
                               } else if ($searchOption['table']=='glpi_networks') {
-                                 $table = getTableForItemType($itemtype);
+                                 $table = $dbu->getTableForItemType($itemtype);
                                  $queryConsole.= " INNER JOIN `".$table."`";
-                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                                  $queryConsole.= " INNER JOIN `".$searchOption['table']."`";
                                  $queryConsole.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
 
                               } else {
                                  $queryConsole .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `".getTableForItemType($itemtype)."`.`id`)";
+                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
                               }
                               $queryConsole .= " WHERE `glpi_computers_items`.`itemtype` = '".$itemtype.
                                                "' AND `glpi_computers_items`.`computers_id` = '$pcID'";
@@ -1483,8 +1500,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  $queryConsole .= " WHERE `items_id` = '$pcID' AND `itemtype` = 'Computer'";
 
                               } else {
-                                 $linktable = getTableForItemType('items_'.$itemtype);
-                                 $fk        = getForeignKeyFieldForTable(getTableForItemType($itemtype));
+                                 $linktable = $dbu->getTableForItemType('items_'.$itemtype);
+                                 $fk        = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
 
                                  $queryConsole .= " FROM `".$linktable."`";
                                  $queryConsole .= " INNER JOIN `".$searchOption['table']."`";
@@ -1585,7 +1602,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               }
                               break;
                            default :
-                              $itemTest = getItemForItemtype(getItemTypeForTable($itemTable));
+                              $itemTest = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
                               switch ($itemTable) {
                                  case "glpi_users":
                                     if ($def['action_type'] == 'contains') {
@@ -1596,10 +1613,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                           " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
                                     } else if ($def['action_type'] == 'equals') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".getUserName($def["value"])."'";
+                                          " = '".$dbu->getUserName($def["value"])."'";
                                     } else if ($def['action_type'] == 'notequals') {
                                        $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".getUserName($def["value"])."'";
+                                          " = '".$dbu->getUserName($def["value"])."'";
                                     }
                                     break;
                                  case "glpi_softwareversions":
@@ -1633,10 +1650,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                        }
                                     } else if ($itemTest instanceof CommonTreeDropdown) {
                                        if ($def['action_type'] == 'under') {
-                                          $sons = getSonsOf($itemTable, $def["value"]);
+                                          $sons = $dbu->getSonsOf($itemTable, $def["value"]);
                                           $queryConsole.= " AND `".$searchOption['table']."`.`id` IN ('".implode("','", $sons)."')";
                                        } else if ($def['action_type'] == 'notunder') {
-                                          $sons = getSonsOf($itemTable, $def["value"]);
+                                          $sons = $dbu->getSonsOf($itemTable, $def["value"]);
                                           $queryConsole.= " AND `".$searchOption['table']."`.`id` NOT IN ('".implode("','", $sons)."')";
                                        }
                                     } else if ($itemTable == 'glpi_ipaddresses') {// REGEX matches of ip addresses
@@ -1683,11 +1700,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     *
     * @static
     * @param $valueFromDef
-    * @param $pcID
     * @return mixed
     */
-   static function getComputeResultByCriteria($valueFromDef, $pcID) {
-      global $DB;
+   static function getComputeResultByCriteria($valueFromDef) {
 
       foreach ($valueFromDef as $itemtype=>$allcrit) {
          if (!empty($allcrit)) {

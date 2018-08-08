@@ -55,7 +55,7 @@ if (isset($_POST["add"])) {
    Html::back();
 
 } else if (isset($_POST["purge"])) {
-   $typo-->check($_POST['id'], PURGE);
+   $typo->check($_POST['id'], PURGE);
    $typo->delete($_POST, 1);
    $typo->redirectToList();
 

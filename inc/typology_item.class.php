@@ -32,7 +32,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-// Typology_Item Class
+/**
+ * Class PluginTypologyTypology_Item
+ */
 class PluginTypologyTypology_Item extends CommonDBRelation {
 
    // From CommonDBRelation
@@ -70,8 +72,9 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       if (!$withtemplate) {
          if ($item->getType() == 'PluginTypologyTypology') {
             if ($_SESSION['glpishow_count_on_tabs']) {
+               $dbu = new DbUtils();
                return self::createTabEntry(self::getTypeName(2),
-                  countElementsInTable($this->getTable(),
+                                           $dbu->countElementsInTable($this->getTable(),
                      "`plugin_typology_typologies_id` = '".$item->getID()."'"));
             }
                return self::getTypeName(2);
@@ -87,9 +90,14 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    }
 
 
+   /**
+    * @param \CommonDBTM $item
+    *
+    * @return int
+    */
    static function countForItem(CommonDBTM $item) {
-
-      return countElementsInTable('glpi_plugin_typology_typologies_items',
+      $dbu = new DbUtils();
+      return $dbu->countElementsInTable('glpi_plugin_typology_typologies_items',
                                   "`itemtype`='".$item->getType()."'
                                    AND `items_id` = '".$item->getID()."'");
    }
@@ -116,6 +124,10 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    }
 
    //if item deleted
+
+   /**
+    * @param \CommonDBTM $item
+    */
    static function cleanItemTypology(CommonDBTM $item) {
 
       $temp = new self();
@@ -219,7 +231,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       if (isset($typoID) && $typoID > 0) {
 
          if ($display) {
-            $itemtype_table = getTableForItemType($input["itemtype"]);
+            $itemtype_table = $dbu->getTableForItemType($input["itemtype"]);
             $message = Dropdown::getDropdownName($itemtype_table, $input["items_id"])." : ".
                __('You cannot assign this typology to this material as he has already a typology : ', 'typology').
                Dropdown::getDropdownName('glpi_plugin_typology_typologies', $typoID);
@@ -330,7 +342,6 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
       $values = [];
       $plugin = new Plugin();
-      $typo_item = new self();
       if ($plugin->isActivated("typology")) {
          $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
          $fields= [];
@@ -427,7 +438,6 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    public static function showPluginFromItems($itemtype, $ID, $withtemplate = '') {
       global $DB,$CFG_GLPI;
 
-      $typo = new PluginTypologyTypology();
       $typo_item = new PluginTypologyTypology_Item();
       $table_typo_item = $typo_item->getTable();
       $item = new $itemtype();
@@ -460,9 +470,9 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       }
 
       echo "<div align='center'><table class='tab_cadre_fixe'>";
-
+      $dbu = new DbUtils();
       //typologie attribuée
-      if (countElementsInTable($table_typo_item, $restrict) > 0) {
+      if ($dbu->countElementsInTable($table_typo_item, $restrict) > 0) {
          $dbu   = new DbUtils();
          $typos = $dbu->getAllDataFromTable($table_typo_item, $restrict);
          if (!empty($typos)) {
@@ -481,7 +491,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                   . " AND `" . $table_typo_item . "`.`items_id` = '" . $ID . "' "
                   . " AND `" . $table_typo_item . "`.`itemtype` = '" . $itemtype . "'
                     AND `" . $table_typo_item . "`.`plugin_typology_typologies_id`=`glpi_plugin_typology_typologies`.`id`"
-                  . getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', '', true);
+                  . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', '', true);
 
          $result = $DB->query($query);
 
@@ -528,12 +538,12 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             if ($data["is_validated"] > 0) {
                $critTypOK = __('Yes');
             } else {
-               $critTypOK = "<font color='red'>".__('No')." ".__('for the criteria', 'typology')." ";
+               $critTypOK = "<span class='typology_font_red_bold'>".__('No')." ".__('for the criteria', 'typology')." ";
                $i=0;
 
                $critTypOK.=self::displayErrors($data["error"]);
 
-               $critTypOK.="</font>";
+               $critTypOK.="</span>";
             }
 
             echo "<td class ='center'><b>".$critTypOK."</b></td>";
@@ -572,7 +582,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             if ($withtemplate<2) {
                if ($typo_item->canCreate()) {
 
-                  $typo_item->showAdd($itemtype, $ID);
+                  $typo_item->showAdd($itemtype);
                }
             }
          }
@@ -588,39 +598,19 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
     * Display a link to add directly an item to a typo.
     *
     * @param $itemtype of item class
-    * @param $ID : id item
     *
     * @return Nothing (displays)
     **/
-   function showAdd ($itemtype, $ID, $value = 0) {
-      global $DB;
-
-      if (Session::isMultiEntitiesMode()) {
-         $colsup=1;
-      } else {
-         $colsup=0;
-      }
+   function showAdd ($itemtype, $ID) {
 
       $item = new $itemtype();
-
-      $entities="";
+      $dbu = new DbUtils();
 
       if ($item->isRecursive()) {
-         $entities = getSonsOf('glpi_entities', $item->getEntityID());
+         $entities = $dbu->getSonsOf('glpi_entities', $item->getEntityID());
       } else {
          $entities = $item->getEntityID();
       }
-
-      $limit = getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', $entities, true);
-
-      $q="SELECT COUNT(*)
-          FROM `glpi_plugin_typology_typologies`
-          WHERE `is_deleted` = '0' ";
-      $q.=$limit;
-      $result = $DB->query($q);
-      $nb = $DB->result($result, 0, 0);
-
-      $item = new $itemtype();
 
       echo "<div align='center'>";
       echo "<table class='tab_cadre_fixe'>";
@@ -632,7 +622,6 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       Dropdown::show('PluginTypologyTypology',
                      ['name' => "plugin_typology_typologies_id",
                            'entities_id' => $entities]);
-      ;
       echo "</td><td class='center' class='tab_bg_2'>";
       echo "<input type='submit' name='add_item' value=\""._sx('button', 'Post')."\" class='submit'></td></tr></div>";
    }
@@ -645,16 +634,16 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
     *@return Nothing (displays)
     **/
    public static function showForTypology(PluginTypologyTypology $typo) {
-      global $DB, $CFG_GLPI;
+      global $CFG_GLPI;
 
       $typoID = $typo->fields['id'];
+      $dbu = new DbUtils();
 
       if (!$typo->can($typoID, READ)) {
          return false;
       }
 
       $canedit = $typo->can($typoID, UPDATE);
-      $canview = $typo->can($typoID, READ);
       $rand    = mt_rand();
 
       if (Session::isMultiEntitiesMode()) {
@@ -758,7 +747,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
          echo "</tr>";
 
          $itemtype = $type;
-         $item     = getItemForItemtype($itemtype);
+         $item     = $dbu->getItemForItemtype($itemtype);
 
          foreach ($datas as $data) {
 
@@ -770,7 +759,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             Session::addToNavigateListItems($itemtype, $data["id"]);
 
             if ($itemtype == 'User') {
-               $format = formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
+               $format = $dbu->formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
             } else {
                $format = $data["name"];
             }
@@ -813,7 +802,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             if ($data["is_validated"] > 0) {
                $critTypOK = __('Yes');
             } else {
-               $critTypOK = "<font color='red'>" . __('No') . " " .
+               $critTypOK = "<span class='typology_font_red'>" . __('No') . " " .
                   __('for the criteria', 'typology') . " ";
                $i         = 0;
 
@@ -837,15 +826,25 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       }
    }
 
+   /**
+    * @param       $itemtype
+    * @param       $start
+    * @param array $res
+    * @param       $typoID
+    *
+    * @return mixed|void
+    */
    static function getDataItems($itemtype, $start, array &$res, $typoID) {
       global $DB;
-      if (!($item = getItemForItemtype($itemtype))) {
+
+      $dbu = new DbUtils();
+      if (!($item = $dbu->getItemForItemtype($itemtype))) {
          return;
       }
       if (!$item->canView()) {
          return;
       }
-      $itemtable = getTableForItemType($itemtype);
+      $itemtable = $dbu->getTableForItemType($itemtype);
       $column    = "name";
 
       $max = $_SESSION['glpilist_limit'];
@@ -858,7 +857,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                               AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
                               AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
       if ($itemtype != 'User') {
-         $query.=getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
+         $query.= $dbu->getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
       }
 
       if ($item->maybeTemplate()) {
@@ -878,7 +877,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                               AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
                               AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
       if ($itemtype != 'User') {
-         $query.=getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
+         $query.=$dbu->getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
       }
 
       if ($item->maybeTemplate()) {
@@ -1044,6 +1043,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                                                        array $ids) {
 
       $typo_item = new PluginTypologyTypology_Item();
+      $dbu = new DbUtils();
 
       switch ($ma->getAction()) {
          case "add_item":
@@ -1065,7 +1065,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                   if (isset($fields['_ruleid'])) {
                      if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']) {
                         $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
-                        $ma->addMessage(Dropdown::getDropdownName(getTableForItemType($item->getType()), $id)." : "
+                        $ma->addMessage(Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id)." : "
                                         .__('Element not match with rules for assigning a typology', 'typology'));
                      } else {
                         if ($typo_item->can(-1, UPDATE, $input)) {
@@ -1081,14 +1081,13 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                      }
                   } else {
                      $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
-                     $ma->addMessage(Dropdown::getDropdownName(getTableForItemType($item->getType()), $id)." : "
+                     $ma->addMessage(Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id)." : "
                                     .__('Element not match with rules for assigning a typology', 'typology'));
                   }
                }
             }
          return;
          case "delete_item":
-            $input = $ma->getInput();
             foreach ($ids as $id) {
 
                if ($typo_item->getFromDBByCrit(["`items_id` = $id

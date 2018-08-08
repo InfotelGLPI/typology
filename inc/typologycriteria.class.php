@@ -30,7 +30,9 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access directly to this file");
 }
 
-/// Class TypologyCriteria
+/**
+ * Class PluginTypologyTypologyCriteria
+ */
 class PluginTypologyTypologyCriteria extends CommonDBTM {
 
    // From CommonDBTM
@@ -41,15 +43,37 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
    var $definitions = [];
 
+   /**
+    * Return the localized name of the current Type
+    * Should be overloaded in each new class
+    *
+    * @param integer $nb Number of items
+    *
+    * @return string
+    **/
    public static function getTypeName($nb = 0) {
 
       return _n('Criterion', 'Criteria', $nb);
    }
 
+   /**
+    * Is the object may be recursive
+    *
+    * Can be overloaded (ex : infocom)
+    *
+    * @return boolean
+    **/
    function maybeRecursive() {
       return true;
    }
 
+   /**
+    * Is the object assigned to an entity
+    *
+    * Can be overloaded (ex : infocom)
+    *
+    * @return boolean
+    **/
    function isEntityAssign() {
       return true;
    }
@@ -90,8 +114,9 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
          switch ($item->getType()) {
             case 'PluginTypologyTypology' :
                if ($_SESSION['glpishow_count_on_tabs']) {
+                  $dbu = new DbUtils();
                   return self::createTabEntry(self::getTypeName(2),
-                                              countElementsInTable($this->getTable(),
+                                              $dbu->countElementsInTable($this->getTable(),
                                                                    "`plugin_typology_typologies_id` = '" . $item->getID() . "'"));
                }
                return self::getTypeName(2);
