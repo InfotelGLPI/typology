@@ -148,7 +148,8 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
       if ($templates_id) {
          $dbu = new DbUtils();
          $translation = new NotificationTemplateTranslation();
-         if (!$dbu->countElementsInTable($translation->getTable(), "`notificationtemplates_id`='$templates_id'")) {
+         if (!$dbu->countElementsInTable($translation->getTable(),
+                                         ["notificationtemplates_id" => $templates_id])) {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##typology.action## : ##typology.entity##';
@@ -193,7 +194,9 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
          $notificationtemplate = new Notification_NotificationTemplate();
          $dbu = new DbUtils();
          foreach ($notifs as $label => $name) {
-            if (!$dbu->countElementsInTable("glpi_notifications", "`itemtype`='PluginTypologyTypology' AND `event`='$name'")) {
+            if (!$dbu->countElementsInTable("glpi_notifications",
+                                            ["itemtype" => 'PluginTypologyTypology',
+                                             "event"    => $name])) {
                $tmp = [
                   'name'                     => $label,
                   'entities_id'              => 0,

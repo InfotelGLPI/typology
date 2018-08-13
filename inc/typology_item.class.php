@@ -75,7 +75,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                $dbu = new DbUtils();
                return self::createTabEntry(self::getTypeName(2),
                                            $dbu->countElementsInTable($this->getTable(),
-                     "`plugin_typology_typologies_id` = '".$item->getID()."'"));
+                                                                      ["plugin_typology_typologies_id" => $item->getID()]));
             }
                return self::getTypeName(2);
          } else if (in_array($item->getType(), PluginTypologyTypology::getTypes(true))
@@ -98,8 +98,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    static function countForItem(CommonDBTM $item) {
       $dbu = new DbUtils();
       return $dbu->countElementsInTable('glpi_plugin_typology_typologies_items',
-                                  "`itemtype`='".$item->getType()."'
-                                   AND `items_id` = '".$item->getID()."'");
+                                  ["itemtype" => $item->getType(),
+                                   "items_id" => $item->getID()]);
    }
 
    /**
@@ -217,8 +217,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    static function checkIfExist($input, $display = true) {
 
       //to control if item has already a typo
-      $restrict = "`items_id` = '" . $input["items_id"] . "'
-                  AND `itemtype` = '" . $input["itemtype"] . "'";
+      $restrict = ["items_id" => $input["items_id"],
+                   "itemtype" => $input["itemtype"]];
       //item a déjà une typo, action annulee + message erreur
       $dbu        = new DbUtils();
       $typo_items = $dbu->getAllDataFromTable("glpi_plugin_typology_typologies_items", $restrict);
@@ -453,8 +453,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       $canread = $item->can($ID, READ);
       $canedit = $item->can($ID, UPDATE);
 
-      $restrict = "`items_id` = '".$ID."'
-              AND `itemtype` = '".$itemtype."'";
+      $restrict = ["items_id" => $ID,
+                   "itemtype" => $itemtype];
 
       if (Session::isMultiEntitiesMode()) {
          $colsup=1;
@@ -911,9 +911,10 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       $options['seeResult'] = 1;
       $options['seeItemtype']=1;
 
-      $restrict  = "`glpi_plugin_typology_typologycriterias`.`plugin_typology_typologies_id` = '$typo_ID'
-                     AND `glpi_plugin_typology_typologycriterias`.`is_active` = 1
-                     ORDER BY `glpi_plugin_typology_typologycriterias`.`itemtype`";
+      $restrict  = ["plugin_typology_typologies_id" => $typo_ID,
+                    "is_active" => 1]+
+                    ["ORDER" => "itemtype"];
+
       $dbu       = new DbUtils();
       $criterias = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriterias', $restrict);
 

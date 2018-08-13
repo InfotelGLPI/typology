@@ -611,15 +611,17 @@ class PluginTypologyTypology extends CommonDBTM {
                foreach ($ids as $key) {
                   $item->getFromDB($key);
 
-                  $restrict = "`plugin_typology_typologies_id` = '" . $key . "'";
-                  $crits    = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriterias", $restrict);
+                  $restrict = ["plugin_typology_typologies_id" => $key];
+                  $crits    = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriterias",
+                                                        $restrict);
                   if (!empty($crits)) {
                      foreach ($crits as $crit) {
 
                         $criteria->getFromDB($crit["id"]);
 
-                        $condition = "`plugin_typology_typologycriterias_id` = '" . $crit["id"] . "'";
-                        $defs      = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriteriadefinitions", $condition);
+                        $condition = ["plugin_typology_typologycriterias_id" => $crit["id"]];
+                        $defs      = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriteriadefinitions",
+                                                               $condition);
                         if (!empty($defs)) {
                            foreach ($defs as $def) {
 
@@ -657,8 +659,9 @@ class PluginTypologyTypology extends CommonDBTM {
 
                   $item->getFromDB($key);
 
-                  $restrict = "`plugin_typology_typologies_id` = '" . $key . "'";
-                  $crits    = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriterias", $restrict);
+                  $restrict = ["plugin_typology_typologies_id" => $key];
+                  $crits    = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriterias",
+                                                        $restrict);
 
                   unset($item->fields["id"]);
                   $item->fields["name"]    = addslashes($item->fields["name"] . " Copy");
@@ -674,8 +677,9 @@ class PluginTypologyTypology extends CommonDBTM {
                      foreach ($crits as $crit) {
                         $criteria->getFromDB($crit["id"]);
 
-                        $condition = "`plugin_typology_typologycriterias_id` = '" . $crit["id"] . "'";
-                        $defs      = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriteriadefinitions", $condition);
+                        $condition = ["plugin_typology_typologycriterias_id" => $crit["id"]];
+                        $defs      = $dbu->getAllDataFromTable("glpi_plugin_typology_typologycriteriadefinitions",
+                                                               $condition);
 
                         unset($criteria->fields["id"]);
                         $criteria->fields["name"]                          = addslashes($criteria->fields["name"]);
