@@ -582,7 +582,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             if ($withtemplate<2) {
                if ($typo_item->canCreate()) {
 
-                  $typo_item->showAdd($itemtype);
+                  $typo_item->showAdd($itemtype, $ID);
                }
             }
          }
