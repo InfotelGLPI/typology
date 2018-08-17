@@ -8,10 +8,12 @@
       <short>
          <fr><![CDATA[Typology. Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.]]></fr>
          <en><![CDATA[Typology. This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.]]></en>
+         <cs><![CDATA[Typologie. Tento zásuvný modul umožňuje definovat typologie použítí (správa nastavení) z informací položek, evidovaných v GLPI.]]></cs>
       </short>
       <long>
          <fr><![CDATA[Ce plugin permet de définir des typologies d’usage (gestion de configurations) à partir des informations des éléments inventoriés dans GLPI.<br />Fonctionnalités :<br />- Utilisation d'un moteur de règle d'affectation de typologie<br />- Définition de critères (Informations générales de l'ordinateur / Composants / Réseau / Logiciels)<br />- Alertes : Vérification des typologies respectées<br />- Actions automatiques : Mise à jour automatique des typologies affectées<br />- Rapport : Liste des typologies par service]]></fr>
          <en><![CDATA[This plugin allows you to define typologies of use (configuration management) from the information items inventoried in GLPI.<br />Features :<br />- Use of an rule engine for typologies assignment<br />- Definition of criteria (General Information Computer / Components / Network / Software)<br />- Alerts: Checking typologies observed<br />- Automatic Actions: Automatic update typologies affected<br />- Report : List of typologies of services]]></en>
+         <cs><![CDATA[Tento zásuvný modul umožňuje definovat typologie použítí (správa nastavení) z informací položek, evidovaných v GLPI.<br />Funkce:<br />- Použití engine pravidel pro přiřazení typologií<br />- Definice kritérií (obecný počítač / komponenty / síť / software)<br />- Výstrahy: Kontrola zpozorovaných technologií<br />- Automatické akce: automatická aktualizace typologií, kterých se týká<br />- Výkaz: seznam typologií služeb]]></cs>
       </long>
    </description>
    <homepage>https://github.com/InfotelGLPI/typology</homepage>
@@ -89,5 +91,10 @@
             <tag>Inventory</tag>
             <tag>Management</tag>
          </en>
+         <cs>
+            <tag>Nastavení</tag>
+            <tag>Inventář</tag>
+            <tag>Správa</tag>
+         </cs>
    </tags>
 </root>
