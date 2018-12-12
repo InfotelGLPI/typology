@@ -126,7 +126,7 @@ function plugin_typology_uninstall() {
 
    //drop rules
    $Rule = new Rule();
-   $a_rules = $Rule->find("`sub_type`='PluginTypologyRuleTypology'");
+   $a_rules = $Rule->find(['sub_type' => 'PluginTypologyRuleTypology']);
    foreach ($a_rules as $data) {
       $Rule->delete($data);
    }
@@ -198,17 +198,20 @@ function plugin_typology_getDatabaseRelations() {
  * @return array
  */
 function plugin_typology_MassiveActions($type) {
-
-   switch ($type) {
-      default:
-         // Actions from items lists
-         if (in_array($type, PluginTypologyTypology::getTypes(true))) {
-            return [
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material', 'typology'),
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material', 'typology'),
-            'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements', 'typology')];
-         }
-      break;
+   
+   $plugin = new Plugin();
+   if ($plugin->isActivated('typology')) {
+      switch ($type) {
+         default:
+            // Actions from items lists
+            if (in_array($type, PluginTypologyTypology::getTypes(true))) {
+               return [
+               'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'add_item' => __('Assign a typology to this material', 'typology'),
+               'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'delete_item' => __('Delete the typology of this material', 'typology'),
+               'PluginTypologyTypology_Item'.MassiveAction::CLASS_ACTION_SEPARATOR.'update_allitem' => __('Recalculate typology for the elements', 'typology')];
+            }
+         break;
+      }
    }
    return [];
 }

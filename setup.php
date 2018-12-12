@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+define('PLUGIN_TYPOLOGY_VERSION', '2.6.0');
+
 // Init the hooks of the plugins -Needed
 function plugin_init_typology() {
    global $PLUGIN_HOOKS;
@@ -75,11 +77,17 @@ function plugin_version_typology() {
 
    return  [
       'name'           => _n('Typology', 'Typologies', 2, 'typology'),
-      'version'        => '2.5.1',
+      'version'        => PLUGIN_TYPOLOGY_VERSION,
       'author'         => "<a href='http://infotel.com/services/expertise-technique/glpi/'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
-      'minGlpiVersion' => '9.3'];
+      'requirements'   => [
+         'glpi' => [
+            'min' => '9.4',
+            'dev' => false
+         ]
+      ]
+   ];
 
 }
 
@@ -88,8 +96,11 @@ function plugin_version_typology() {
  * @return bool
  */
 function plugin_typology_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.3', 'lt') || version_compare(GLPI_VERSION, '9.4', 'ge')) {
-      echo __('This plugin requires GLPI >= 9.3');
+   if (version_compare(GLPI_VERSION, '9.4', 'lt')
+       || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+      if (method_exists('Plugin', 'messageIncompatible')) {
+         echo Plugin::messageIncompatible('core', '9.4');
+      }
       return false;
    }
    return true;

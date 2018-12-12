@@ -80,7 +80,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     */
    static function countForItem($id) {
       $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
-      $datas = $typoCritDef->find("`plugin_typology_typologycriterias_id` = ".$id);
+      $datas = $typoCritDef->find(['plugin_typology_typologycriterias_id' =>$id]);
       return count($datas);
    }
 
@@ -730,8 +730,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       $params['seeResult'] = 0;
       $params['seeItemtype'] = 0;
-      $img_OK = $CFG_GLPI["root_doc"].'/pics/ok.png';
-      $img_NOT = $CFG_GLPI["root_doc"].'/plugins/typology/pics/icon-error.gif';
+      $img_OK = "<i style='color:forestgreen' class='question fa fa-check-circle fa-2x'></i>";
+      $img_NOT = "<i style='color:darkred' class='question fa fa-times-circle fa-2x'></i>";
 
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
@@ -787,13 +787,13 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       echo "</td>";
 
       if ($params['seeResult']) {
-         echo "<td class='center'><img src=";
+         echo "<td class='center'>";
          if ($ligne['result'] == 'ok') {
             echo $img_OK;
          } else if ($ligne['result'] == 'not_ok') {
             echo $img_NOT;
          }
-         echo " ></td>";
+         echo " </td>";
       }
 
       // logical operator
