@@ -103,6 +103,13 @@ function plugin_typology_uninstall() {
    include_once (GLPI_ROOT."/plugins/typology/inc/profile.class.php");
    include_once (GLPI_ROOT."/plugins/typology/inc/menu.class.php");
 
+   //drop rules
+   $Rule = new Rule();
+   $a_rules = $Rule->find(['sub_type' => 'PluginTypologyRuleTypology']);
+   foreach ($a_rules as $data) {
+      $Rule->delete($data);
+   }
+
    // Plugin tables deletion
    $tables = ["glpi_plugin_typology_typologies",
                     "glpi_plugin_typology_typologycriterias",
@@ -124,12 +131,6 @@ function plugin_typology_uninstall() {
       $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginTypologyTypology';");
    }
 
-   //drop rules
-   $Rule = new Rule();
-   $a_rules = $Rule->find(['sub_type' => 'PluginTypologyRuleTypology']);
-   foreach ($a_rules as $data) {
-      $Rule->delete($data);
-   }
 
    $notif = new Notification();
    $options = ['itemtype' => 'PluginTypologyTypology',
