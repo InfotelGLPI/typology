@@ -181,7 +181,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             echo "<th class='center b'>" . __('Value') . "</th>";
             echo "</tr>";
 
-            while ($ligne = $DB->fetch_array($result)) {
+            while ($ligne = $DB->fetchArray($result)) {
                echo "<tr class='tab_bg_2'>";
 
                if ($canedit) {
@@ -873,7 +873,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                INNER JOIN `glpi_softwares` on (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                WHERE `glpi_softwareversions`.`id`='".$ligne["value"]."'";
                      if ($result = $DB->query($query)) {
-                        while ($data = $DB->fetch_array($result)) {
+                        while ($data = $DB->fetchArray($result)) {
                            echo $data['softname']." - ";
                            if ($data['vname']=='') {
                               echo "(".$data['vid'].")";
@@ -1176,7 +1176,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                 WHERE `glpi_softwareversions`.`id`='".$def["value"]."'";
                                        if ($result = $DB->query($query)) {
-                                          while ($data = $DB->fetch_array($result)) {
+                                          while ($data = $DB->fetchArray($result)) {
                                                 $name= $data['softname']." - ";
                                              if ($data['vname']=='') {
                                                 $name.= "(".$data['vid'].")";
@@ -1203,7 +1203,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                               WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
 
                                     if ($resultQuery = $DB->query($query)) {
-                                       $tabResult = $DB->fetch_assoc($resultQuery);
+                                       $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                     $dropdownResult = $tabResult['designation'];
                                  } else {
@@ -1240,7 +1240,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                    ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                    WHERE `glpi_softwareversions`.`id` = '".$def["Field"]."'";
                                        if ($result = $DB->query($query)) {
-                                          while ($data = $DB->fetch_array($result)) {
+                                          while ($data = $DB->fetchArray($result)) {
                                              $name= $data['softname']." - ";
                                              if ($data['vname']=='') {
                                                 $name.= "(".$data['vid'].")";
@@ -1267,7 +1267,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                  WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
 
                                     if ($resultQuery = $DB->query($query)) {
-                                       $tabResult = $DB->fetch_assoc($resultQuery);
+                                       $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                        $dropdownResult = $tabResult['designation'];
                                  } else {
@@ -1672,7 +1672,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               break;
                         }
 
-                        $nbConsole = $DB->fetch_array($DB->query($queryConsole));
+                        $nbConsole = $DB->fetchArray($DB->query($queryConsole));
                         if ($nbConsole['COUNT'] > 0) {
                            if ($def['action_type'] == 'notequals' || $def['action_type'] == 'notcontains') {
                               $valueFromDef[$itemtype][$key1][$key2]["result"]='not_ok';

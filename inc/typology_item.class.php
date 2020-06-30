@@ -507,7 +507,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
          echo "</tr>";
 
-         while ($data=$DB->fetch_array($result)) {
+         while ($data=$DB->fetchArray($result)) {
             $typo_ID=$data["id"];
             $used[]=$typo_ID;
 

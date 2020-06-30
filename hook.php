@@ -34,11 +34,12 @@ function plugin_typology_install() {
    global $DB;
 
    include_once (GLPI_ROOT . "/plugins/typology/inc/profile.class.php");
+   $update = true;
 
    if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
-
+      $update = false;
       // table sql creation
-      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-2.5.0.sql");
+      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-3.0.0.sql");
 
       // Add record notification
       include_once(GLPI_ROOT . "/plugins/typology/inc/notificationtargettypology.class.php");
@@ -46,7 +47,6 @@ function plugin_typology_install() {
    }
 
    if ($DB->tableExists("glpi_plugin_typology_typologycriterias")) {
-
       $query = "UPDATE `glpi_plugin_typology_typologycriterias`
                      SET `itemtype`='IPAddress'
                      WHERE `itemtype`='NetworkPort'";
@@ -59,7 +59,6 @@ function plugin_typology_install() {
    }
 
    if ($DB->tableExists("glpi_plugin_typology_profiles")) {
-
       $notepad_tables = ['glpi_plugin_typology_typologies'];
       $dbu = new DbUtils();
       foreach ($notepad_tables as $t) {
@@ -80,6 +79,11 @@ function plugin_typology_install() {
             $DB->query($query);
          }
       }
+   }
+
+   // Update timestamp for 9.5 (v1.6.0)
+   if ($update) {
+      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/update-3.0.0.sql");
    }
 
    CronTask::Register('PluginTypologyTypology', 'UpdateTypology', DAY_TIMESTAMP);
