@@ -15,7 +15,7 @@ CREATE TABLE `glpi_plugin_typology_typologies` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL, -- nom du profil ex: Poste Medecin, ...
   `comment` text COLLATE utf8_unicode_ci, -- commentaires si necessaire
   `is_deleted` tinyint(1) NOT NULL default '0', -- pour placer les profils dans la corbeille avant purge definitive ou restoration
-  `date_mod` timestamp NOT NULL default '0000-00-00 00:00:00', -- date de derniere modif du profil (quand il y a modification de la liste de materiels lies a ce type de profil d'usage)
+  `date_mod` TIMESTAMP NULL DEFAULT NULL, -- date de derniere modif du profil (quand il y a modification de la liste de materiels lies a ce type de profil d'usage)
   PRIMARY KEY (`id`), -- index
   KEY `name` (`name`), -- index
   KEY `entities_id` (`entities_id`), -- index
@@ -39,7 +39,7 @@ CREATE TABLE `glpi_plugin_typology_typologycriterias` (
   `link` tinyint(1) NOT NULL default '0',-- AND ou OR entre les définitions d'un critère
   `entities_id` int(11) NOT NULL default '0', -- laisser pour l'utilisation des entites
   `is_recursive` tinyint(1) NOT NULL default '0', -- laisser pour l'utilisation de la recursivite
-  `date_mod` timestamp NOT NULL default '0000-00-00 00:00:00',
+  `date_mod` TIMESTAMP NULL DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`), -- index
   KEY `name` (`name`), -- index

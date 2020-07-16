@@ -81,11 +81,6 @@ function plugin_typology_install() {
       }
    }
 
-   // Update timestamp for 9.5 (v1.6.0)
-   if ($update) {
-      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/update-3.0.0.sql");
-   }
-
    CronTask::Register('PluginTypologyTypology', 'UpdateTypology', DAY_TIMESTAMP);
    CronTask::Register('PluginTypologyTypology', 'NotValidated', DAY_TIMESTAMP);
 

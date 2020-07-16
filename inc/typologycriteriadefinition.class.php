@@ -730,8 +730,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       $params['seeResult'] = 0;
       $params['seeItemtype'] = 0;
-      $img_OK = "<i style='color:forestgreen' class='question fa fa-check-circle fa-2x'></i>";
-      $img_NOT = "<i style='color:darkred' class='question fa fa-times-circle fa-2x'></i>";
+      $img_OK = "<i style='color:forestgreen' class='question fas fa-check-circle fa-2x'></i>";
+      $img_NOT = "<i style='color:darkred' class='question fas fa-times-circle fa-2x'></i>";
 
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
@@ -1113,7 +1113,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                              ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)";
                               $queryReal .= " LEFT JOIN `glpi_softwarecategories` 
                                              ON (`glpi_softwares`.`softwarecategories_id` = `glpi_softwarecategories`.`id`)";
-                              $queryReal .= " WHERE `glpi_items_softwareversions`.`computers_id` ='$pcID'";
+                              $queryReal .= " WHERE `glpi_items_softwareversions`.`itemtype` ='Computer' 
+                              AND `glpi_items_softwareversions`.`items_id` ='$pcID'";
                               break;
                            case "IPAddress":
                               $queryReal .= " FROM `glpi_networkports`";
@@ -1473,7 +1474,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)";
                               $queryConsole .= " LEFT JOIN `glpi_softwarecategories` 
                                                 ON (`glpi_softwares`.`softwarecategories_id` = `glpi_softwarecategories`.`id`)";
-                              $queryConsole .= " WHERE `glpi_items_softwareversions`.`computers_id` ='$pcID'";
+                              $queryConsole .= " WHERE `glpi_items_softwareversions`.`itemtype` ='Computer' 
+                              AND `glpi_items_softwareversions`.`items_id` ='$pcID'";
                               break;
                            //                           case "NetworkPort":
                            //                              $queryConsole .= " FROM `glpi_networkports`";
