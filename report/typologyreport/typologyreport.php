@@ -198,7 +198,7 @@ if ($res && $nbtot >0) {
 
    $resultService = $DB->query($queryService);
    $row_num = 1;
-   while ($dataService=$DB->fetch_assoc($resultService)) {
+   while ($dataService=$DB->fetchAssoc($resultService)) {
 
       if ($dataService['groups_id'] == 0) {
          $serviceName = __('None');
@@ -272,7 +272,7 @@ if ($res && $nbtot >0) {
       $computeOK=0;
       $computeNOTOK=0;
 
-      while ($dataComputer=$DB->fetch_array($resultComputer)) {
+      while ($dataComputer=$DB->fetchArray($resultComputer)) {
 
          $link=Toolbox::getItemTypeFormURL("Computer");
 

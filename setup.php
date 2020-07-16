@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_TYPOLOGY_VERSION', '2.6.0');
+define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
 
 // Init the hooks of the plugins -Needed
 function plugin_init_typology() {
@@ -83,7 +83,7 @@ function plugin_version_typology() {
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.4',
+            'min' => '9.5',
             'dev' => false
          ]
       ]
@@ -96,10 +96,10 @@ function plugin_version_typology() {
  * @return bool
  */
 function plugin_typology_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.4', 'lt')
-       || version_compare(GLPI_VERSION, '9.5', 'ge')) {
+   if (version_compare(GLPI_VERSION, '9.5', 'lt')
+      || version_compare(GLPI_VERSION, '9.6', 'ge')) {
       if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.4');
+         echo Plugin::messageIncompatible('core', '9.5');
       }
       return false;
    }

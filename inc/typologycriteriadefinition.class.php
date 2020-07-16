@@ -181,7 +181,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             echo "<th class='center b'>" . __('Value') . "</th>";
             echo "</tr>";
 
-            while ($ligne = $DB->fetch_array($result)) {
+            while ($ligne = $DB->fetchArray($result)) {
                echo "<tr class='tab_bg_2'>";
 
                if ($canedit) {
@@ -873,7 +873,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                INNER JOIN `glpi_softwares` on (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                WHERE `glpi_softwareversions`.`id`='".$ligne["value"]."'";
                      if ($result = $DB->query($query)) {
-                        while ($data = $DB->fetch_array($result)) {
+                        while ($data = $DB->fetchArray($result)) {
                            echo $data['softname']." - ";
                            if ($data['vname']=='') {
                               echo "(".$data['vid'].")";
@@ -1106,14 +1106,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                 AND `glpi_computers_items`.`computers_id` = '$pcID'";
                               break;
                            case "Software":
-                              $queryReal .= " FROM `glpi_computers_softwareversions`";
+                              $queryReal .= " FROM `glpi_items_softwareversions`";
                               $queryReal .= " LEFT JOIN `glpi_softwareversions` 
-                                             ON (`glpi_computers_softwareversions`.`softwareversions_id` = `glpi_softwareversions`.`id`)";
+                                             ON (`glpi_items_softwareversions`.`softwareversions_id` = `glpi_softwareversions`.`id`)";
                               $queryReal .= " LEFT JOIN `glpi_softwares` 
                                              ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)";
                               $queryReal .= " LEFT JOIN `glpi_softwarecategories` 
                                              ON (`glpi_softwares`.`softwarecategories_id` = `glpi_softwarecategories`.`id`)";
-                              $queryReal .= " WHERE `glpi_computers_softwareversions`.`computers_id` ='$pcID'";
+                              $queryReal .= " WHERE `glpi_items_softwareversions`.`computers_id` ='$pcID'";
                               break;
                            case "IPAddress":
                               $queryReal .= " FROM `glpi_networkports`";
@@ -1176,7 +1176,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                 WHERE `glpi_softwareversions`.`id`='".$def["value"]."'";
                                        if ($result = $DB->query($query)) {
-                                          while ($data = $DB->fetch_array($result)) {
+                                          while ($data = $DB->fetchArray($result)) {
                                                 $name= $data['softname']." - ";
                                              if ($data['vname']=='') {
                                                 $name.= "(".$data['vid'].")";
@@ -1203,7 +1203,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                               WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
 
                                     if ($resultQuery = $DB->query($query)) {
-                                       $tabResult = $DB->fetch_assoc($resultQuery);
+                                       $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                     $dropdownResult = $tabResult['designation'];
                                  } else {
@@ -1240,7 +1240,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                    ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                    WHERE `glpi_softwareversions`.`id` = '".$def["Field"]."'";
                                        if ($result = $DB->query($query)) {
-                                          while ($data = $DB->fetch_array($result)) {
+                                          while ($data = $DB->fetchArray($result)) {
                                              $name= $data['softname']." - ";
                                              if ($data['vname']=='') {
                                                 $name.= "(".$data['vid'].")";
@@ -1267,7 +1267,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                  WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
 
                                     if ($resultQuery = $DB->query($query)) {
-                                       $tabResult = $DB->fetch_assoc($resultQuery);
+                                       $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                        $dropdownResult = $tabResult['designation'];
                                  } else {
@@ -1466,14 +1466,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                "' AND `glpi_computers_items`.`computers_id` = '$pcID'";
                               break;
                            case "Software":
-                              $queryConsole .= " FROM `glpi_computers_softwareversions`";
+                              $queryConsole .= " FROM `glpi_items_softwareversions`";
                               $queryConsole .= " LEFT JOIN `glpi_softwareversions` 
-                                                ON (`glpi_computers_softwareversions`.`softwareversions_id` = `glpi_softwareversions`.`id`)";
+                                                ON (`glpi_items_softwareversions`.`softwareversions_id` = `glpi_softwareversions`.`id`)";
                               $queryConsole .= " LEFT JOIN `glpi_softwares` 
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)";
                               $queryConsole .= " LEFT JOIN `glpi_softwarecategories` 
                                                 ON (`glpi_softwares`.`softwarecategories_id` = `glpi_softwarecategories`.`id`)";
-                              $queryConsole .= " WHERE `glpi_computers_softwareversions`.`computers_id` ='$pcID'";
+                              $queryConsole .= " WHERE `glpi_items_softwareversions`.`computers_id` ='$pcID'";
                               break;
                            //                           case "NetworkPort":
                            //                              $queryConsole .= " FROM `glpi_networkports`";
@@ -1672,7 +1672,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               break;
                         }
 
-                        $nbConsole = $DB->fetch_array($DB->query($queryConsole));
+                        $nbConsole = $DB->fetchArray($DB->query($queryConsole));
                         if ($nbConsole['COUNT'] > 0) {
                            if ($def['action_type'] == 'notequals' || $def['action_type'] == 'notcontains') {
                               $valueFromDef[$itemtype][$key1][$key2]["result"]='not_ok';
