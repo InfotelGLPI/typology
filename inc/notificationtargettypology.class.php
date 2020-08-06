@@ -153,7 +153,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
             $tmp['notificationtemplates_id'] = $templates_id;
             $tmp['language']                 = '';
             $tmp['subject']                  = '##typology.action## : ##typology.entity##';
-            $tmp['conttent_text']            = '##FOREACHitems##
+            $tmp['content_text']            = '##FOREACHitems##
    ##lang.typology.name## : ##typology.name##
    ##lang.typology.itemtype## : ##typology.itemtype##
    ##lang.typology.items_id## : ##typology.items_id##

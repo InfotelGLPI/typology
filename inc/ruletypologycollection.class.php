@@ -38,7 +38,7 @@ class PluginTypologyRuleTypologyCollection extends RuleCollection {
 
    // From RuleCollection
    public $stop_on_first_match=true;
-   public static $right='plugin_typology';
+   static $rightname = 'plugin_typology';
    public $menu_option='typologies';
 
    /**
