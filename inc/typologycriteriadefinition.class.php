@@ -297,7 +297,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          'typocrit_id' => $typocrit_id];
 
       Ajax::updateItemOnSelectEvent("field", "span_actions",
-         $CFG_GLPI["root_doc"] . "/plugins/typology/ajax/dropdownAction.php",
+         $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownAction.php",
          $params);
    }
 
@@ -625,7 +625,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          'typocrit_id' => $typocrit_id];
 
       Ajax::updateItemOnSelectEvent("action_type", "span_values",
-         $CFG_GLPI["root_doc"] . "/plugins/typology/ajax/dropdownCaseValue.php",
+         $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php",
          $params);
 
       if ($value > 0) {
@@ -635,7 +635,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
          $params["typetable"] = $value;
          Ajax::UpdateItem("span_values",
-            $CFG_GLPI["root_doc"] . "/plugins/typology/ajax/dropdownCaseValue.php", $params);
+            $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php", $params);
       }
    }
 

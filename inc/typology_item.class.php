@@ -466,7 +466,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
       if ($withtemplate!=2) {
          echo "<form method='post' action=\"".
-               $CFG_GLPI["root_doc"]."/plugins/typology/front/typology.form.php\">";
+               $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typology.form.php\">";
       }
 
       echo "<div align='center'><table class='tab_cadre_fixe'>";
@@ -517,7 +517,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                   && ((in_array($data['entities_id'], $_SESSION['glpiactiveentities'])
                                  || $data["is_recursive"]))) {
                echo "<td class='center'><a href='".
-                        $CFG_GLPI["root_doc"]."/plugins/typology/front/typology.form.php?id=".
+                        $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typology.form.php?id=".
                         $data["id"]."'>".$data["name"];
                if ($_SESSION["glpiis_ids_visible"]||empty($data["name"])) {
                   echo " (".$data["id"].")";
@@ -656,7 +656,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
 
          echo "<div class='firstbloc'>";
          echo "<form method='post' name='typologies_form$rand' id='typologies_form$rand' action='" .
-         $CFG_GLPI["root_doc"] . "/plugins/typology/front/typology.form.php'>";
+            $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typology.form.php'>";
 
          echo "<table class='tab_cadre_fixe'>";
          echo "<tr>";

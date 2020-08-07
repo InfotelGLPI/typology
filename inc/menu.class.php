@@ -55,7 +55,7 @@ class PluginTypologyMenu extends CommonGLPI {
 
       $menu                                           = [];
       $menu['title']                                  = self::getMenuName();
-      $menu['page']                                   = "/plugins/typology/front/typology.php";
+      $menu['page']                                   = PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typology.php";
       $menu['links']['search']                        = PluginTypologyTypology::getSearchURL(false);
       $menu['icon']                                   = self::getIcon();
       if (PluginTypologyTypology::canCreate()) {

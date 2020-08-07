@@ -27,8 +27,11 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
-
+define('PLUGIN_TYPOLOGY_VERSION', '2.7.1');
+if (!defined("PLUGIN_TYPOLOGY_DIR")) {
+   define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
+   define("PLUGIN_TYPOLOGY_DIR_NOFULL", Plugin::getPhpDir("typology",false));
+}
 // Init the hooks of the plugins -Needed
 function plugin_init_typology() {
    global $PLUGIN_HOOKS;

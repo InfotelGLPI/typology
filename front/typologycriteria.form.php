@@ -44,7 +44,7 @@ if (isset($_POST["update"])) {
          && !empty($_POST["itemtype"])) {
       $criteria->check(-1, CREATE, $_POST);
       $newID = $criteria->add($_POST);
-      Html::redirect($CFG_GLPI["root_doc"]."/plugins/typology/front/typologycriteria.form.php?id=$newID");
+      Html::redirect($CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typologycriteria.form.php?id=$newID");
    } else {
       Session::addMessageAfterRedirect(__('No element to be tested'), false, ERROR);
       Html::back();

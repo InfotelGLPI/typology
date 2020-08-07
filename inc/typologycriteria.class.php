@@ -358,7 +358,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
    //      );
    //
    //      Ajax::updateItemOnSelectEvent("massiveaction$rand","show_massiveaction$rand",
-   //         $CFG_GLPI["root_doc"]."/plugins/typology/ajax/dropdownMassiveAction.php",$params);
+   //         PLUGIN_TYPOLOGY_DIR . "/ajax/dropdownMassiveAction.php",$params);
    //
    //      echo "<span id='show_massiveaction$rand'>&nbsp;</span>\n";
    //
@@ -500,7 +500,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
                        'action' => $_POST["action"]];
 
             Ajax::updateItemOnSelectEvent("dropdown_field$rand", "show_massiveaction_field",
-                                          $CFG_GLPI["root_doc"] . "/plugins/typology/ajax/dropdownMassiveActionField.php",
+               $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownMassiveActionField.php",
                                           $params);
 
             echo "&nbsp;<span id='show_massiveaction_field'>&nbsp;</span>\n";

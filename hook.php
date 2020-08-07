@@ -33,16 +33,16 @@
 function plugin_typology_install() {
    global $DB;
 
-   include_once (GLPI_ROOT . "/plugins/typology/inc/profile.class.php");
+   include_once (PLUGIN_TYPOLOGY_DIR . "/inc/profile.class.php");
    $update = true;
 
    if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
       $update = false;
       // table sql creation
-      $DB->runFile(GLPI_ROOT . "/plugins/typology/sql/empty-3.0.0.sql");
+      $DB->runFile(PLUGIN_TYPOLOGY_DIR . "/sql/empty-3.0.0.sql");
 
       // Add record notification
-      include_once(GLPI_ROOT . "/plugins/typology/inc/notificationtargettypology.class.php");
+      include_once(PLUGIN_TYPOLOGY_DIR . "/inc/notificationtargettypology.class.php");
       call_user_func(["PluginTypologyNotificationTargetTypology", 'install']);
    }
 
@@ -99,8 +99,8 @@ function plugin_typology_install() {
 function plugin_typology_uninstall() {
    global $DB;
 
-   include_once (GLPI_ROOT."/plugins/typology/inc/profile.class.php");
-   include_once (GLPI_ROOT."/plugins/typology/inc/menu.class.php");
+   include_once (PLUGIN_TYPOLOGY_DIR . "/inc/profile.class.php");
+   include_once (PLUGIN_TYPOLOGY_DIR . "/inc/menu.class.php");
 
    //drop rules
    $Rule = new Rule();
