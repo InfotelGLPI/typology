@@ -1,45 +1,48 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Typology Development Team
 # This file is distributed under the same license as the GLPI - Typology plugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# NeoTrinity <tecvisor@yahoo.fr>, 2016-2017
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - typology plugin\n"
+"Project-Id-Version: GLPI - Typology plugin 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-13 11:49+0200\n"
-"PO-Revision-Date: 2017-12-14 00:04+0000\n"
-"Last-Translator: NeoTrinity <tecvisor@yahoo.fr>\n"
-"Language-Team: German (Germany) (http://www.transifex.com/tsmr/GLPI_typology/language/de_DE/)\n"
+"POT-Creation-Date: 2019-02-25 09:46+0100\n"
+"PO-Revision-Date: 2020-11-02 13:02+0000\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2020\n"
+"Language-Team: German (Germany) (https://www.transifex.com/infotelGLPI/teams/12374/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:207 inc/typology_item.class.php:577
+#: hook.php:210 inc/typology_item.class.php:577
 msgid "Assign a typology to this material"
 msgstr "Weisen Sie diesem Material eine Typologie zu"
 
-#: hook.php:208
+#: hook.php:211
 msgid "Delete the typology of this material"
 msgstr "Löschen Sie die Typologie dieses Materials"
 
-#: hook.php:209 inc/typology.class.php:337
+#: hook.php:212 inc/typology.class.php:337
 msgid "Recalculate typology for the elements"
 msgstr "Typologie für die Elemente Neu berechnen"
 
-#: hook.php:235
+#: hook.php:239
 msgid "Typology's name"
 msgstr "Name der Typologie"
 
-#: hook.php:249 inc/typology_item.class.php:504
+#: hook.php:253 inc/typology_item.class.php:504
 #: inc/typology_item.class.php:746
 msgid "Responding to typology's criteria"
 msgstr "Auf Typologie Kriterien gehorchen"
 
-#: setup.php:77 inc/menu.class.php:44 inc/profile.class.php:166
+#: setup.php:79 inc/menu.class.php:44 inc/profile.class.php:166
 #: inc/typology.class.php:69
 msgid "Typology"
 msgid_plural "Typologies"
@@ -48,16 +51,19 @@ msgstr[1] "Typologien"
 
 #: front/typology.form.php:84
 msgid "Element not match with the rule for assigning the typology:"
-msgstr "Das Element stimmt nicht mit der Regel für die Zuweisung der Typologie überein:"
+msgstr ""
+"Das Element stimmt nicht mit der Regel für die Zuweisung der Typologie "
+"überein:"
 
 #: front/typology.form.php:99 inc/typology_item.class.php:1070
 #: inc/typology_item.class.php:1086
 msgid "Element not match with rules for assigning a typology"
-msgstr "Element stimmt nicht mit Regeln für die Zuweisung einer Typologie überein"
+msgstr ""
+"Element stimmt nicht mit Regeln für die Zuweisung einer Typologie überein"
 
 #: inc/notificationtargettypology.class.php:49
 #: inc/notificationtargettypology.class.php:71 inc/typology.class.php:341
-#: inc/typology.class.php:488
+#: inc/typology.class.php:490
 msgid "Elements not match with the typology"
 msgstr "Elemente stimmen nicht mit der Typologie überein"
 
@@ -101,7 +107,9 @@ msgstr[1] "Definitionen"
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
-msgstr "Sie haben nicht das Recht, eine Definition für diese Kriterien zu erstellen. Bitte kontaktieren Sie eine Person mit diesem Recht."
+msgstr ""
+"Sie haben nicht das Recht, eine Definition für diese Kriterien zu erstellen."
+" Bitte kontaktieren Sie eine Person mit diesem Recht."
 
 #: inc/typologycriteriadefinition.class.php:566
 #: inc/typologycriteriadefinition.class.php:572
@@ -137,7 +145,9 @@ msgstr "Element aussen der Typologie"
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
-msgstr "Diese Typologie können Sie diesem Material nicht zuordnen, da es bereits eine Typologie aufweist, weil es bereits eine Typologie hat"
+msgstr ""
+"Diese Typologie können Sie diesem Material nicht zuordnen, da es bereits "
+"eine Typologie aufweist, weil es bereits eine Typologie hat"
 
 #: inc/typology_item.class.php:498
 msgid "Typology assigned to this material"
