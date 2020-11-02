@@ -1,45 +1,48 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Typology Development Team
 # This file is distributed under the same license as the GLPI - Typology plugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# NeoTrinity <tecvisor@yahoo.fr>, 2016-2017
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2020
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - typology plugin\n"
+"Project-Id-Version: GLPI - Typology plugin 2.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-13 11:49+0200\n"
-"PO-Revision-Date: 2017-12-14 00:03+0000\n"
-"Last-Translator: NeoTrinity <tecvisor@yahoo.fr>\n"
-"Language-Team: English (United States) (http://www.transifex.com/tsmr/GLPI_typology/language/en_US/)\n"
+"POT-Creation-Date: 2019-02-25 09:46+0100\n"
+"PO-Revision-Date: 2020-11-02 13:02+0000\n"
+"Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2020\n"
+"Language-Team: English (United States) (https://www.transifex.com/infotelGLPI/teams/12374/en_US/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: hook.php:207 inc/typology_item.class.php:577
+#: hook.php:210 inc/typology_item.class.php:577
 msgid "Assign a typology to this material"
 msgstr "Assign a typology to this material"
 
-#: hook.php:208
+#: hook.php:211
 msgid "Delete the typology of this material"
 msgstr "Delete the typology of this material"
 
-#: hook.php:209 inc/typology.class.php:337
+#: hook.php:212 inc/typology.class.php:337
 msgid "Recalculate typology for the elements"
 msgstr "Recalculate typology for the elements"
 
-#: hook.php:235
+#: hook.php:239
 msgid "Typology's name"
 msgstr "Typology's name"
 
-#: hook.php:249 inc/typology_item.class.php:504
+#: hook.php:253 inc/typology_item.class.php:504
 #: inc/typology_item.class.php:746
 msgid "Responding to typology's criteria"
 msgstr "Responding to typology's criteria"
 
-#: setup.php:77 inc/menu.class.php:44 inc/profile.class.php:166
+#: setup.php:79 inc/menu.class.php:44 inc/profile.class.php:166
 #: inc/typology.class.php:69
 msgid "Typology"
 msgid_plural "Typologies"
@@ -57,7 +60,7 @@ msgstr "Element not match with rules for assigning a typology"
 
 #: inc/notificationtargettypology.class.php:49
 #: inc/notificationtargettypology.class.php:71 inc/typology.class.php:341
-#: inc/typology.class.php:488
+#: inc/typology.class.php:490
 msgid "Elements not match with the typology"
 msgstr "Elements not match with the typology"
 
@@ -101,7 +104,9 @@ msgstr[1] "Definitions"
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
-msgstr "You don't have right to create a definition for this criteria. Thank to contact a person having this right."
+msgstr ""
+"You don't have right to create a definition for this criteria. Thank to "
+"contact a person having this right."
 
 #: inc/typologycriteriadefinition.class.php:566
 #: inc/typologycriteriadefinition.class.php:572
@@ -137,7 +142,9 @@ msgstr "Element out of the typology"
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
-msgstr "You cannot assign this typology to this material as he has already a typology : "
+msgstr ""
+"You cannot assign this typology to this material as he has already a "
+"typology : "
 
 #: inc/typology_item.class.php:498
 msgid "Typology assigned to this material"
