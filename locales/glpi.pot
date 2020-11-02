@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI - Typology plugin 2.4.0\n"
+"Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-25 09:46+0100\n"
+"POT-Creation-Date: 2020-11-02 18:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:210 inc/typology_item.class.php:577
+#: hook.php:209 inc/typology_item.class.php:577
 msgid "Assign a typology to this material"
 msgstr ""
 
-#: hook.php:211
+#: hook.php:210
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:212 inc/typology.class.php:337
+#: hook.php:211 inc/typology.class.php:337
 msgid "Recalculate typology for the elements"
 msgstr ""
 
-#: hook.php:239
+#: hook.php:238
 msgid "Typology's name"
 msgstr ""
 
-#: hook.php:253 inc/typology_item.class.php:504 inc/typology_item.class.php:746
+#: hook.php:252 inc/typology_item.class.php:504 inc/typology_item.class.php:746
 msgid "Responding to typology's criteria"
 msgstr ""
 
@@ -76,42 +76,6 @@ msgstr ""
 
 #: inc/typology.class.php:419
 msgid "Typology of the linked elements is updated."
-msgstr ""
-
-#: inc/typologycriteria.class.php:184
-msgid "Add a criterion"
-msgstr ""
-
-#: inc/typologycriteria.class.php:229
-msgid "Criteria's list"
-msgstr ""
-
-#: inc/typologycriteria.class.php:253 inc/typology_item.class.php:937
-msgid "Detail of the assigned typology"
-msgstr ""
-
-#: inc/typologycriteriadefinition.class.php:54
-msgid "Definition"
-msgid_plural "Definitions"
-msgstr[0] ""
-msgstr[1] ""
-
-#: inc/typologycriteriadefinition.class.php:102
-msgid ""
-"You don't have right to create a definition for this criteria. Thank to "
-"contact a person having this right."
-msgstr ""
-
-#: inc/typologycriteriadefinition.class.php:566
-#: inc/typologycriteriadefinition.class.php:572
-#: inc/typologycriteriadefinition.class.php:807
-msgid "Less than"
-msgstr ""
-
-#: inc/typologycriteriadefinition.class.php:567
-#: inc/typologycriteriadefinition.class.php:573
-#: inc/typologycriteriadefinition.class.php:809
-msgid "More than"
 msgstr ""
 
 #: inc/typology_item.class.php:60
@@ -170,6 +134,10 @@ msgstr ""
 msgid "Comparison"
 msgstr ""
 
+#: inc/typology_item.class.php:937 inc/typologycriteria.class.php:253
+msgid "Detail of the assigned typology"
+msgstr ""
+
 #: inc/typology_item.class.php:938
 msgid "Detail of the encountered configuration"
 msgstr ""
@@ -180,4 +148,36 @@ msgstr ""
 
 #: inc/typology_item.class.php:945
 msgid "Real value"
+msgstr ""
+
+#: inc/typologycriteria.class.php:184
+msgid "Add a criterion"
+msgstr ""
+
+#: inc/typologycriteria.class.php:229
+msgid "Criteria's list"
+msgstr ""
+
+#: inc/typologycriteriadefinition.class.php:54
+msgid "Definition"
+msgid_plural "Definitions"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/typologycriteriadefinition.class.php:102
+msgid ""
+"You don't have right to create a definition for this criteria. Thank to "
+"contact a person having this right."
+msgstr ""
+
+#: inc/typologycriteriadefinition.class.php:566
+#: inc/typologycriteriadefinition.class.php:572
+#: inc/typologycriteriadefinition.class.php:807
+msgid "Less than"
+msgstr ""
+
+#: inc/typologycriteriadefinition.class.php:567
+#: inc/typologycriteriadefinition.class.php:573
+#: inc/typologycriteriadefinition.class.php:809
+msgid "More than"
 msgstr ""
