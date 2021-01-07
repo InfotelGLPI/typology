@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_TYPOLOGY_VERSION', '2.7.1');
+define('PLUGIN_TYPOLOGY_VERSION', '2.7.2');
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
    define("PLUGIN_TYPOLOGY_DIR_NOFULL", Plugin::getPhpDir("typology",false));

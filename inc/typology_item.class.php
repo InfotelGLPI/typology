@@ -308,8 +308,8 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                $itemtype = $crit->fields["itemtype"];
                $criteria= "";
                if ($withlink) {
-                  $criteria="<a href='".$CFG_GLPI["root_doc"].
-                     "/plugins/typology/front/typologycriteria.form.php?id=".
+                  $criteria="<a href='".$CFG_GLPI["root_doc"].PLUGIN_TYPOLOGY_DIR_NOFULL.
+                     "/front/typologycriteria.form.php?id=".
                      $crit->fields["id"]."' target='_blank'>";
                }
                $criteria.=$crit->fields["name"];
