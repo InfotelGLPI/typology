@@ -1,45 +1,49 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Typology Development Team
 # This file is distributed under the same license as the GLPI - Typology plugin package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Rafael Fontenelle <rffontenelle@gmail.com>, 2013
+# Xavier CAILLAUD <thetsmr@gmail.com>, 2020
+# Carlos Pinto Jr., 2021
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GLPI Project - typology plugin\n"
+"Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-13 11:49+0200\n"
-"PO-Revision-Date: 2017-10-10 13:03+0000\n"
-"Last-Translator: Amandine Manceau\n"
-"Language-Team: Portuguese (Brazil) (http://www.transifex.com/tsmr/GLPI_typology/language/pt_BR/)\n"
+"POT-Creation-Date: 2021-01-07 10:35+0000\n"
+"PO-Revision-Date: 2020-11-02 16:29+0000\n"
+"Last-Translator: Carlos Pinto Jr., 2021\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/infotelGLPI/teams/12374/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: hook.php:207 inc/typology_item.class.php:577
+#: hook.php:209 inc/typology_item.class.php:577
 msgid "Assign a typology to this material"
 msgstr "Atribuir uma tipologia a este material"
 
-#: hook.php:208
+#: hook.php:210
 msgid "Delete the typology of this material"
-msgstr ""
+msgstr "Apague a tipologia deste material"
 
-#: hook.php:209 inc/typology.class.php:337
+#: hook.php:211 inc/typology.class.php:337
 msgid "Recalculate typology for the elements"
 msgstr "Recalcular tipologia para os elementos"
 
-#: hook.php:235
+#: hook.php:238
 msgid "Typology's name"
 msgstr "Nome da tipologia"
 
-#: hook.php:249 inc/typology_item.class.php:504
+#: hook.php:252 inc/typology_item.class.php:504
 #: inc/typology_item.class.php:746
 msgid "Responding to typology's criteria"
 msgstr "Respondendo a critérios da tipologia"
 
-#: setup.php:77 inc/menu.class.php:44 inc/profile.class.php:166
+#: setup.php:82 inc/menu.class.php:44 inc/profile.class.php:166
 #: inc/typology.class.php:69
 msgid "Typology"
 msgid_plural "Typologies"
@@ -57,7 +61,7 @@ msgstr "Elemento não corresponde a regras para atribuição de uma tipologia"
 
 #: inc/notificationtargettypology.class.php:49
 #: inc/notificationtargettypology.class.php:71 inc/typology.class.php:341
-#: inc/typology.class.php:488
+#: inc/typology.class.php:490
 msgid "Elements not match with the typology"
 msgstr "Elementos não correspondem à tipologia"
 
@@ -78,42 +82,6 @@ msgstr "Regras para atribuição de uma tipologia a um computador"
 #: inc/typology.class.php:419
 msgid "Typology of the linked elements is updated."
 msgstr "Tipologia dos elementos vinculados está atualizada."
-
-#: inc/typologycriteria.class.php:184
-msgid "Add a criterion"
-msgstr "Adicionar um critério"
-
-#: inc/typologycriteria.class.php:229
-msgid "Criteria's list"
-msgstr "Lista de critérios"
-
-#: inc/typologycriteria.class.php:253 inc/typology_item.class.php:937
-msgid "Detail of the assigned typology"
-msgstr "Detalhe da tipologia atribuída"
-
-#: inc/typologycriteriadefinition.class.php:54
-msgid "Definition"
-msgid_plural "Definitions"
-msgstr[0] "Definição"
-msgstr[1] "Definições"
-
-#: inc/typologycriteriadefinition.class.php:102
-msgid ""
-"You don't have right to create a definition for this criteria. Thank to "
-"contact a person having this right."
-msgstr "Você não tem permissão para criar uma definição para este critério. Obrigado por contatar uma pessoa que tenha esta permissão."
-
-#: inc/typologycriteriadefinition.class.php:566
-#: inc/typologycriteriadefinition.class.php:572
-#: inc/typologycriteriadefinition.class.php:807
-msgid "Less than"
-msgstr "Menos de"
-
-#: inc/typologycriteriadefinition.class.php:567
-#: inc/typologycriteriadefinition.class.php:573
-#: inc/typologycriteriadefinition.class.php:809
-msgid "More than"
-msgstr "Mais de"
 
 #: inc/typology_item.class.php:60
 msgid "Element"
@@ -137,7 +105,9 @@ msgstr "Elemento fora da tipologia"
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
-msgstr "Você não pode atribuir esta tipologia a este material, pois ele já possui uma tipologia:"
+msgstr ""
+"Você não pode atribuir esta tipologia a este material, pois ele já possui "
+"uma tipologia:"
 
 #: inc/typology_item.class.php:498
 msgid "Typology assigned to this material"
@@ -157,7 +127,7 @@ msgstr "Elementos vinculados"
 
 #: inc/typology_item.class.php:705
 msgid "Select a type"
-msgstr ""
+msgstr "Selecione um tipo"
 
 #: inc/typology_item.class.php:728
 msgid "No linked element"
@@ -171,6 +141,10 @@ msgstr "Console de gerenciamento"
 msgid "Comparison"
 msgstr "Comparação"
 
+#: inc/typology_item.class.php:937 inc/typologycriteria.class.php:253
+msgid "Detail of the assigned typology"
+msgstr "Detalhe da tipologia atribuída"
+
 #: inc/typology_item.class.php:938
 msgid "Detail of the encountered configuration"
 msgstr "Detalhe da configuração encontrada"
@@ -182,3 +156,37 @@ msgstr "Valor esperado"
 #: inc/typology_item.class.php:945
 msgid "Real value"
 msgstr "Valor real"
+
+#: inc/typologycriteria.class.php:184
+msgid "Add a criterion"
+msgstr "Adicionar um critério"
+
+#: inc/typologycriteria.class.php:229
+msgid "Criteria's list"
+msgstr "Lista de critérios"
+
+#: inc/typologycriteriadefinition.class.php:54
+msgid "Definition"
+msgid_plural "Definitions"
+msgstr[0] "Definição"
+msgstr[1] "Definições"
+
+#: inc/typologycriteriadefinition.class.php:102
+msgid ""
+"You don't have right to create a definition for this criteria. Thank to "
+"contact a person having this right."
+msgstr ""
+"Você não tem permissão para criar uma definição para este critério. Obrigado"
+" por contatar uma pessoa que tenha esta permissão."
+
+#: inc/typologycriteriadefinition.class.php:566
+#: inc/typologycriteriadefinition.class.php:572
+#: inc/typologycriteriadefinition.class.php:807
+msgid "Less than"
+msgstr "Menos de"
+
+#: inc/typologycriteriadefinition.class.php:567
+#: inc/typologycriteriadefinition.class.php:573
+#: inc/typologycriteriadefinition.class.php:809
+msgid "More than"
+msgstr "Mais de"
