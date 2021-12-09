@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_TYPOLOGY_VERSION', '2.7.2');
+define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
    define("PLUGIN_TYPOLOGY_DIR_NOFULL", Plugin::getPhpDir("typology",false));
@@ -86,33 +86,11 @@ function plugin_version_typology() {
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
       'requirements'   => [
          'glpi' => [
-            'min' => '9.5',
+            'min' => '10.0',
+            'max' => '11.0',
             'dev' => false
          ]
       ]
    ];
 
-}
-
-// Optional : check prerequisites before install : may print errors or add to message after redirect
-/**
- * @return bool
- */
-function plugin_typology_check_prerequisites() {
-   if (version_compare(GLPI_VERSION, '9.5', 'lt')
-      || version_compare(GLPI_VERSION, '9.6', 'ge')) {
-      if (method_exists('Plugin', 'messageIncompatible')) {
-         echo Plugin::messageIncompatible('core', '9.5');
-      }
-      return false;
-   }
-   return true;
-}
-
-// Uninstall process for plugin : need to return true if succeeded : may display messages or add to message after redirect
-/**
- * @return bool
- */
-function plugin_typology_check_config() {
-   return true;
 }

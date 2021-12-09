@@ -46,6 +46,10 @@ class PluginTypologyTypology extends CommonDBTM {
 
    static $types = ['Computer'];
 
+   static function getIcon() {
+      return "fab fa-typo3";
+   }
+
    static $types_criteria = [
       'Computer',
       'Monitor',
@@ -208,7 +212,7 @@ class PluginTypologyTypology extends CommonDBTM {
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td>";
       echo "<td>";
-      Html::autocompletionTextField($this, "name", ['value' => $this->fields["name"]]);
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
       echo "<td rowspan=2>" . __('Comments') . "</td>";
       echo "<td rowspan=2>";
@@ -229,7 +233,7 @@ class PluginTypologyTypology extends CommonDBTM {
       }
 
       echo "</td></tr>";
-      echo "<input type='hidden' name='entities_id' value='" . $_SESSION['glpiactive_entity'] . "'>";
+      echo Html::hidden('entities_id', ['value' => $_SESSION["glpiactive_entity"]]);
 
       $this->showFormButtons($options);
 

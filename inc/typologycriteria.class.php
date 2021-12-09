@@ -184,18 +184,19 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
             echo "<tr class='tab_bg_1'><th colspan='7'>" . __('Add a criterion', 'typology') . "</tr>";
 
             echo "<tr class='tab_bg_2'><td class='center'>" . __('Name') . "</td>";
-            echo "<input type='hidden' name='plugin_typology_typologies_id' value='$ID'>";
-            echo "<input type='hidden' name='entities_id' value='" . $typo->getEntityID() . "'>";
-            echo "<input type='hidden' name='is_recursive' value='" . $typo->isRecursive() . "'>";
+            echo Html::hidden('plugin_typology_typologies_id', ['value' => $ID]);
+            echo Html::hidden('entities_id', ['value' => $typo->getEntityID()]);
+            echo Html::hidden('is_recursive', ['value' => $typo->isRecursive()]);
             echo "</td><td class='center'>";
-            Html::autocompletionTextField($crit, "name");
+
+            echo Html::input('name', ['value' => '', 'size' => 40]);
             echo "</td><td class='center'>" . __('Item') . "</td><td class='center' width='20%'>";
             PluginTypologyTypologyCriteria::dropdownItemtype();
             echo "</td><td>" . __('Logical operator') . "</td><td>";
             Dropdown::showFromArray('link', [0 => __('and'), 1 => __('or')]);
             echo "</td><td>";
-            echo "<input type='hidden' name='is_active' value='1'>";
-            echo "<input type='submit' name='add' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+            echo Html::hidden('is_active', ['value' => 1]);
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'add', 'class' => 'btn btn-primary']);
             echo "</td></tr>";
 
             echo "</table>";
@@ -381,7 +382,7 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Name') . "</td><td>";
-      Html::autocompletionTextField($this, "name");
+      echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
       echo "</td>";
       echo "<td>" . __('Item') . "</td><td>";
       echo $itemtype::getTypeName(0) . "</td>";

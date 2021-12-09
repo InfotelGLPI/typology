@@ -160,7 +160,7 @@ if ($nbtot == 0) {
 
 if ($res && $nbtot >0) {
 
-   $nbCols=$DB->num_fields($res);
+   $nbCols=$DB->numFields($res);
    $nbrows = $DB->numrows($res);
    $num = 1;
    $link  = $_SERVER['PHP_SELF'];

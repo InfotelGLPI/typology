@@ -36,10 +36,10 @@ if (!defined('GLPI_ROOT')) {
  */
 class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
-   public static $itemtype = 'PluginTypologyTypologyCriteria';
-   public static $items_id = 'plugin_typology_typologycriterias_id';
-   public $dohistory = true;
-   static $rightname                = "plugin_typology";
+   public static $itemtype  = 'PluginTypologyTypologyCriteria';
+   public static $items_id  = 'plugin_typology_typologycriterias_id';
+   public        $dohistory = true;
+   static        $rightname = "plugin_typology";
 
    /**
     * Return the localized name of the current Type
@@ -58,7 +58,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * display typologycriteriaDefinition's tab for each typologycriteria
     *
     * @param CommonGLPI $item
-    * @param int $withtemplate
+    * @param int        $withtemplate
+    *
     * @return string
     */
    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
@@ -75,12 +76,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
    /**
     * Count of definitions
+    *
     * @param type $item
+    *
     * @return type
     */
    static function countForItem($id) {
       $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
-      $datas = $typoCritDef->find(['plugin_typology_typologycriterias_id' =>$id]);
+      $datas       = $typoCritDef->find(['plugin_typology_typologycriterias_id' => $id]);
       return count($datas);
    }
 
@@ -88,9 +91,11 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * display tab's content for each typologycriteria
     *
     * @static
+    *
     * @param CommonGLPI $item
-    * @param int $tabnum
-    * @param int $withtemplate
+    * @param int        $tabnum
+    * @param int        $withtemplate
+    *
     * @return bool|true
     */
    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
@@ -140,9 +145,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             echo "<form method='post' action='./typologycriteria.form.php'>";
             echo "<table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='6'>" . PluginTypologyTypologyCriteriaDefinition::getTypeName(1) . "</tr>";
-            echo "<input type='hidden' name='plugin_typology_typologycriterias_id' value='$typocrit_id'>";
-            echo "<input type='hidden' name='entities_id' value='".$typocrit->getField('entities_id')."'>";
-            echo "<input type='hidden' name='is_recursive' value='".$typocrit->getField('is_recursive')."'>";
+            echo Html::hidden('plugin_typology_typologycriterias_id', ['value' => $typocrit_id]);
+            echo Html::hidden('entities_id', ['value' => $typocrit->getField('entities_id')]);
+            echo Html::hidden('is_recursive', ['value' => $typocrit->getField('is_recursive')]);
             echo "<tr class='tab_bg_1 center'>";
             echo "<td>" . _n('Field', 'Fields', 2) . "</td><td>";
             PluginTypologyTypologyCriteriaDefinition::dropdownFields($typocrit_id);
@@ -154,29 +159,29 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             echo "<td>";
             echo "<span id='span_values' name='span_values'></span></td>";
 
-            echo"<td class='tab_bg_2 left' width='80px'>";
-            echo "<input type='submit' name='add_action' value=\"" . _sx('button', 'Add') . "\" class='submit'>";
+            echo "<td class='tab_bg_2 left' width='80px'>";
+            echo Html::submit(_sx('button', 'Add'), ['name' => 'add_action', 'class' => 'btn btn-primary']);
             echo "</td></tr>\n";
             echo "</table>";
             Html::closeForm();
             echo "</div>";
          }
-         if ($DB->num_fields($result)>0) {
+         if ($DB->numFields($result) > 0) {
 
             if ($canedit) {
                Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
-               $massiveactionparams = ['item' => $typocrit, 'container' => 'mass'.__CLASS__.$rand];
+               $massiveactionparams = ['item' => $typocrit, 'container' => 'mass' . __CLASS__ . $rand];
                Html::showMassiveActions($massiveactionparams);
             }
 
             echo "<div class='center'><table class='tab_cadre_fixe'>";
-            echo "<tr><th colspan='4'>".PluginTypologyTypologyCriteriaDefinition::getTypeName(2)."</th></tr>";
+            echo "<tr><th colspan='4'>" . PluginTypologyTypologyCriteriaDefinition::getTypeName(2) . "</th></tr>";
 
             echo "<tr class='tab_bg_1 center'>";
             if ($canedit) {
                echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
             }
-            echo "<th>"._n('Field', 'Fields', 2)."</th>";
+            echo "<th>" . _n('Field', 'Fields', 2) . "</th>";
             echo "<th class='center b'>" . __('Logical operator') . "</th>";
             echo "<th class='center b'>" . __('Value') . "</th>";
             echo "</tr>";
@@ -194,13 +199,13 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
                echo "</tr>";
             }
-
+            echo "</table>";
             if ($canedit) {
                $massiveactionparams['ontop'] = false;
                Html::showMassiveActions($massiveactionparams);
                Html::closeForm();
             }
-            echo "</table></div>";
+            echo "</div>";
          }
       }
    }
@@ -208,12 +213,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
    /**
     * Get the standard massive actions which are forbidden
     *
-    * @since version 0.84
-    *
     * @return an array of massive actions
-    **/
+    **@since version 0.84
+    *
+    */
    public function getForbiddenStandardMassiveAction() {
-      $forbidden = parent::getForbiddenStandardMassiveAction();
+      $forbidden   = parent::getForbiddenStandardMassiveAction();
       $forbidden[] = 'update';
 
       return $forbidden;
@@ -223,15 +228,17 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * Display all the fields available depending on itemtype selected
     *
     * @static
-    * @param $typocrit_id
+    *
+    * @param     $typocrit_id
     * @param int $value
+    *
     * @return mixed
     */
    static function dropdownFields($typocrit_id, $value = 0) {
       global $DB, $CFG_GLPI;
-      $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
+      $typoCritDef                                                 = new PluginTypologyTypologyCriteriaDefinition();
       $typoCritDef->fields['plugin_typology_typologycriterias_id'] = $typocrit_id;
-      $typoCrit = new PluginTypologyTypologyCriteria();
+      $typoCrit                                                    = new PluginTypologyTypologyCriteria();
       $typoCrit->getFromDB($typocrit_id);
       $itemtype = $typoCrit->fields['itemtype'];
 
@@ -244,10 +251,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       //Search option for this type
       $target = new $itemtype();
 
-      echo "<select name='field' id='field'>";
+      echo "<select name='field' id='field' class='form-select'>";
       echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option>";
 
-      foreach ($DB->list_fields($dbu->getTableForItemType($itemtype)) as $field) {
+      foreach ($DB->listFields($dbu->getTableForItemType($itemtype)) as $field) {
          $searchOption = $target->getSearchOptionByField('field', $field['Field']);
          if (empty($searchOption)) {
             if ($table = $dbu->getTableNameForForeignKeyField($field['Field'])) {
@@ -267,7 +274,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          }
 
          if (!empty($searchOption)
-            && !in_array($field['Field'], self::getUnallowedFields($itemtype))
+             && !in_array($field['Field'], self::getUnallowedFields($itemtype))
          ) {
             if (!empty($searchOption['datatype'])) {
                echo "<option value='" . $field['Field'] . ";" . $searchOption['table'] . ";" . $searchOption['datatype'] . "'";
@@ -275,37 +282,39 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                echo "<option value='" . $field['Field'] . ";" . $searchOption['table'] . ";'";
             }
 
-            echo  ">" . $searchOption['name'] . "</option>";
+            echo ">" . $searchOption['name'] . "</option>";
 
          }
       }
       if ($itemtype == 'DeviceMemory') {
          echo "<option value='count;glpi_items_devicememories;number'>" .
-            _x('Quantity', 'Number') . "</option>";
+              _x('Quantity', 'Number') . "</option>";
       } else if ($itemtype == 'DeviceProcessor') {
          echo "<option value='count;glpi_items_deviceprocessors;number'>" .
-            _x('Quantity', 'Number') . "</option>";
+              _x('Quantity', 'Number') . "</option>";
       } else if ($itemtype == 'Software') {
          echo "<option value='softwareversions_id;glpi_softwareversions;'>" .
-            __('Name')." - "._n('Version', 'Versions', 2) . "</option>";
+              __('Name') . " - " . _n('Version', 'Versions', 2) . "</option>";
       }
       echo "</select>";
 
-      $params = ['field' => '__VALUE__',
-         'value' => $value,
-         'itemtype' => $itemtype,
-         'typocrit_id' => $typocrit_id];
+      $params = ['field'       => '__VALUE__',
+                 'value'       => $value,
+                 'itemtype'    => $itemtype,
+                 'typocrit_id' => $typocrit_id];
 
       Ajax::updateItemOnSelectEvent("field", "span_actions",
-         $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownAction.php",
-         $params);
+                                    $CFG_GLPI["root_doc"] . PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownAction.php",
+                                    $params);
    }
 
    /**
     * List field not allowed
     *
     * @static
+    *
     * @param $itemclass
+    *
     * @return array
     */
    static function getUnallowedFields($itemclass) {
@@ -344,36 +353,36 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          //            break;
          case "DeviceHardDrive":
             return ['comment',
-               'designation',
-               'rpm',
-               'interfacetypes_id',
-               'cache',
-               'manufacturers_id'];
+                    'designation',
+                    'rpm',
+                    'interfacetypes_id',
+                    'cache',
+                    'manufacturers_id'];
             break;
          case "Printer" :
             return ['id',
-               'name',
-               'entities_id',
-               'is_recursive',
-               'date_mod',
-               'contact',
-               'contact_num',
-               'users_id_tech',
-               'groups_id_tech',
-               'serial',
-               'otherserial',
-               'comment',
-               'locations_id',
-               'domains_id',
-               'printermodels_id',
-               'manufacturers_id',
-               'is_global',
-               'init_pages_counter',
-               'last_pages_counter',
-               'notepad',
-               'groups_id',
-               'users_id',
-               'states_id'];
+                    'name',
+                    'entities_id',
+                    'is_recursive',
+                    'date_mod',
+                    'contact',
+                    'contact_num',
+                    'users_id_tech',
+                    'groups_id_tech',
+                    'serial',
+                    'otherserial',
+                    'comment',
+                    'locations_id',
+                    'domains_id',
+                    'printermodels_id',
+                    'manufacturers_id',
+                    'is_global',
+                    'init_pages_counter',
+                    'last_pages_counter',
+                    'notepad',
+                    'groups_id',
+                    'users_id',
+                    'states_id'];
             break;
          //         case "DeviceDrive":
          //            return array('comment',
@@ -381,123 +390,123 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          //            break;
          case "Software" :
             return ['id',
-         //               'name',
-               'entities_id',
-               'is_recursive',
-               'comment',
-               'locations_id',
-               'users_id_tech',
-               'groups_id_tech',
-               'softwares_id',
-               'manufacturers_id',
-               'date_mod',
-               'notepad',
-               'groups_id',
-               'users_id',
-               'is_helpdesk_visible'];
+                    //               'name',
+                    'entities_id',
+                    'is_recursive',
+                    'comment',
+                    'locations_id',
+                    'users_id_tech',
+                    'groups_id_tech',
+                    'softwares_id',
+                    'manufacturers_id',
+                    'date_mod',
+                    'notepad',
+                    'groups_id',
+                    'users_id',
+                    'is_helpdesk_visible'];
             break;
          case "Monitor" :
             return ['id',
-               'name',
-               'entities_id',
-               'date_mod',
-               'contact',
-               'contact_num',
-               'users_id_tech',
-               'groups_id_tech',
-               'comment',
-               'serial',
-               'otherserial',
-               'have_bnc',
-               'locations_id',
-               'monitormodels_id',
-               'manufacturers_id',
-               'is_global',
-               'notepad',
-               'users_id',
-               'groups_id',
-               'states_id'];
+                    'name',
+                    'entities_id',
+                    'date_mod',
+                    'contact',
+                    'contact_num',
+                    'users_id_tech',
+                    'groups_id_tech',
+                    'comment',
+                    'serial',
+                    'otherserial',
+                    'have_bnc',
+                    'locations_id',
+                    'monitormodels_id',
+                    'manufacturers_id',
+                    'is_global',
+                    'notepad',
+                    'users_id',
+                    'groups_id',
+                    'states_id'];
             break;
          case "DeviceMemory":
             return ['comment',
-               'designation',
-               'manufacturers_id',
-               'devicememorytypes_id'];
+                    'designation',
+                    'manufacturers_id',
+                    'devicememorytypes_id'];
             break;
          case "Computer" :
             return ['id',
-               'name',
-               'entities_id',
-               'serial',
-               'otherserial',
-               'contact',
-               'contact_num',
-               'users_id_tech',
-               'groups_id_tech',
-               'comment',
-               'date_mod',
-         //               'os_license_number',
-               'os_licenseid',
-               'autoupdatesystems_id',
-         //               'locations_id',
-               'manufacturers_id',
-               'computermodels_id',
-               'notepad',
-               'is_ocs_import',
-               'users_id',
-               'groups_id',
-               //'states_id',
-               'uuid'];
+                    'name',
+                    'entities_id',
+                    'serial',
+                    'otherserial',
+                    'contact',
+                    'contact_num',
+                    'users_id_tech',
+                    'groups_id_tech',
+                    'comment',
+                    'date_mod',
+                    //               'os_license_number',
+                    'os_licenseid',
+                    'autoupdatesystems_id',
+                    //               'locations_id',
+                    'manufacturers_id',
+                    'computermodels_id',
+                    'notepad',
+                    'is_ocs_import',
+                    'users_id',
+                    'groups_id',
+                    //'states_id',
+                    'uuid'];
             break;
          case "NetworkPort":
             return ['id',
-               'itemtype',
-               'items_id',
-               'logical_number',
-         //               'name',
-               'mac',
-               'networkinterfaces_id',
-               'netpoints_id',
-               'comment'];
+                    'itemtype',
+                    'items_id',
+                    'logical_number',
+                    //               'name',
+                    'mac',
+                    'networkinterfaces_id',
+                    'netpoints_id',
+                    'comment'];
             break;
          case "IPAddress":
             return ['id',
-               'itemtype',
-               'items_id',
-               'logical_number',
-         //               'name',
-               'mac',
-               'networkinterfaces_id',
-               'netpoints_id',
-               'comment'];
+                    'itemtype',
+                    'items_id',
+                    'logical_number',
+                    //               'name',
+                    'mac',
+                    'networkinterfaces_id',
+                    'netpoints_id',
+                    'comment'];
             break;
          case "DeviceProcessor":
             return ['comment',
-               'manufacturers_id',
-         //               'specif_default',
-               'frequence'];
+                    'manufacturers_id',
+                    //               'specif_default',
+                    'frequence'];
             break;
          case "Peripheral" :
             return ['id',
-               'name',
-               'entities_id',
-               'date_mod',
-               'contact',
-               'contact_num',
-               'users_id_tech',
-               'manufacturers_id',
-               'peripheralmodels_id',
-               'brand',
-               'groups_id_tech',
-               'comment',
-               'serial',
-               'otherserial',
-               'locations_id',
-               'is_global',
-               'notepad',
-               'users_id',
-               'groups_id',
-               'states_id'];
+                    'name',
+                    'entities_id',
+                    'date_mod',
+                    'contact',
+                    'contact_num',
+                    'users_id_tech',
+                    'manufacturers_id',
+                    'peripheralmodels_id',
+                    'brand',
+                    'groups_id_tech',
+                    'comment',
+                    'serial',
+                    'otherserial',
+                    'locations_id',
+                    'is_global',
+                    'notepad',
+                    'users_id',
+                    'groups_id',
+                    'states_id'];
             break;
          //         case "Phone" :
          //            return array('id',
@@ -525,26 +534,28 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * Display logical operator depending on field selected
     *
     * @static
-    * @param $itemtype
-    * @param $typocrit_id
-    * @param $field
+    *
+    * @param     $itemtype
+    * @param     $typocrit_id
+    * @param     $field
     * @param int $value
+    *
     * @return mixed
     */
    static function dropdownSelect($itemtype, $typocrit_id, $field, $value = 0) {
       global $CFG_GLPI;
-      $test = explode(";", $field);
-      $itemTable = $test[1];
+      $test         = explode(";", $field);
+      $itemTable    = $test[1];
       $itemDataType = $test[2];
 
       $dbu = new DbUtils();
 
-      $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
+      $typoCritDef                                                 = new PluginTypologyTypologyCriteriaDefinition();
       $typoCritDef->fields['plugin_typology_typologycriterias_id'] = $typocrit_id;
-      $typoCritDef->fields['field'] = $field;
+      $typoCritDef->fields['field']                                = $field;
 
       if (!isset($typoCritDef->fields['field']) || !$typoCritDef->fields['field']) {
-         echo  "</span>";
+         echo "</span>";
          return;
       }
 
@@ -552,7 +563,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          $typoCritDef->fields['entities_id'] = $_SESSION['glpiactive_entity'];
       }
 
-      echo "<select name='action_type' id='action_type'>";
+      echo "<select name='action_type' id='action_type' class='form-select'>";
       echo "<option value='0'>" . Dropdown::EMPTY_VALUE . "</option>";
 
       switch ($itemDataType) {
@@ -619,14 +630,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       echo "</select>";
 
       $params = ['action_type' => '__VALUE__',
-         'value' => $value,
-         'itemtype' => $itemtype,
-         'field' => $field,
-         'typocrit_id' => $typocrit_id];
+                 'value'       => $value,
+                 'itemtype'    => $itemtype,
+                 'field'       => $field,
+                 'typocrit_id' => $typocrit_id];
 
       Ajax::updateItemOnSelectEvent("action_type", "span_values",
-         $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php",
-         $params);
+                                    $CFG_GLPI["root_doc"] . PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php",
+                                    $params);
 
       if ($value > 0) {
          echo "<script type='text/javascript' >\n";
@@ -635,7 +646,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
          $params["typetable"] = $value;
          Ajax::UpdateItem("span_values",
-            $CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php", $params);
+                          $CFG_GLPI["root_doc"] . PLUGIN_TYPOLOGY_DIR_NOFULL . "/ajax/dropdownCaseValue.php", $params);
       }
    }
 
@@ -643,56 +654,57 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * Display all values available depending on field selected
     *
     * @static
-    * @param $options
+    *
+    * @param     $options
     * @param int $value
     */
    static function dropdownValues($options) {
 
-      $itemtype = $options['itemtype'];
+      $itemtype    = $options['itemtype'];
       $typocrit_id = $options['typocrit_id'];
-      $field = $options['field'];
-      $action = $options['action_type'];
+      $field       = $options['field'];
+      $action      = $options['action_type'];
 
-      $test = explode(";", $field);
-      $itemField = $test[0];
-      $itemTable = $test[1];
+      $test         = explode(";", $field);
+      $itemField    = $test[0];
+      $itemTable    = $test[1];
       $itemDataType = $test[2];
 
-      $typoCritDef = new PluginTypologyTypologyCriteriaDefinition();
+      $typoCritDef                                                 = new PluginTypologyTypologyCriteriaDefinition();
       $typoCritDef->fields['plugin_typology_typologycriterias_id'] = $typocrit_id;
-      $typoCritDef->fields['field'] = $field;
-      $typoCrit = new PluginTypologyTypologyCriteria();
+      $typoCritDef->fields['field']                                = $field;
+      $typoCrit                                                    = new PluginTypologyTypologyCriteria();
       $typoCrit->getFromDB($typocrit_id);
 
       if ($action == 'contains'
-         || $action == 'notcontains'
-            || $action == 'regex_match'
-               || $action == 'regex_not_match') {
-         Html::autocompletionTextField($typoCritDef, "value");
+          || $action == 'notcontains'
+          || $action == 'regex_match'
+          || $action == 'regex_not_match') {
+         echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
       } else {
          switch ($itemDataType) {
             case "bool" :
                Dropdown::showYesNo('value');
                break;
             case "number" :
-               Html::autocompletionTextField($typoCritDef, "value");
+               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
                if ($itemField == 'size') {
                   echo "\"";
                }
                break;
             case "string" :
-               Html::autocompletionTextField($typoCritDef, "value");
+               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
                break;
             case "text" :
-               Html::autocompletionTextField($typoCritDef, "value");
-               if ($itemtype=='DeviceHardDrive') {
-                  echo " ".__('Mio');
+               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
+               if ($itemtype == 'DeviceHardDrive') {
+                  echo " " . __('Mio');
                } else if ($itemField == 'frequence') {
-                  echo " ".__('MHz');
-               } else if ($itemtype=='DeviceMemory' && $itemField == 'specif_default') {
-                  echo " ".__('Mio');
-               } else if ($itemtype=='DeviceProcessor' && $itemField == 'specif_default') {
-                  echo " ".__('MHz');
+                  echo " " . __('MHz');
+               } else if ($itemtype == 'DeviceMemory' && $itemField == 'specif_default') {
+                  echo " " . __('Mio');
+               } else if ($itemtype == 'DeviceProcessor' && $itemField == 'specif_default') {
+                  echo " " . __('MHz');
                }
                break;
             //            case "ip" :
@@ -702,15 +714,15 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                switch ($itemTable) {
                   case "glpi_users":
                      User::dropdown(['right' => 'all',
-                                          'name' => 'value']);
+                                     'name'  => 'value']);
                      break;
                   case "glpi_softwareversions":
                      Software::dropdownSoftwareToInstall("value", $typoCrit->fields['entities_id']);
                      break;
                   default :
-                     $dbu = new DbUtils();
+                     $dbu       = new DbUtils();
                      $itemclass = $dbu->getItemTypeForTable($itemTable);
-                     Dropdown::show($itemclass, ['name' => 'value','entity' => $typoCrit->fields['entities_id']]);
+                     Dropdown::show($itemclass, ['name' => 'value', 'entity' => $typoCrit->fields['entities_id']]);
                      break;
                }
                break;
@@ -726,12 +738,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * @param $ligne datas used to display the definition
     **/
    static function showMinimalDefinitionForm($ligne, $options = []) {
-      global $DB,$CFG_GLPI;
+      global $DB, $CFG_GLPI;
 
-      $params['seeResult'] = 0;
+      $params['seeResult']   = 0;
       $params['seeItemtype'] = 0;
-      $img_OK = "<i style='color:forestgreen' class='question fas fa-check-circle fa-2x'></i>";
-      $img_NOT = "<i style='color:darkred' class='question fas fa-times-circle fa-2x'></i>";
+      $img_OK                = "<i style='color:forestgreen' class='question fas fa-check-circle fa-2x'></i>";
+      $img_NOT               = "<i style='color:darkred' class='question fas fa-times-circle fa-2x'></i>";
 
       if (is_array($options) && count($options)) {
          foreach ($options as $key => $val) {
@@ -760,9 +772,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       echo "<td class='center'>";
 
-      $test = explode(";", $ligne["field"]);
-      $itemField = $test[0];
-      $itemTable = $test[1];
+      $test         = explode(";", $ligne["field"]);
+      $itemField    = $test[0];
+      $itemTable    = $test[1];
       $itemDataType = $test[2];
 
       $dbu = new DbUtils();
@@ -775,13 +787,13 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
             $crit = $dbu->getItemForItemtype($dbu->getItemTypeForTable($itemTable));
             if ($crit instanceof CommonTreeDropdown) {
                $searchOption = $item->getSearchOptionByField('field', 'completename', $itemTable);
-               echo  $searchOption['name'];
+               echo $searchOption['name'];
             } else {
                $searchOption = $item->getSearchOptionByField('field', 'name', $itemTable);
-               echo  $searchOption['name'];
+               echo $searchOption['name'];
             }
          } else {
-            echo  $searchOption['name'];
+            echo $searchOption['name'];
          }
       }
       echo "</td>";
@@ -827,9 +839,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       echo "<td class='center'>";
 
       if ($ligne['action_type'] == 'contains'
-         || $ligne['action_type'] == 'notcontains'
-            || $ligne['action_type'] == 'regex_match'
-               || $ligne['action_type'] == 'regex_not_match') {
+          || $ligne['action_type'] == 'notcontains'
+          || $ligne['action_type'] == 'regex_match'
+          || $ligne['action_type'] == 'regex_not_match') {
          echo $ligne["value"];
       } else {
          switch ($itemDataType) {
@@ -847,14 +859,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                break;
             case "text" :
                echo $ligne["value"];
-               if ($ligne["itemtype"]=='DeviceHardDrive') {
-                  echo " ".__('Mio');
+               if ($ligne["itemtype"] == 'DeviceHardDrive') {
+                  echo " " . __('Mio');
                } else if ($itemField == 'frequence') {
-                  echo " ".__('MHz');
-               } else if ($ligne["itemtype"]=='DeviceMemory' && $itemField == 'specif_default') {
-                  echo " ".__('Mio');
-               } else if ($ligne["itemtype"]=='DeviceProcessor' && $itemField == 'specif_default') {
-                  echo " ".__('MHz');
+                  echo " " . __('MHz');
+               } else if ($ligne["itemtype"] == 'DeviceMemory' && $itemField == 'specif_default') {
+                  echo " " . __('Mio');
+               } else if ($ligne["itemtype"] == 'DeviceProcessor' && $itemField == 'specif_default') {
+                  echo " " . __('MHz');
                }
                break;
             //            case "ip" :
@@ -871,12 +883,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                       `glpi_softwareversions`.`id` as vid
                                FROM `glpi_softwareversions`
                                INNER JOIN `glpi_softwares` on (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
-                               WHERE `glpi_softwareversions`.`id`='".$ligne["value"]."'";
+                               WHERE `glpi_softwareversions`.`id`='" . $ligne["value"] . "'";
                      if ($result = $DB->query($query)) {
                         while ($data = $DB->fetchArray($result)) {
-                           echo $data['softname']." - ";
-                           if ($data['vname']=='') {
-                              echo "(".$data['vid'].")";
+                           echo $data['softname'] . " - ";
+                           if ($data['vname'] == '') {
+                              echo "(" . $data['vid'] . ")";
                            } else {
                               echo $data['vname'];
                            }
@@ -904,23 +916,23 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
          echo "<td class='center'>";
 
          if (($ligne['realvalue'][0] > 1
-               && $ligne['realvalue'][1] > 1)
-                  || ($ligne['realvalue'][0] == 1
-                        && $ligne['realvalue'][1] == 2)) {
-            echo $ligne['realvalue'][0].' / '.$ligne['realvalue'][1];
+              && $ligne['realvalue'][1] > 1)
+             || ($ligne['realvalue'][0] == 1
+                 && $ligne['realvalue'][1] == 2)) {
+            echo $ligne['realvalue'][0] . ' / ' . $ligne['realvalue'][1];
             echo "<br>";
          } else if ($ligne['realvalue'][0] == 0
-               && $ligne['realvalue'][1] != 1) {
+                    && $ligne['realvalue'][1] != 1) {
             echo __('Item not found');
          }
 
          if ((isset($ligne['list_ok'])
-            && $ligne['realvalue'][0] > 0 )
-            || ($ligne['realvalue'][0] == 0
-               && $ligne['realvalue'][1] == 1)) {
+              && $ligne['realvalue'][0] > 0)
+             || ($ligne['realvalue'][0] == 0
+                 && $ligne['realvalue'][1] == 1)) {
 
             $count = count($ligne['list_ok']);
-            $i = 0;
+            $i     = 0;
 
             foreach ($ligne['list_ok'] as $key => $val) {
                $i++;
@@ -931,14 +943,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                   echo $val;
                   if ($itemField == 'size') {
                      echo "\"";
-                  } else if ($ligne["itemtype"]=='DeviceHardDrive') {
-                     echo " ".__('Mio');
+                  } else if ($ligne["itemtype"] == 'DeviceHardDrive') {
+                     echo " " . __('Mio');
                   } else if ($itemField == 'frequence') {
-                     echo " ".__('MHz');
-                  } else if ($ligne["itemtype"]=='DeviceMemory' && $itemField == 'specif_default') {
-                     echo " ".__('Mio');
-                  } else if ($ligne["itemtype"]=='DeviceProcessor' && $itemField == 'specif_default') {
-                     echo " ".__('MHz');
+                     echo " " . __('MHz');
+                  } else if ($ligne["itemtype"] == 'DeviceMemory' && $itemField == 'specif_default') {
+                     echo " " . __('Mio');
+                  } else if ($ligne["itemtype"] == 'DeviceProcessor' && $itemField == 'specif_default') {
+                     echo " " . __('MHz');
                   }
                } else {
                   echo Dropdown::GetYesNo($val);
@@ -956,10 +968,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * recover all value for console management display
     *
     * @static
+    *
     * @param $tabCritID
     * @param $pcID
     * @param $itemtype
     * @param $display
+    *
     * @return null
     */
    static function getConsoleData($tabCritID, $pcID, $itemtype, $display) {
@@ -972,9 +986,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       $valueFromDef = self::getRealValue($pcID, $valueFromDef);
 
       if ($display) {
-         $valueFromDef=self::getComputeResultByDef($valueFromDef, $pcID);
+         $valueFromDef = self::getComputeResultByDef($valueFromDef, $pcID);
       } else {
-         $valueFromDef=self::getComputeResultByCriteria($valueFromDef);
+         $valueFromDef = self::getComputeResultByCriteria($valueFromDef);
       }
       return $valueFromDef;
    }
@@ -983,13 +997,15 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * get all definitions value for each criteria
     *
     * @static
+    *
     * @param $critID
+    *
     * @return array
     */
    static function getValueFromDef($critID) {
       global $DB;
-      $resp = [];
-      $query ="SELECT `glpi_plugin_typology_typologycriteriadefinitions`.`id` AS id,
+      $resp  = [];
+      $query = "SELECT `glpi_plugin_typology_typologycriteriadefinitions`.`id` AS id,
                       `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` AS plugin_typology_typologycriterias_id,
                       `glpi_plugin_typology_typologycriterias`.`link` AS link,
                       `glpi_plugin_typology_typologycriteriadefinitions`.`field` AS field,
@@ -998,8 +1014,8 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                FROM `glpi_plugin_typology_typologycriteriadefinitions`
                LEFT JOIN `glpi_plugin_typology_typologycriterias`
                   ON (`glpi_plugin_typology_typologycriterias`.`id` = `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id`)
-               WHERE `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` ".
-         " = '".$critID."'
+               WHERE `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` " .
+               " = '" . $critID . "'
          ORDER BY `id`";
       foreach ($DB->request($query) as $data) {
          $resp[$data['id']] = $data;
@@ -1012,8 +1028,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * get real computer value
     *
     * @static
+    *
     * @param $pcID
     * @param $valueFromDef
+    *
     * @return mixed
     */
    static function getRealValue($pcID, $valueFromDef) {
@@ -1021,35 +1039,35 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       $dbu = new DbUtils();
 
-      foreach ($valueFromDef as $itemtype=>$allcrit) {
+      foreach ($valueFromDef as $itemtype => $allcrit) {
          if (!empty($allcrit)) {
             $item = new $itemtype();
 
-            foreach ($allcrit as $key1=>$allDef) {
+            foreach ($allcrit as $key1 => $allDef) {
                if (!empty($allDef)) {
 
-                  foreach ($allDef as $key2=>$def) {
+                  foreach ($allDef as $key2 => $def) {
                      if (!empty($def)) {
-                        $test= explode(";", $def["field"]);
-                        $itemField = $test[0];
-                        $itemTable = $test[1];
+                        $test         = explode(";", $def["field"]);
+                        $itemField    = $test[0];
+                        $itemTable    = $test[1];
                         $itemDataType = $test[2];
 
                         //1-SELECT
                         $queryReal = "SELECT ";
                         if ($itemField == 'count') {
-                           $queryReal.= "COUNT(*) ";
-                           $queryReal.= "as Field ";
+                           $queryReal             .= "COUNT(*) ";
+                           $queryReal             .= "as Field ";
                            $searchOption['table'] = $itemTable;
                         } else if ($itemField == 'softwareversions_id') {
                            $searchOption['table'] = $itemTable;
                            $searchOption['field'] = 'id';
-                           $searchOption['name'] = __('Name')." - "._n('Version', 'Versions', 2);
-                           $queryReal.= "`".$searchOption['table']."`.`".$searchOption['field']."` ";
-                           $queryReal.= "as Field ";
+                           $searchOption['name']  = __('Name') . " - " . _n('Version', 'Versions', 2);
+                           $queryReal             .= "`" . $searchOption['table'] . "`.`" . $searchOption['field'] . "` ";
+                           $queryReal             .= "as Field ";
                         } else if ($itemField == 'softwarecategories_id') {
                            $searchOption['table'] = $itemTable;
-                           $queryReal.= " `glpi_softwares`.`name` as softwares_name, `glpi_softwarecategories`.`name` as softwarecategories_name, `glpi_softwarecategories`.`name` as Field ";
+                           $queryReal             .= " `glpi_softwares`.`name` as softwares_name, `glpi_softwarecategories`.`name` as softwarecategories_name, `glpi_softwarecategories`.`name` as Field ";
                         } else {
                            $searchOption = $item->getSearchOptionByField('field', $itemField);
 
@@ -1062,10 +1080,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               }
                            }
 
-                           $queryReal.= "`".$searchOption['table']."`.`".$searchOption['field']."` ";
-                           $queryReal.= "as Field ";
-                           $queryReal.= ",`".$searchOption['table']."`.`id` ";
-                           $queryReal.= "as Field_id ";
+                           $queryReal .= "`" . $searchOption['table'] . "`.`" . $searchOption['field'] . "` ";
+                           $queryReal .= "as Field ";
+                           $queryReal .= ",`" . $searchOption['table'] . "`.`id` ";
+                           $queryReal .= "as Field_id ";
                         }
 
                         // 2 - FROM
@@ -1074,7 +1092,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $queryReal .= " FROM `glpi_computers`";
                               if ($searchOption['table'] != 'glpi_computers') {
                                  $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryReal .= " ON (`glpi_computers`.`" . $fk . "`= `" . $searchOption['table'] . "`.`id`)";
                               }
                               $queryReal .= " WHERE `glpi_computers`.`id` = '$pcID'";
@@ -1084,25 +1102,25 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "Printer":
                               $queryReal .= " FROM `glpi_computers_items`";
                               if (strstr($searchOption['table'], 'types')) {
-                                 $table = str_replace('types', 's', $searchOption['table']);
+                                 $table     = str_replace('types', 's', $searchOption['table']);
                                  $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
-                                 $queryReal.= " INNER JOIN `".$table."`";
-                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
-                                 $queryReal.= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryReal.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
-                              } else if ($searchOption['table']=='glpi_networks') {
-                                 $table = $dbu->getTableForItemType($itemtype);
+                                 $queryReal .= " INNER JOIN `" . $table . "`";
+                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
+                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryReal .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
+                              } else if ($searchOption['table'] == 'glpi_networks') {
+                                 $table     = $dbu->getTableForItemType($itemtype);
                                  $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
-                                 $queryReal.= " INNER JOIN `".$table."`";
-                                 $queryReal.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
-                                 $queryReal.= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryReal.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
+                                 $queryReal .= " INNER JOIN `" . $table . "`";
+                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
+                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryReal .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
 
                               } else {
-                                 $queryReal .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
+                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
                               }
-                              $queryReal .= " WHERE `glpi_computers_items`.`itemtype` = '".$itemtype."'
+                              $queryReal .= " WHERE `glpi_computers_items`.`itemtype` = '" . $itemtype . "'
                                                 AND `glpi_computers_items`.`computers_id` = '$pcID'";
                               break;
                            case "Software":
@@ -1118,13 +1136,13 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               break;
                            case "IPAddress":
                               $queryReal .= " FROM `glpi_networkports`";
-                              $queryReal .= " LEFT JOIN `glpi_networknames`".
-                                             " ON (`glpi_networkports`.`id` = `glpi_networknames`.`items_id`".
-                                             " AND `glpi_networknames`.`itemtype`='NetworkPort')";
-                              $queryReal .= " LEFT JOIN `glpi_ipaddresses`".
-                                             " ON (`glpi_networknames`.`id` = `glpi_ipaddresses`.`items_id`".
-                                             " AND `glpi_ipaddresses`.`itemtype`='NetworkName')";
-                              $queryReal .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'".
+                              $queryReal .= " LEFT JOIN `glpi_networknames`" .
+                                            " ON (`glpi_networkports`.`id` = `glpi_networknames`.`items_id`" .
+                                            " AND `glpi_networknames`.`itemtype`='NetworkPort')";
+                              $queryReal .= " LEFT JOIN `glpi_ipaddresses`" .
+                                            " ON (`glpi_networknames`.`id` = `glpi_ipaddresses`.`items_id`" .
+                                            " AND `glpi_ipaddresses`.`itemtype`='NetworkName')";
+                              $queryReal .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'" .
                                             " AND `glpi_networkports`.`items_id` = '$pcID'";
                               break;
                            //                           case "NetworkPort":
@@ -1136,34 +1154,34 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "DeviceMemory":
                            case "DeviceHardDrive":
                               if ($itemField == 'count') {
-                                 $queryReal .= " FROM `".$searchOption['table']."`";
+                                 $queryReal .= " FROM `" . $searchOption['table'] . "`";
                                  $queryReal .= " WHERE `items_id` = '$pcID' AND `itemtype` = 'Computer'";
 
                               } else {
-                                 $linktable = $dbu->getTableForItemType('items_'.$itemtype);
+                                 $linktable = $dbu->getTableForItemType('items_' . $itemtype);
                                  $fk        = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
 
-                                 $queryReal .= " FROM `".$linktable."`";
-                                 $queryReal .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryReal .= " ON (`".$linktable."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
-                                 $queryReal .= " WHERE `".$linktable."`.`items_id` = '$pcID'".
-                                                " AND `".$linktable."`.`itemtype` = 'Computer'";
+                                 $queryReal .= " FROM `" . $linktable . "`";
+                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryReal .= " ON (`" . $linktable . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
+                                 $queryReal .= " WHERE `" . $linktable . "`.`items_id` = '$pcID'" .
+                                               " AND `" . $linktable . "`.`itemtype` = 'Computer'";
                               }
                               break;
                         }
 
-                        $nbReal=0;
-                        $real_value= null;
-                        $nbok = 0;
-                        $list = [];
+                        $nbReal     = 0;
+                        $real_value = null;
+                        $nbok       = 0;
+                        $list       = [];
                         foreach ($DB->request($queryReal) as $data) {
 
                            $nbReal++;
 
                            if ($def['action_type'] == 'equals') {
                               if ($itemDataType == "text"
-                              //                                    || $itemDataType == "ip"
-                                       || $itemField == 'softwareversions_id') {
+                                  //                                    || $itemDataType == "ip"
+                                  || $itemField == 'softwareversions_id') {
                                  if ($data['Field'] == $def["value"]) {
 
                                     $nbok++;
@@ -1175,33 +1193,33 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                  FROM `glpi_softwareversions`
                                                 INNER JOIN `glpi_softwares`
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
-                                                WHERE `glpi_softwareversions`.`id`='".$def["value"]."'";
+                                                WHERE `glpi_softwareversions`.`id`='" . $def["value"] . "'";
                                        if ($result = $DB->query($query)) {
                                           while ($data = $DB->fetchArray($result)) {
-                                                $name= $data['softname']." - ";
-                                             if ($data['vname']=='') {
-                                                $name.= "(".$data['vid'].")";
+                                             $name = $data['softname'] . " - ";
+                                             if ($data['vname'] == '') {
+                                                $name .= "(" . $data['vid'] . ")";
                                              } else {
-                                                $name.= $data['vname'];
+                                                $name .= $data['vname'];
                                              }
                                              $list[] = $name;
                                           }
                                        }
                                     } else {
-                                       $list[]=$data['Field'];
+                                       $list[] = $data['Field'];
                                     }
                                  }
-                              } else if ($itemDataType== "bool" || $itemDataType == "number") {
+                              } else if ($itemDataType == "bool" || $itemDataType == "number") {
                                  if ($data['Field'] == $def["value"]) {
                                     $nbok++;
-                                    $list[]=$data['Field'];
+                                    $list[] = $data['Field'];
                                  }
 
                               } else {
                                  if (stristr($searchOption['table'], 'device')) {// If device type
-                                    $query = "SELECT `".$searchOption['table']."`.`designation`
-                                              FROM `".$searchOption['table']."`
-                                              WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
+                                    $query = "SELECT `" . $searchOption['table'] . "`.`designation`
+                                              FROM `" . $searchOption['table'] . "`
+                                              WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
 
                                     if ($resultQuery = $DB->query($query)) {
                                        $tabResult = $DB->fetchAssoc($resultQuery);
@@ -1215,21 +1233,21 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                     $nbok++;
 
                                     if ($itemField == 'softwarecategories_id') {
-                                        $name = $data['Field'];
+                                       $name = $data['Field'];
                                        if (isset($data['softwares_name'])) {
-                                           $name .= ' <span class="italic">('.
-                                               $data['softwares_name'].')</span>';
+                                          $name .= ' <span class="italic">(' .
+                                                   $data['softwares_name'] . ')</span>';
                                        }
-                                        $list[]=$name;
+                                       $list[] = $name;
                                     } else {
-                                        $list[]=$data['Field'];
+                                       $list[] = $data['Field'];
                                     }
                                  }
                               }
                            } else if ($def['action_type'] == 'notequals') {
                               if ($itemDataType == "text"
-                                 || $itemDataType == "ip"
-                                 || $itemField == 'softwareversions_id') {
+                                  || $itemDataType == "ip"
+                                  || $itemField == 'softwareversions_id') {
                                  if ($data['Field'] == $def["value"]) {
                                     $nbok++;
                                     if ($itemField == 'softwareversions_id') {
@@ -1239,38 +1257,38 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                    FROM `glpi_softwareversions`
                                                    INNER JOIN `glpi_softwares`
                                                    ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
-                                                   WHERE `glpi_softwareversions`.`id` = '".$def["Field"]."'";
+                                                   WHERE `glpi_softwareversions`.`id` = '" . $def["Field"] . "'";
                                        if ($result = $DB->query($query)) {
                                           while ($data = $DB->fetchArray($result)) {
-                                             $name= $data['softname']." - ";
-                                             if ($data['vname']=='') {
-                                                $name.= "(".$data['vid'].")";
+                                             $name = $data['softname'] . " - ";
+                                             if ($data['vname'] == '') {
+                                                $name .= "(" . $data['vid'] . ")";
                                              } else {
-                                                $name.= $data['vname'];
+                                                $name .= $data['vname'];
                                              }
                                              $list[] = $name;
                                           }
                                        }
                                     } else {
-                                       $list[]=$data['Field'];
+                                       $list[] = $data['Field'];
                                     }
                                  }
                               } else if ($itemDataType == "bool" || $itemDataType == "number") {
                                  if ($data['Field'] == $def["value"]) {
                                     $nbok++;
-                                    $list[]=$data['Field'];
+                                    $list[] = $data['Field'];
                                  }
 
                               } else {
                                  if (stristr($searchOption['table'], 'device')) {// If device type
-                                    $query = "SELECT `".$searchOption['table']."`.`designation`
-                                                 FROM `".$searchOption['table']."`
-                                                 WHERE `".$searchOption['table']."`.`designation` = '".$data['Field']."'";
+                                    $query = "SELECT `" . $searchOption['table'] . "`.`designation`
+                                                 FROM `" . $searchOption['table'] . "`
+                                                 WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
 
                                     if ($resultQuery = $DB->query($query)) {
                                        $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
-                                       $dropdownResult = $tabResult['designation'];
+                                    $dropdownResult = $tabResult['designation'];
                                  } else {
                                     $dropdownResult = Dropdown::getDropdownName($searchOption['table'], $def["value"]);
                                  }
@@ -1279,26 +1297,26 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                     $nbok++;
 
                                     if ($itemField == 'softwarecategories_id') {
-                                        $name = $data['Field'];
+                                       $name = $data['Field'];
                                        if (isset($data['softwares_name'])) {
-                                           $name .= ' <span class="italic">('.
-                                               $data['softwares_name'].')</span>';
+                                          $name .= ' <span class="italic">(' .
+                                                   $data['softwares_name'] . ')</span>';
                                        }
-                                        $list[]=$name;
+                                       $list[] = $name;
                                     } else {
-                                        $list[]=$data['Field'];
+                                       $list[] = $data['Field'];
                                     }
                                  }
                               }
                            } else if ($def['action_type'] == 'lessthan') {
                               if ($data['Field'] <= $def["value"]) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
                               }
                            } else if ($def['action_type'] == 'morethan') {
                               if ($data['Field'] >= $def["value"]) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
 
                               }
                            } else if ($def['action_type'] == 'contains') {
@@ -1307,38 +1325,38 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  if ($itemField == 'softwarecategories_id') {
                                     $name = $data['Field'];
                                     if (isset($data['softwares_name'])) {
-                                        $name .= ' <span class="italic">('.
-                                            $data['softwares_name'].')</span>';
+                                       $name .= ' <span class="italic">(' .
+                                                $data['softwares_name'] . ')</span>';
                                     }
-                                    $list[]=$name;
+                                    $list[] = $name;
                                  } else {
-                                    $list[]=$data['Field'];
+                                    $list[] = $data['Field'];
                                  }
                               }
                            } else if ($def['action_type'] == 'notcontains') {
                               if (stristr($data['Field'], $def["value"])) {
-                                  $nbok++;
+                                 $nbok++;
                                  if ($itemField == 'softwarecategories_id') {
-                                     $name = $data['Field'];
+                                    $name = $data['Field'];
                                     if (isset($data['softwares_name'])) {
-                                        $name .= ' <span class="italic">('.
-                                            $data['softwares_name'].')</span>';
+                                       $name .= ' <span class="italic">(' .
+                                                $data['softwares_name'] . ')</span>';
                                     }
-                                       $list[]=$name;
+                                    $list[] = $name;
                                  } else {
-                                    $list[]=$data['Field'];
+                                    $list[] = $data['Field'];
                                  }
                               }
                            } else if ($def['action_type'] == 'regex_match') {
                               if (preg_match($def["value"], $data['Field'])) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
 
                               }
                            } else if ($def['action_type'] == 'regex_not_match') {
                               if (!preg_match($def["value"], $data['Field'])) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
 
                               }
                            } else if ($def['action_type'] == 'under') {
@@ -1346,7 +1364,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $sons = $dbu->getSonsOf($itemTable, $def["value"]);
                               if (in_array($data['Field_id'], $sons)) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
                               }
                            } else if ($def['action_type'] == 'notunder') {
 
@@ -1354,18 +1372,18 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
                               if (!in_array($data['Field_id'], $sons)) {
                                  $nbok++;
-                                 $list[]=$data['Field'];
+                                 $list[] = $data['Field'];
                               }
                            }
                         }
                         //display the real value even if $nbok==0
-                        if ($nbReal == 1 && $nbok==0) {
+                        if ($nbReal == 1 && $nbok == 0) {
                            foreach ($DB->request($queryReal) as $data) {
-                              $list[]=$data['Field'];
+                              $list[] = $data['Field'];
                            }
                         }
-                        $valueFromDef[$itemtype][$key1][$key2]["list_ok"]=$list;
-                        $valueFromDef[$itemtype][$key1][$key2]["realvalue"]=[$nbok,$nbReal];
+                        $valueFromDef[$itemtype][$key1][$key2]["list_ok"]   = $list;
+                        $valueFromDef[$itemtype][$key1][$key2]["realvalue"] = [$nbok, $nbReal];
                      }
                   }
                }
@@ -1379,8 +1397,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     * get result comparison def value and pc value
     *
     * @static
+    *
     * @param $valueFromDef
     * @param $pcID
+    *
     * @return mixed
     */
    static function getComputeResultByDef($valueFromDef, $pcID) {
@@ -1388,19 +1408,19 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       $dbu = new DbUtils();
 
-      foreach ($valueFromDef as $itemtype=>$allcrit) {
+      foreach ($valueFromDef as $itemtype => $allcrit) {
          if (!empty($allcrit)) {
             $item = new $itemtype();
 
-            foreach ($allcrit as $key1=>$allDef) {
+            foreach ($allcrit as $key1 => $allDef) {
                if (!empty($allDef)) {
 
-                  foreach ($allDef as $key2=>$def) {
+                  foreach ($allDef as $key2 => $def) {
                      if (!empty($def)) {
 
-                        $test= explode(";", $def["field"]);
-                        $itemField = $test[0];
-                        $itemTable = $test[1];
+                        $test         = explode(";", $def["field"]);
+                        $itemField    = $test[0];
+                        $itemTable    = $test[1];
                         $itemDataType = $test[2];
 
                         if ($itemField == 'count') {
@@ -1411,7 +1431,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
                            $searchOption['table'] = $itemTable;
                            $searchOption['field'] = 'id';
-                           $searchOption['name'] = __('Name')." - "._n('Version', 'Versions', 2);;
+                           $searchOption['name']  = __('Name') . " - " . _n('Version', 'Versions', 2);;
 
                         } else {
                            $searchOption = $item->getSearchOptionByField('field', $itemField);
@@ -1435,7 +1455,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               $queryConsole .= " FROM `glpi_computers`";
                               if ($searchOption['table'] != 'glpi_computers') {
                                  $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk           = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                                  $queryConsole .= " ON (`glpi_computers`.`" . $fk .
                                                   "`= `" . $searchOption['table'] . "`.`id`)";
                               }
@@ -1445,25 +1465,25 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "Peripheral":
                            case "Printer":
                               $queryConsole .= " FROM `glpi_computers_items`";
-                              $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+                              $fk           = $dbu->getForeignKeyFieldForTable($searchOption['table']);
                               if (strstr($searchOption['table'], 'types')) {
-                                 $table = str_replace('types', 's', $searchOption['table']);
-                                 $queryConsole.= " INNER JOIN `".$table."`";
-                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
-                                 $queryConsole.= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryConsole.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
-                              } else if ($searchOption['table']=='glpi_networks') {
-                                 $table = $dbu->getTableForItemType($itemtype);
-                                 $queryConsole.= " INNER JOIN `".$table."`";
-                                 $queryConsole.= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
-                                 $queryConsole.= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryConsole.= " ON (`".$table."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
+                                 $table        = str_replace('types', 's', $searchOption['table']);
+                                 $queryConsole .= " INNER JOIN `" . $table . "`";
+                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
+                                 $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryConsole .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
+                              } else if ($searchOption['table'] == 'glpi_networks') {
+                                 $table        = $dbu->getTableForItemType($itemtype);
+                                 $queryConsole .= " INNER JOIN `" . $table . "`";
+                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
+                                 $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryConsole .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
 
                               } else {
-                                 $queryConsole .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `".$dbu->getTableForItemType($itemtype)."`.`id`)";
+                                 $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryConsole .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
                               }
-                              $queryConsole .= " WHERE `glpi_computers_items`.`itemtype` = '".$itemtype.
+                              $queryConsole .= " WHERE `glpi_computers_items`.`itemtype` = '" . $itemtype .
                                                "' AND `glpi_computers_items`.`computers_id` = '$pcID'";
                               break;
                            case "Software":
@@ -1484,32 +1504,32 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            //                              break;
                            case "IPAddress":
                               $queryConsole .= " FROM `glpi_networkports`";
-                              $queryConsole .= " LEFT JOIN `glpi_networknames`".
-                                 " ON (`glpi_networkports`.`id` = `glpi_networknames`.`items_id`".
-                                 " AND `glpi_networknames`.`itemtype`='NetworkPort')";
-                              $queryConsole .= " LEFT JOIN `glpi_ipaddresses`".
-                                 " ON (`glpi_networknames`.`id` = `glpi_ipaddresses`.`items_id`".
-                                 " AND `glpi_ipaddresses`.`itemtype`='NetworkName')";
-                              $queryConsole .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'".
-                                 " AND `glpi_networkports`.`items_id` = '$pcID'";
+                              $queryConsole .= " LEFT JOIN `glpi_networknames`" .
+                                               " ON (`glpi_networkports`.`id` = `glpi_networknames`.`items_id`" .
+                                               " AND `glpi_networknames`.`itemtype`='NetworkPort')";
+                              $queryConsole .= " LEFT JOIN `glpi_ipaddresses`" .
+                                               " ON (`glpi_networknames`.`id` = `glpi_ipaddresses`.`items_id`" .
+                                               " AND `glpi_ipaddresses`.`itemtype`='NetworkName')";
+                              $queryConsole .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'" .
+                                               " AND `glpi_networkports`.`items_id` = '$pcID'";
                               break;
 
                            case "DeviceProcessor":
                            case "DeviceMemory":
                            case "DeviceHardDrive":
                               if ($itemField == 'count') {
-                                 $queryConsole .= " FROM `".$searchOption['table']."`";
+                                 $queryConsole .= " FROM `" . $searchOption['table'] . "`";
                                  $queryConsole .= " WHERE `items_id` = '$pcID' AND `itemtype` = 'Computer'";
 
                               } else {
-                                 $linktable = $dbu->getTableForItemType('items_'.$itemtype);
+                                 $linktable = $dbu->getTableForItemType('items_' . $itemtype);
                                  $fk        = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
 
-                                 $queryConsole .= " FROM `".$linktable."`";
-                                 $queryConsole .= " INNER JOIN `".$searchOption['table']."`";
-                                 $queryConsole .= " ON (`".$linktable."`.`".$fk."` = `".$searchOption['table']."`.`id`)";
-                                 $queryConsole .= " WHERE `".$linktable."`.`items_id` = '$pcID'".
-                                                  " AND `".$linktable."`.`itemtype` = 'Computer'";
+                                 $queryConsole .= " FROM `" . $linktable . "`";
+                                 $queryConsole .= " INNER JOIN `" . $searchOption['table'] . "`";
+                                 $queryConsole .= " ON (`" . $linktable . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
+                                 $queryConsole .= " WHERE `" . $linktable . "`.`items_id` = '$pcID'" .
+                                                  " AND `" . $linktable . "`.`itemtype` = 'Computer'";
                               }
                               break;
                         }
@@ -1518,52 +1538,52 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         switch ($itemDataType) {
                            case "bool" :
                               if ($def['action_type'] == 'equals') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " = '".$def["value"]."'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " = '" . $def["value"] . "'";
                               } else if ($def['action_type'] == 'notequals') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " = '".$def["value"]."'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " = '" . $def["value"] . "'";
                               }
                               break;
                            case "number" :
                               if ($itemField == 'count') {
-                                 $queryConsole .=" Having COUNT ";
+                                 $queryConsole .= " Having COUNT ";
                                  if ($def['action_type'] == 'equals') {
-                                    $queryConsole.= " = ";
+                                    $queryConsole .= " = ";
                                  } else if ($def['action_type'] == 'notequals') {
-                                    $queryConsole.= " = ";
+                                    $queryConsole .= " = ";
                                  } else if ($def['action_type'] == 'lessthan') {
-                                    $queryConsole.= " <= ";
+                                    $queryConsole .= " <= ";
                                  } else if ($def['action_type'] == 'morethan') {
-                                    $queryConsole.= " >= ";
+                                    $queryConsole .= " >= ";
                                  }
                                  $queryConsole .= $def["value"];
                               } else {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
                                  if ($def['action_type'] == 'equals') {
-                                    $queryConsole.= " = ";
+                                    $queryConsole .= " = ";
                                  } else if ($def['action_type'] == 'notequals') {
-                                    $queryConsole.= " = ";
+                                    $queryConsole .= " = ";
                                  } else if ($def['action_type'] == 'lessthan') {
-                                    $queryConsole.= " <= ";
+                                    $queryConsole .= " <= ";
                                  } else if ($def['action_type'] == 'morethan') {
-                                    $queryConsole.= " >= ";
+                                    $queryConsole .= " >= ";
                                  }
-                                 $queryConsole.= $def["value"];
+                                 $queryConsole .= $def["value"];
                               }
                               break;
                            case "text" :
-                              $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
+                              $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
                               if ($def['action_type'] == 'equals') {
-                                 $queryConsole.= " = ";
+                                 $queryConsole .= " = ";
                               } else if ($def['action_type'] == 'notequals') {
-                                 $queryConsole.= " = ";
+                                 $queryConsole .= " = ";
                               } else if ($def['action_type'] == 'lessthan') {
-                                 $queryConsole.= " <= ";
+                                 $queryConsole .= " <= ";
                               } else if ($def['action_type'] == 'morethan') {
-                                 $queryConsole.= " >= ";
+                                 $queryConsole .= " >= ";
                               }
-                              $queryConsole.= $def["value"];
+                              $queryConsole .= $def["value"];
                               break;
                            //                           case "ip" :
                            //                              if ($def['action_type'] == 'contains') {
@@ -1590,17 +1610,17 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            //                              break;
                            case "string" :
                               if ($def['action_type'] == 'contains') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
                               } else if ($def['action_type'] == 'notcontains') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " LIKE '%".$def["value"]."%'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " LIKE '%" . $def["value"] . "%'";
                               } else if ($def['action_type'] == 'equals') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " = '".$def["value"]."'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " = '" . $def["value"] . "'";
                               } else if ($def['action_type'] == 'notequals') {
-                                 $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                    " = '".$def["value"]."'";
+                                 $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                  " = '" . $def["value"] . "'";
                               }
                               break;
                            default :
@@ -1608,65 +1628,65 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               switch ($itemTable) {
                                  case "glpi_users":
                                     if ($def['action_type'] == 'contains') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
                                     } else if ($def['action_type'] == 'notcontains') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
                                     } else if ($def['action_type'] == 'equals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".$dbu->getUserName($def["value"])."'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " = '" . $dbu->getUserName($def["value"]) . "'";
                                     } else if ($def['action_type'] == 'notequals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".$dbu->getUserName($def["value"])."'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " = '" . $dbu->getUserName($def["value"]) . "'";
                                     }
                                     break;
                                  case "glpi_softwareversions":
                                     if ($def['action_type'] == 'equals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".$def["value"]."'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " = '" . $def["value"] . "'";
                                     } else if ($def['action_type'] == 'notequals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " = '".$def["value"]."'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " = '" . $def["value"] . "'";
                                     }
                                     break;
                                  default :
                                     if ($def['action_type'] == 'contains' || $def['action_type'] == 'notcontains') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                          " LIKE '%".Toolbox::addslashes_deep($def["value"])."%'";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
                                     } else if ($def['action_type'] == 'equals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
                                        if ($item instanceof CommonDevice) {
                                           $item->getFromDB($def["value"]);
-                                          $queryConsole.= " = '".Toolbox::addslashes_deep($item->getName())."'";
+                                          $queryConsole .= " = '" . Toolbox::addslashes_deep($item->getName()) . "'";
                                        } else {
-                                          $queryConsole.=" = '".Toolbox::addslashes_deep(Dropdown::getDropdownName($searchOption['table'], $def["value"]))."'";
+                                          $queryConsole .= " = '" . Toolbox::addslashes_deep(Dropdown::getDropdownName($searchOption['table'], $def["value"])) . "'";
                                        }
                                     } else if ($def['action_type'] == 'notequals') {
-                                       $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`";
+                                       $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
                                        if ($item instanceof CommonDevice) {
                                           $item->getFromDB($def["value"]);
-                                          $queryConsole.= " = '".$item->getName()."'";
+                                          $queryConsole .= " = '" . $item->getName() . "'";
                                        } else {
-                                          $queryConsole.=" = '".Dropdown::getDropdownName($searchOption['table'], $def["value"])."'";
+                                          $queryConsole .= " = '" . Dropdown::getDropdownName($searchOption['table'], $def["value"]) . "'";
                                        }
                                     } else if ($itemTest instanceof CommonTreeDropdown) {
                                        if ($def['action_type'] == 'under') {
-                                          $sons = $dbu->getSonsOf($itemTable, $def["value"]);
-                                          $queryConsole.= " AND `".$searchOption['table']."`.`id` IN ('".implode("','", $sons)."')";
+                                          $sons         = $dbu->getSonsOf($itemTable, $def["value"]);
+                                          $queryConsole .= " AND `" . $searchOption['table'] . "`.`id` IN ('" . implode("','", $sons) . "')";
                                        } else if ($def['action_type'] == 'notunder') {
-                                          $sons = $dbu->getSonsOf($itemTable, $def["value"]);
-                                          $queryConsole.= " AND `".$searchOption['table']."`.`id` NOT IN ('".implode("','", $sons)."')";
+                                          $sons         = $dbu->getSonsOf($itemTable, $def["value"]);
+                                          $queryConsole .= " AND `" . $searchOption['table'] . "`.`id` NOT IN ('" . implode("','", $sons) . "')";
                                        }
                                     } else if ($itemTable == 'glpi_ipaddresses') {// REGEX matches of ip addresses
                                        if ($def['action_type'] == 'regex_match') {
-                                          $def["value"]=trim($def["value"], '/');
-                                          $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                             " REGEXP '".$def["value"]."'";
+                                          $def["value"] = trim($def["value"], '/');
+                                          $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                           " REGEXP '" . $def["value"] . "'";
                                        } else if ($def['action_type'] == 'regex_not_match') {
-                                          $def["value"]=trim($def["value"], '/');
-                                          $queryConsole .= " AND `".$searchOption['table']."`.`".$searchOption['field']."`".
-                                             " NOT REGEXP '".$def["value"]."'";
+                                          $def["value"] = trim($def["value"], '/');
+                                          $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
+                                                           " NOT REGEXP '" . $def["value"] . "'";
                                        }
                                     }
                                     break;
@@ -1677,15 +1697,15 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         $nbConsole = $DB->fetchArray($DB->query($queryConsole));
                         if ($nbConsole['COUNT'] > 0) {
                            if ($def['action_type'] == 'notequals' || $def['action_type'] == 'notcontains') {
-                              $valueFromDef[$itemtype][$key1][$key2]["result"]='not_ok';
+                              $valueFromDef[$itemtype][$key1][$key2]["result"] = 'not_ok';
                            } else {
-                              $valueFromDef[$itemtype][$key1][$key2]["result"]='ok';
+                              $valueFromDef[$itemtype][$key1][$key2]["result"] = 'ok';
                            }
                         } else {
                            if ($def['action_type'] == 'notequals' || $def['action_type'] == 'notcontains') {
-                              $valueFromDef[$itemtype][$key1][$key2]["result"]='ok';
+                              $valueFromDef[$itemtype][$key1][$key2]["result"] = 'ok';
                            } else {
-                              $valueFromDef[$itemtype][$key1][$key2]["result"]='not_ok';
+                              $valueFromDef[$itemtype][$key1][$key2]["result"] = 'not_ok';
                            }
                         }
                      }
@@ -1697,22 +1717,24 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
       return $valueFromDef;
    }
 
-    /**
+   /**
     * get global result value vs computer by itemtype
     *
     * @static
+    *
     * @param $valueFromDef
+    *
     * @return mixed
     */
    static function getComputeResultByCriteria($valueFromDef) {
 
-      foreach ($valueFromDef as $itemtype=>$allcrit) {
+      foreach ($valueFromDef as $itemtype => $allcrit) {
          if (!empty($allcrit)) {
-            foreach ($allcrit as $key1=>$allDef) {// in all criteria
+            foreach ($allcrit as $key1 => $allDef) {// in all criteria
                if (!empty($allDef)) {
-                  foreach ($allDef as $key2=>$def) {// checking all definitions
+                  foreach ($allDef as $key2 => $def) {// checking all definitions
                      if ($def['action_type'] == 'notequals'
-                           || $def['action_type'] == 'notcontains') {// EXEPTION
+                         || $def['action_type'] == 'notcontains') {// EXEPTION
                         if ($def['link'] == 0) {// If link == 0, AND operator
                            if ($def['realvalue'][0] > 0) {
                               $ItemNotOkAND[$itemtype][$key1][] = 1;
@@ -1745,15 +1767,15 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                   // Results between the operator OR, AND
                   if (isset($ItemNotOkAND[$itemtype][$key1])) {// AND
                      if (in_array(1, $ItemNotOkAND[$itemtype][$key1])) {
-                        $valueFromDef[$itemtype][$key1]["result"]='not_ok';
+                        $valueFromDef[$itemtype][$key1]["result"] = 'not_ok';
                      } else {
-                        $valueFromDef[$itemtype][$key1]["result"]='ok';
+                        $valueFromDef[$itemtype][$key1]["result"] = 'ok';
                      }
                   } else if (isset($ItemOkOR[$itemtype][$key1])) {// OR
                      if (in_array(1, $ItemOkOR[$itemtype][$key1])) {
-                        $valueFromDef[$itemtype][$key1]["result"]='ok';
+                        $valueFromDef[$itemtype][$key1]["result"] = 'ok';
                      } else {
-                        $valueFromDef[$itemtype][$key1]["result"]='not_ok';
+                        $valueFromDef[$itemtype][$key1]["result"] = 'not_ok';
                      }
                   }
                }
