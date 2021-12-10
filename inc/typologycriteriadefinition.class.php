@@ -174,7 +174,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                Html::showMassiveActions($massiveactionparams);
             }
 
-            echo "<div class='center'><table class='tab_cadre_fixe'>";
+            echo "<div class='left'><table class='tab_cadre_fixe'>";
             echo "<tr><th colspan='4'>" . PluginTypologyTypologyCriteriaDefinition::getTypeName(2) . "</th></tr>";
 
             echo "<tr class='tab_bg_1 center'>";
@@ -680,23 +680,23 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
           || $action == 'notcontains'
           || $action == 'regex_match'
           || $action == 'regex_not_match') {
-         echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
+         echo Html::input('value', ['value' => '', 'size' => 40]);
       } else {
          switch ($itemDataType) {
             case "bool" :
                Dropdown::showYesNo('value');
                break;
             case "number" :
-               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
+               echo Html::input('value', ['value' => '', 'size' => 40]);
                if ($itemField == 'size') {
                   echo "\"";
                }
                break;
             case "string" :
-               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
+               echo Html::input('value', ['value' => '', 'size' => 40]);
                break;
             case "text" :
-               echo Html::input('name', ['value' => $typoCritDef->fields['value'], 'size' => 40]);
+               echo Html::input('value', ['value' => '', 'size' => 40]);
                if ($itemtype == 'DeviceHardDrive') {
                   echo " " . __('Mio');
                } else if ($itemField == 'frequence') {
