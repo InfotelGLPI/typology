@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-10 16:02+0000\n"
+"POT-Creation-Date: 2021-12-13 07:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:211 inc/typology.class.php:341
+#: hook.php:211 inc/typology.class.php:345
 msgid "Recalculate typology for the elements"
 msgstr ""
 
@@ -38,7 +38,7 @@ msgstr ""
 msgid "Responding to typology's criteria"
 msgstr ""
 
-#: setup.php:82 inc/menu.class.php:44 inc/profile.class.php:166
+#: setup.php:85 inc/menu.class.php:44 inc/profile.class.php:166
 #: inc/typology.class.php:73
 msgid "Typology"
 msgid_plural "Typologies"
@@ -55,8 +55,8 @@ msgid "Element not match with rules for assigning a typology"
 msgstr ""
 
 #: inc/notificationtargettypology.class.php:49
-#: inc/notificationtargettypology.class.php:71 inc/typology.class.php:345
-#: inc/typology.class.php:494
+#: inc/notificationtargettypology.class.php:71 inc/typology.class.php:349
+#: inc/typology.class.php:498
 msgid "Elements not match with the typology"
 msgstr ""
 
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Rules for assigning a typology to a computer"
 msgstr ""
 
-#: inc/typology.class.php:423
+#: inc/typology.class.php:427
 msgid "Typology of the linked elements is updated."
 msgstr ""
 
@@ -172,12 +172,12 @@ msgstr ""
 
 #: inc/typologycriteriadefinition.class.php:577
 #: inc/typologycriteriadefinition.class.php:583
-#: inc/typologycriteriadefinition.class.php:819
+#: inc/typologycriteriadefinition.class.php:817
 msgid "Less than"
 msgstr ""
 
 #: inc/typologycriteriadefinition.class.php:578
 #: inc/typologycriteriadefinition.class.php:584
-#: inc/typologycriteriadefinition.class.php:821
+#: inc/typologycriteriadefinition.class.php:819
 msgid "More than"
 msgstr ""
