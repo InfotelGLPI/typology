@@ -707,9 +707,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                   echo " " . __('MHz');
                }
                break;
-            //            case "ip" :
-            //               Html::autocompletionTextField($typoCritDef, "value");
-            //               break;
+
             default :
                switch ($itemTable) {
                   case "glpi_users":

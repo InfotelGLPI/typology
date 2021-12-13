@@ -488,8 +488,8 @@ class PluginTypologyTypologyCriteria extends CommonDBTM {
 
       switch ($ma->getAction()) {
          case "deleteAll":
-            echo "&nbsp;<input type=\"submit\" name=\"massiveaction\" class=\"submit\" value=\"" .
-                 _sx('button', 'Post') . "\" >";
+            echo "&nbsp;";
+            echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
             return true;
             break;
          case "updateAll":

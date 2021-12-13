@@ -47,7 +47,7 @@ class PluginTypologyTypology extends CommonDBTM {
    static $types = ['Computer'];
 
    static function getIcon() {
-      return "fab fa-typo3";
+      return "ti ti-list-check";
    }
 
    static $types_criteria = [
@@ -216,7 +216,11 @@ class PluginTypologyTypology extends CommonDBTM {
       echo "</td>";
       echo "<td rowspan=2>" . __('Comments') . "</td>";
       echo "<td rowspan=2>";
-      echo "<textarea cols='45' rows='8' name='comment' >" . $this->fields["comment"] . "</textarea>";
+      Html::textarea(['name'            => 'comment',
+                      'value'           => $this->fields["comment"],
+                      'cols'       => 45,
+                      'rows'       => 8,
+                      'enable_richtext' => false]);
       echo "</td></tr>";
 
       echo "<tr class='tab_bg_1'>";

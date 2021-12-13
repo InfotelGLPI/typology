@@ -143,7 +143,7 @@ if ($nbtot == 0) {
             $param .= $key."[".$k."]=".urlencode($v);
          }
       } else {
-         echo "<input type='hidden' name='$key' value='$val' >";
+         echo Html::hidden($key, ['value' => $val]);
          if (!empty ($param)) {
             $param .= "&";
          }
