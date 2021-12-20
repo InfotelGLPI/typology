@@ -1019,15 +1019,12 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             return true;
             break;
          //delete item to a typo
+         case "update_allitem":
          case "delete_item":
-            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
+            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
             return true;
             break;
          //update item to a typo
-         case "update_allitem":
-            echo Html::submit(_x('button', 'Post'), ['name' => 'massiveaction']);
-            return true;
-            break;
       }
    }
 
