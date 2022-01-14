@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-15 08:14+0000\n"
+"POT-Creation-Date: 2021-12-20 15:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,8 +49,8 @@ msgstr[1] ""
 msgid "Element not match with the rule for assigning the typology:"
 msgstr ""
 
-#: front/typology.form.php:99 inc/typology_item.class.php:1067
-#: inc/typology_item.class.php:1083
+#: front/typology.form.php:99 inc/typology_item.class.php:1064
+#: inc/typology_item.class.php:1080
 msgid "Element not match with rules for assigning a typology"
 msgstr ""
 
