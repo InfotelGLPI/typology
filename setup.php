@@ -60,7 +60,7 @@ function plugin_init_typology() {
       if (Session::haveRight("plugin_typology", UPDATE)) {
          //use massiveaction in the plugin
          $PLUGIN_HOOKS['use_massive_action']['typology']=1;
-         $PLUGIN_HOOKS['redirect_page']['typology'] = 'front/typology.form.php';
+         $PLUGIN_HOOKS['redirect_page']['typology'] = PLUGIN_TYPOLOGY_DIR_NOFULL.'/front/typology.form.php';
       }
 
       Plugin::registerClass('PluginTypologyRuleTypologyCollection', [
