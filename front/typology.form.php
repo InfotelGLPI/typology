@@ -144,7 +144,7 @@ if (isset($_POST["add"])) {
 
 } else {
    $typo->checkGlobal(READ);
-   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologymenu");
+   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
 
    $typo->display($_GET);
    Html::footer();

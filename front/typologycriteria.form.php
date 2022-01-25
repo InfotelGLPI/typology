@@ -93,7 +93,7 @@ if (isset($_POST["update"])) {
 
 } else {
    $typo->checkGlobal(READ);
-   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologymenu");
+   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
 
    $criteria->display($_GET);
    Html::footer();

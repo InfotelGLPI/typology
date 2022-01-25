@@ -144,7 +144,7 @@ function plugin_typology_uninstall() {
    foreach (PluginTypologyProfile::getAllRights() as $right) {
       $profileRight->deleteByCriteria(['name' => $right['field']]);
    }
-   PluginTypologyMenu::removeRightsFromSession();
+   PluginTypologyTypology::removeRightsFromSession();
 
    PluginTypologyProfile::removeRightsFromSession();
 

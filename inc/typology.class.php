@@ -719,4 +719,34 @@ class PluginTypologyTypology extends CommonDBTM {
             break;
       }
    }
+
+   /**
+    * get menu content
+    *
+    * @since 0.85
+    *
+    * @return array array for menu
+    **/
+//   static function getMenuContent() {
+//
+//      $menu                                           = [];
+//      $menu['title']                                  = self::getMenuName();
+//      $menu['page']                                   = PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typology.php";
+//      $menu['links']['search']                        = PluginTypologyTypology::getSearchURL(false);
+//      $menu['icon']                                   = PluginTypologyTypology::getIcon();
+//      if (PluginTypologyTypology::canCreate()) {
+//         $menu['links']['add']                        = PluginTypologyTypology::getFormURL(false);
+//      }
+//
+//      return $menu;
+//   }
+
+   static function removeRightsFromSession() {
+      if (isset($_SESSION['glpimenu']['tools']['types']['PluginTypologyPluginTypology'])) {
+         unset($_SESSION['glpimenu']['tools']['types']['PluginTypologyPluginTypology']);
+      }
+      if (isset($_SESSION['glpimenu']['tools']['content']['plugintypologytypology'])) {
+         unset($_SESSION['glpimenu']['tools']['content']['plugintypologytypology']);
+      }
+   }
 }

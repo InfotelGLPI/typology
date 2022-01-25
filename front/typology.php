@@ -29,7 +29,7 @@
 
 include ('../../../inc/includes.php');
 
-Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologymenu");
+Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
 
 $typo = new PluginTypologyTypology();
 if ($typo->canView() || Session::haveRight("config", UPDATE)) {

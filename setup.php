@@ -54,7 +54,7 @@ function plugin_init_typology() {
       // Display a menu entry ?
       if (Session::haveRight("plugin_typology", READ)) {
          // menu entry
-         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => 'PluginTypologyMenu'];
+         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => 'PluginTypologyTypology'];
       }
 
       if (Session::haveRight("plugin_typology", UPDATE)) {
