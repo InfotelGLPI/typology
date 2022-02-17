@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-22 15:52+0000\n"
+"POT-Creation-Date: 2022-01-25 08:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,8 +38,7 @@ msgstr ""
 msgid "Responding to typology's criteria"
 msgstr ""
 
-#: setup.php:85 inc/menu.class.php:44 inc/profile.class.php:166
-#: inc/typology.class.php:73
+#: setup.php:85 inc/profile.class.php:166 inc/typology.class.php:73
 msgid "Typology"
 msgid_plural "Typologies"
 msgstr[0] ""
