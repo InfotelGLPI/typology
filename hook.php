@@ -100,7 +100,6 @@ function plugin_typology_uninstall() {
    global $DB;
 
    include_once (PLUGIN_TYPOLOGY_DIR . "/inc/profile.class.php");
-   include_once (PLUGIN_TYPOLOGY_DIR . "/inc/menu.class.php");
 
    //drop rules
    $Rule = new Rule();
