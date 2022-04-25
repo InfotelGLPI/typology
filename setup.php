@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-define('PLUGIN_TYPOLOGY_VERSION', '3.0.0-rc1');
+define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
 
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
