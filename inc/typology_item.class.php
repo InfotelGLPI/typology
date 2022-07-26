@@ -343,8 +343,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
    static function addItem($item) {
 
       $values = [];
-      $plugin = new Plugin();
-      if ($plugin->isActivated("typology")) {
+      if (Plugin::isPluginActive("typology")) {
          $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
          $fields         = [];
          //si massive action ajouter tous les champs de la rules
@@ -411,8 +410,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
     **/
    static function updateItem($item) {
 
-      $plugin = new Plugin();
-      if ($plugin->isActivated("typology")) {
+      if (Plugin::isPluginActive("typology")) {
 
          $values = self::addItem($item);
 
@@ -952,7 +950,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
             $datas = PluginTypologyTypologyCriteriaDefinition::getConsoleData($tabCritID, $ID, $itemtype, $display);
             if (!$display) {
                foreach ($datas[$itemtype] as $k => $critId) {
-                  if ($critId['result'] == 'not_ok') {
+                  if (isset($critId['result']) && $critId['result'] == 'not_ok') {
                      $notOK[] = $k;
                   }
                }

@@ -173,8 +173,7 @@ function plugin_typology_postinit() {
  */
 function plugin_typology_getDatabaseRelations() {
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated("typology")) {
+   if (Plugin::isPluginActive("typology")) {
       return  ["glpi_entities" =>  ["glpi_plugin_typology_typologies" =>"entities_id",
                                               "glpi_plugin_typology_typologycriterias" => "entities_id",
                                               "glpi_plugin_typology_typologycriteriadefinitions" => "entities_id"],
@@ -197,9 +196,8 @@ function plugin_typology_getDatabaseRelations() {
  * @return array
  */
 function plugin_typology_MassiveActions($type) {
-   
-   $plugin = new Plugin();
-   if ($plugin->isActivated('typology')) {
+
+   if (Plugin::isPluginActive('typology')) {
       switch ($type) {
          default:
             // Actions from items lists
@@ -225,10 +223,9 @@ function plugin_typology_MassiveActions($type) {
  */
 function plugin_typology_getAddSearchOptions($itemtype) {
 
-   $plugin = new Plugin();
    $sopt = [];
 
-   if ($plugin->isActivated('typology')
+   if (Plugin::isPluginActive('typology')
          && Session::haveRight("plugin_typology", READ)) {
       if (in_array($itemtype, PluginTypologyTypology::getTypes(true))) {
          $sopt[4650]['table']         = 'glpi_plugin_typology_typologies';
