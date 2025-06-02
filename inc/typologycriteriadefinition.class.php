@@ -139,7 +139,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
       echo "<div class='firstbloc'>";
 
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
 
          if (Session::haveRight("plugin_typology", UPDATE)) {
             echo "<form method='post' action='./typologycriteria.form.php'>";
@@ -882,7 +882,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                FROM `glpi_softwareversions`
                                INNER JOIN `glpi_softwares` on (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                WHERE `glpi_softwareversions`.`id`='" . $ligne["value"] . "'";
-                     if ($result = $DB->query($query)) {
+                     if ($result = $DB->doQuery($query)) {
                         while ($data = $DB->fetchArray($result)) {
                            echo $data['softname'] . " - ";
                            if ($data['vname'] == '') {
@@ -1192,7 +1192,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                 INNER JOIN `glpi_softwares`
                                                 ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                 WHERE `glpi_softwareversions`.`id`='" . $def["value"] . "'";
-                                       if ($result = $DB->query($query)) {
+                                       if ($result = $DB->doQuery($query)) {
                                           while ($data = $DB->fetchArray($result)) {
                                              $name = $data['softname'] . " - ";
                                              if ($data['vname'] == '') {
@@ -1219,7 +1219,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                               FROM `" . $searchOption['table'] . "`
                                               WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
 
-                                    if ($resultQuery = $DB->query($query)) {
+                                    if ($resultQuery = $DB->doQuery($query)) {
                                        $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                     $dropdownResult = $tabResult['designation'];
@@ -1256,7 +1256,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                    INNER JOIN `glpi_softwares`
                                                    ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
                                                    WHERE `glpi_softwareversions`.`id` = '" . $def["Field"] . "'";
-                                       if ($result = $DB->query($query)) {
+                                       if ($result = $DB->doQuery($query)) {
                                           while ($data = $DB->fetchArray($result)) {
                                              $name = $data['softname'] . " - ";
                                              if ($data['vname'] == '') {
@@ -1283,7 +1283,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                                  FROM `" . $searchOption['table'] . "`
                                                  WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
 
-                                    if ($resultQuery = $DB->query($query)) {
+                                    if ($resultQuery = $DB->doQuery($query)) {
                                        $tabResult = $DB->fetchAssoc($resultQuery);
                                     }
                                     $dropdownResult = $tabResult['designation'];
@@ -1609,7 +1609,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "string" :
                               if ($def['action_type'] == 'contains') {
                                  $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
-                                                  " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
+                                                  " LIKE '%" . $def["value"] . "%'";
                               } else if ($def['action_type'] == 'notcontains') {
                                  $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
                                                   " LIKE '%" . $def["value"] . "%'";
@@ -1627,10 +1627,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  case "glpi_users":
                                     if ($def['action_type'] == 'contains') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
-                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
+                                                        " LIKE '%" . $def["value"] . "%'";
                                     } else if ($def['action_type'] == 'notcontains') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
-                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
+                                                        " LIKE '%" . $def["value"] . "%'";
                                     } else if ($def['action_type'] == 'equals') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
                                                         " = '" . $dbu->getUserName($def["value"]) . "'";
@@ -1651,14 +1651,14 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  default :
                                     if ($def['action_type'] == 'contains' || $def['action_type'] == 'notcontains') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`" .
-                                                        " LIKE '%" . Toolbox::addslashes_deep($def["value"]) . "%'";
+                                                        " LIKE '%" . $def["value"] . "%'";
                                     } else if ($def['action_type'] == 'equals') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
                                        if ($item instanceof CommonDevice) {
                                           $item->getFromDB($def["value"]);
-                                          $queryConsole .= " = '" . Toolbox::addslashes_deep($item->getName()) . "'";
+                                          $queryConsole .= " = '" . $item->getName() . "'";
                                        } else {
-                                          $queryConsole .= " = '" . Toolbox::addslashes_deep(Dropdown::getDropdownName($searchOption['table'], $def["value"])) . "'";
+                                          $queryConsole .= " = '" . Dropdown::getDropdownName($searchOption['table'], $def["value"]) . "'";
                                        }
                                     } else if ($def['action_type'] == 'notequals') {
                                        $queryConsole .= " AND `" . $searchOption['table'] . "`.`" . $searchOption['field'] . "`";
@@ -1692,7 +1692,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               break;
                         }
 
-                        $nbConsole = $DB->fetchArray($DB->query($queryConsole));
+                        $nbConsole = $DB->fetchArray($DB->doQuery($queryConsole));
                         if ($nbConsole['COUNT'] > 0) {
                            if ($def['action_type'] == 'notequals' || $def['action_type'] == 'notcontains') {
                               $valueFromDef[$itemtype][$key1][$key2]["result"] = 'not_ok';

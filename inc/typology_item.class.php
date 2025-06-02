@@ -493,7 +493,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                     AND `" . $table_typo_item . "`.`plugin_typology_typologies_id`=`glpi_plugin_typology_typologies`.`id`"
                   . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', '', true);
 
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
 
          echo "<tr><th>" . __('Typology assigned to this material', 'typology') . "</th>";
 
@@ -858,7 +858,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       if ($item->maybeTemplate()) {
          $query .= " AND " . $itemtable . ".is_template='0'";
       }
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->result($result, 0, "count");
 
       $query = "SELECT `" . $itemtable . "`.*,

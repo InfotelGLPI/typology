@@ -196,7 +196,7 @@ if ($res && $nbtot >0) {
                               `glpi_plugin_typology_typologies`.`id`".
                       getOrderBy('entity', $columns);
 
-   $resultService = $DB->query($queryService);
+   $resultService = $DB->doQuery($queryService);
    $row_num = 1;
    while ($dataService=$DB->fetchAssoc($resultService)) {
 
@@ -268,7 +268,7 @@ if ($res && $nbtot >0) {
                                AND ".$condition."".$sqltypo."
                                ORDER BY `glpi_computers`.`name`";
 
-      $resultComputer = $DB->query($queryComputer);
+      $resultComputer = $DB->doQuery($queryComputer);
       $computeOK=0;
       $computeNOTOK=0;
 
