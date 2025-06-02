@@ -272,7 +272,8 @@ function plugin_typology_getAddSearchOptions($itemtype) {
  */
 function plugin_typology_giveItem($type, $ID, $data, $num) {
 
-   $searchopt=&Search::getOptions($type);
+    $options = Search::getOptions($type);
+    $searchopt=& $options;
    $table=$searchopt[$ID]["table"];
    $field=$searchopt[$ID]["field"];
 
