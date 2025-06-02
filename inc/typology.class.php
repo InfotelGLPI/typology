@@ -186,7 +186,7 @@ class PluginTypologyTypology extends CommonDBTM {
 
       foreach ($devtypes as $itemtype) {
          $device = new $itemtype();
-         if ($device->can(-1, 'r')) {
+         if ($device->can(-1, READ)) {
             $types_criteria[] = $itemtype;
          }
       }
