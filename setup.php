@@ -27,19 +27,22 @@
  --------------------------------------------------------------------------
  */
 
+global $CFG_GLPI;
+
+use Glpi\Plugin\Hooks;
+
 define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
 
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
    define("PLUGIN_TYPOLOGY_DIR_NOFULL", Plugin::getPhpDir("typology",false));
-   define("PLUGIN_TYPOLOGY_WEBDIR", Plugin::getWebDir("typology"));
 }
 
 // Init the hooks of the plugins -Needed
 function plugin_init_typology() {
    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS['add_css']['typology']        = 'typology.css';
+   $PLUGIN_HOOKS[Hooks::ADD_CSS]['typology']        = 'typology.css';
    $PLUGIN_HOOKS['csrf_compliant']['typology'] = true;
    $PLUGIN_HOOKS['change_profile']['typology'] = ['PluginTypologyProfile','initProfile'];
 
@@ -89,8 +92,8 @@ function plugin_version_typology() {
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
       'requirements'   => [
          'glpi' => [
-            'min' => '10.0',
-            'max' => '11.0',
+            'min' => '11.0',
+            'max' => '12.0',
             'dev' => false
          ]
       ]

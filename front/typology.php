@@ -27,6 +27,8 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include ('../../../inc/includes.php');
 
 Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
@@ -36,7 +38,7 @@ if ($typo->canView() || Session::haveRight("config", UPDATE)) {
    Search::show("PluginTypologyTypology");
 
 } else {
-   Html::displayRightError();
+    throw new AccessDeniedHttpException();
 }
 
 Html::footer();

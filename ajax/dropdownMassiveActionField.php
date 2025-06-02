@@ -35,7 +35,7 @@ Html::header_nocache();
 Session::checkLoginUser();
 
 if (!isset($_POST["field"])) {
-   exit();
+    throw new \Glpi\Exception\Http\NotFoundHttpException();
 }
 
 if (isset($_POST["field"]) && $_POST["field"]) {
