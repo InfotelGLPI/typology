@@ -64,10 +64,10 @@ function plugin_typology_install() {
       foreach ($notepad_tables as $t) {
          // Migrate data
          if ($DB->fieldExists($t, 'notepad')) {
-            $query = "SELECT id, notepad
-                      FROM `$t`
-                      WHERE notepad IS NOT NULL
-                            AND notepad <>'';";
+             $criteria = [
+                 'NOT' => ['notepad' => null],
+                 'notepad' => ['!=' => '']
+             ];
             foreach ($DB->request($query) as $data) {
                $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
@@ -134,7 +134,10 @@ function plugin_typology_uninstall() {
    $options = ['itemtype' => 'PluginTypologyTypology',
                     'event'    => 'AlertNotValidatedTypology',
                     'FIELDS'   => 'id'];
-   foreach ($DB->request('glpi_notifications', $options) as $data) {
+   foreach ($DB->request([
+       'FROM' => 'glpi_notifications',
+       'WHERE' => $options
+   ]) as $data) {
       $notif->delete($data);
    }
 

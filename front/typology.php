@@ -29,7 +29,6 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 
-include ('../../../inc/includes.php');
 
 Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
 

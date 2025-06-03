@@ -1000,27 +1000,37 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
     *
     * @return array
     */
-   static function getValueFromDef($critID) {
-      global $DB;
-      $resp  = [];
-      $query = "SELECT `glpi_plugin_typology_typologycriteriadefinitions`.`id` AS id,
-                      `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` AS plugin_typology_typologycriterias_id,
-                      `glpi_plugin_typology_typologycriterias`.`link` AS link,
-                      `glpi_plugin_typology_typologycriteriadefinitions`.`field` AS field,
-                      `glpi_plugin_typology_typologycriteriadefinitions`.`action_type` AS action_type,
-                      `glpi_plugin_typology_typologycriteriadefinitions`.`value` AS value
-               FROM `glpi_plugin_typology_typologycriteriadefinitions`
-               LEFT JOIN `glpi_plugin_typology_typologycriterias`
-                  ON (`glpi_plugin_typology_typologycriterias`.`id` = `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id`)
-               WHERE `glpi_plugin_typology_typologycriteriadefinitions`.`plugin_typology_typologycriterias_id` " .
-               " = '" . $critID . "'
-         ORDER BY `id`";
-      foreach ($DB->request($query) as $data) {
-         $resp[$data['id']] = $data;
-      }
-      return $resp;
+    static function getValueFromDef($critID) {
+        global $DB;
+        $resp = [];
 
-   }
+        foreach ($DB->request([
+            'FROM' => 'glpi_plugin_typology_typologycriteriadefinitions',
+            'LEFTJOIN' => [
+                'glpi_plugin_typology_typologycriterias' => [
+                    'ON' => [
+                        'glpi_plugin_typology_typologycriterias.id' => 'glpi_plugin_typology_typologycriteriadefinitions.plugin_typology_typologycriterias_id'
+                    ]
+                ]
+            ],
+            'FIELDS' => [
+                'glpi_plugin_typology_typologycriteriadefinitions.id',
+                'glpi_plugin_typology_typologycriteriadefinitions.plugin_typology_typologycriterias_id',
+                'glpi_plugin_typology_typologycriterias.link',
+                'glpi_plugin_typology_typologycriteriadefinitions.field',
+                'glpi_plugin_typology_typologycriteriadefinitions.action_type',
+                'glpi_plugin_typology_typologycriteriadefinitions.value',
+            ],
+            'WHERE' => [
+                'glpi_plugin_typology_typologycriteriadefinitions.plugin_typology_typologycriterias_id' => $critID
+            ],
+            'ORDER' => 'glpi_plugin_typology_typologycriteriadefinitions.id'
+        ]) as $data) {
+            $resp[$data['id']] = $data;
+        }
+        return $resp;
+    }
+
 
    /**
     * get real computer value

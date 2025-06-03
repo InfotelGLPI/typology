@@ -27,7 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
 
 $typo = new PluginTypologyTypology();
 $typo->redirectToList();

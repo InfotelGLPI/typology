@@ -27,10 +27,10 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
+global $DB, $LANG;
 $USEDBREPLICATE        = 1;
 $DBCONNECTION_REQUIRED = 1;
 
-include ("../../../../inc/includes.php");
 
 $titre = __('Typologies list by service with materials list', 'typology');
 
