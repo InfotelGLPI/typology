@@ -1006,11 +1006,9 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
         foreach ($DB->request([
             'FROM' => 'glpi_plugin_typology_typologycriteriadefinitions',
-            'LEFTJOIN' => [
+            'LEFT JOIN' => [
                 'glpi_plugin_typology_typologycriterias' => [
-                    'ON' => [
-                        'glpi_plugin_typology_typologycriterias.id' => 'glpi_plugin_typology_typologycriteriadefinitions.plugin_typology_typologycriterias_id'
-                    ]
+                    'glpi_plugin_typology_typologycriterias.id' => 'glpi_plugin_typology_typologycriteriadefinitions.plugin_typology_typologycriterias_id'
                 ]
             ],
             'FIELDS' => [
@@ -1062,20 +1060,20 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         $itemDataType = $test[2];
 
                         //1-SELECT
-                        $queryReal = "SELECT ";
+                         $searchOption = [];
                         if ($itemField == 'count') {
-                           $queryReal             .= "COUNT(*) ";
-                           $queryReal             .= "as Field ";
+                            $fields = ['COUNT(*) as Field'];
                            $searchOption['table'] = $itemTable;
                         } else if ($itemField == 'softwareversions_id') {
                            $searchOption['table'] = $itemTable;
-                           $searchOption['field'] = 'id';
-                           $searchOption['name']  = __('Name') . " - " . _n('Version', 'Versions', 2);
-                           $queryReal             .= "`" . $searchOption['table'] . "`.`" . $searchOption['field'] . "` ";
-                           $queryReal             .= "as Field ";
+                            $fields = ["`{$searchOption['table']}`.`id` as Field"];
                         } else if ($itemField == 'softwarecategories_id') {
                            $searchOption['table'] = $itemTable;
-                           $queryReal             .= " `glpi_softwares`.`name` as softwares_name, `glpi_softwarecategories`.`name` as softwarecategories_name, `glpi_softwarecategories`.`name` as Field ";
+                            $fields = [
+                                "`glpi_softwares`.`name` as softwares_name",
+                                "`glpi_softwarecategories`.`name` as softwarecategories_name",
+                                "`glpi_softwarecategories`.`name` as Field"
+                            ];
                         } else {
                            $searchOption = $item->getSearchOptionByField('field', $itemField);
 
@@ -1087,73 +1085,103 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  $searchOption = $item->getSearchOptionByField('field', 'name', $itemTable);
                               }
                            }
+                            $fields = [
+                                "`{$searchOption['table']}`.`{$searchOption['field']}` as Field",
+                                "`{$searchOption['table']}`.`id` as Field_id"
+                            ];
 
-                           $queryReal .= "`" . $searchOption['table'] . "`.`" . $searchOption['field'] . "` ";
-                           $queryReal .= "as Field ";
-                           $queryReal .= ",`" . $searchOption['table'] . "`.`id` ";
-                           $queryReal .= "as Field_id ";
                         }
 
                         // 2 - FROM
+                         $params = [];
                         switch ($itemtype) {
                            case "Computer":
-                              $queryReal .= " FROM `glpi_computers`";
+                               $params['FROM'] = 'glpi_computers';
                               if ($searchOption['table'] != 'glpi_computers') {
-                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
                                  $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
-                                 $queryReal .= " ON (`glpi_computers`.`" . $fk . "`= `" . $searchOption['table'] . "`.`id`)";
+                                  $params['INNER JOIN'][$searchOption['table']] = [
+                                      "`glpi_computers`.`$fk`" => "`{$searchOption['table']}`.`id`"
+                                  ];
                               }
-                              $queryReal .= " WHERE `glpi_computers`.`id` = '$pcID'";
+                               $params['WHERE'] = ['glpi_computers.id' => $pcID];
                               break;
                            case "Monitor":
                            case "Peripheral":
                            case "Printer":
-                              $queryReal .= " FROM `glpi_computers_items`";
-                              if (strstr($searchOption['table'], 'types')) {
-                                 $table     = str_replace('types', 's', $searchOption['table']);
-                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
-                                 $queryReal .= " INNER JOIN `" . $table . "`";
-                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
-                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $queryReal .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
-                              } else if ($searchOption['table'] == 'glpi_networks') {
-                                 $table     = $dbu->getTableForItemType($itemtype);
-                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
-                                 $queryReal .= " INNER JOIN `" . $table . "`";
-                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
-                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $queryReal .= " ON (`" . $table . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
+                            $params['FROM'] = 'glpi_computers_items';
 
-                              } else {
-                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $queryReal .= " ON (`glpi_computers_items`.`items_id` = `" . $dbu->getTableForItemType($itemtype) . "`.`id`)";
-                              }
-                              $queryReal .= " WHERE `glpi_computers_items`.`itemtype` = '" . $itemtype . "'
-                                                AND `glpi_computers_items`.`computers_id` = '$pcID'";
-                              break;
-                           case "Software":
-                              $queryReal .= " FROM `glpi_items_softwareversions`";
-                              $queryReal .= " LEFT JOIN `glpi_softwareversions` 
-                                             ON (`glpi_items_softwareversions`.`softwareversions_id` = `glpi_softwareversions`.`id`)";
-                              $queryReal .= " LEFT JOIN `glpi_softwares` 
-                                             ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)";
-                              $queryReal .= " LEFT JOIN `glpi_softwarecategories` 
-                                             ON (`glpi_softwares`.`softwarecategories_id` = `glpi_softwarecategories`.`id`)";
-                              $queryReal .= " WHERE `glpi_items_softwareversions`.`itemtype` ='Computer' 
-                              AND `glpi_items_softwareversions`.`items_id` ='$pcID'";
-                              break;
-                           case "IPAddress":
-                              $queryReal .= " FROM `glpi_networkports`";
-                              $queryReal .= " LEFT JOIN `glpi_networknames`" .
-                                            " ON (`glpi_networkports`.`id` = `glpi_networknames`.`items_id`" .
-                                            " AND `glpi_networknames`.`itemtype`='NetworkPort')";
-                              $queryReal .= " LEFT JOIN `glpi_ipaddresses`" .
-                                            " ON (`glpi_networknames`.`id` = `glpi_ipaddresses`.`items_id`" .
-                                            " AND `glpi_ipaddresses`.`itemtype`='NetworkName')";
-                              $queryReal .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'" .
-                                            " AND `glpi_networkports`.`items_id` = '$pcID'";
-                              break;
-                           //                           case "NetworkPort":
+                            if (strstr($searchOption['table'], 'types')) {
+                                $table = str_replace('types', 's', $searchOption['table']);
+                                $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+
+                                $params['INNER JOIN'][$table] = [
+                                    "`glpi_computers_items`.`items_id`" => "`" . $dbu->getTableForItemType($itemtype) . "`.`id`"
+                                ];
+
+                                $params['INNER JOIN'][$searchOption['table']] = [
+                                    "`$table`.`$fk`" => "`{$searchOption['table']}`.`id`"
+                                ];
+
+                            } else if ($searchOption['table'] == 'glpi_networks') {
+                                $table = $dbu->getTableForItemType($itemtype);
+                                $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+
+                                $params['INNER JOIN'][$table] = [
+                                    "`glpi_computers_items`.`items_id`" => "`" . $dbu->getTableForItemType($itemtype) . "`.`id`"
+                                ];
+
+                                $params['INNER JOIN'][$searchOption['table']] = [
+                                    "`$table`.`$fk`" => "`{$searchOption['table']}`.`id`"
+                                ];
+
+                            } else {
+                                $params['INNER JOIN'][$searchOption['table']] = [
+                                    "`glpi_computers_items`.`items_id`" => "`" . $dbu->getTableForItemType($itemtype) . "`.`id`"
+                                ];
+                            }
+
+                            $params['WHERE'] = [
+                                'glpi_computers_items.itemtype' => $itemtype,
+                                'glpi_computers_items.computers_id' => $pcID
+                            ];
+                            break;
+                            case "Software":
+                                $params['FROM'] = 'glpi_items_softwareversions';
+                                $params['LEFT JOIN'] = [
+                                    'glpi_softwareversions' => [
+                                        'glpi_items_softwareversions.softwareversions_id' => 'glpi_softwareversions.id'
+                                    ],
+                                    'glpi_softwares' => [
+                                        'glpi_softwareversions.softwares_id' => 'glpi_softwares.id'
+                                    ],
+                                    'glpi_softwarecategories' => [
+                                        'glpi_softwares.softwarecategories_id' => 'glpi_softwarecategories.id'
+                                    ]
+                                ];
+                                $params['WHERE'] = [
+                                    'glpi_items_softwareversions.itemtype' => 'Computer',
+                                    'glpi_items_softwareversions.items_id' => $pcID
+                                ];
+                                break;
+                            case "IPAddress":
+                                $params['FROM'] = 'glpi_networkports';
+                                $params['LEFT JOIN'] = [
+                                    'glpi_networknames' => [
+                                        'glpi_networkports.id' => 'glpi_networknames.items_id',
+                                    ],
+                                    'glpi_ipaddresses' => [
+                                        'glpi_networknames.id' => 'glpi_ipaddresses.items_id',
+                                    ]
+                                ];
+                                $params['WHERE'] = [
+                                    'glpi_networkports.itemtype' => 'Computer',
+                                    'glpi_networkports.items_id' => $pcID,
+                                    'glpi_networknames.itemtype' => 'NetworkPort',
+                                    'glpi_ipaddresses.itemtype' => 'NetworkName'
+                                ];
+                                break;
+
+                            //                           case "NetworkPort":
                            //                              $queryReal .= " FROM `glpi_networkports`";
                            //                              $queryReal .= " WHERE `glpi_networkports`.`itemtype` = 'Computer'".
                            //                                            " AND `glpi_networkports`.`items_id` = '$pcID'";
@@ -1162,18 +1190,24 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "DeviceMemory":
                            case "DeviceHardDrive":
                               if ($itemField == 'count') {
-                                 $queryReal .= " FROM `" . $searchOption['table'] . "`";
-                                 $queryReal .= " WHERE `items_id` = '$pcID' AND `itemtype` = 'Computer'";
+                                  $params['FROM'] = $searchOption['table'];
+                                  $params['WHERE'] = [
+                                      'items_id' => $pcID,
+                                      'itemtype' => 'Computer'
+                                  ];
 
                               } else {
                                  $linktable = $dbu->getTableForItemType('items_' . $itemtype);
                                  $fk        = $dbu->getForeignKeyFieldForTable($dbu->getTableForItemType($itemtype));
 
-                                 $queryReal .= " FROM `" . $linktable . "`";
-                                 $queryReal .= " INNER JOIN `" . $searchOption['table'] . "`";
-                                 $queryReal .= " ON (`" . $linktable . "`.`" . $fk . "` = `" . $searchOption['table'] . "`.`id`)";
-                                 $queryReal .= " WHERE `" . $linktable . "`.`items_id` = '$pcID'" .
-                                               " AND `" . $linktable . "`.`itemtype` = 'Computer'";
+                                  $params['FROM'] = $linktable;
+                                  $params['INNER JOIN'][$searchOption['table']] = [
+                                      "`$linktable`.`$fk`" => "`{$searchOption['table']}`.`id`"
+                                  ];
+                                  $params['WHERE'] = [
+                                      "$linktable.items_id" => $pcID,
+                                      "$linktable.itemtype" => 'Computer'
+                                  ];
                               }
                               break;
                         }
@@ -1182,7 +1216,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         $real_value = null;
                         $nbok       = 0;
                         $list       = [];
-                        foreach ($DB->request($queryReal) as $data) {
+                        foreach ($DB->request($params) as $data) {
 
                            $nbReal++;
 
@@ -1195,24 +1229,31 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                     $nbok++;
 
                                     if ($itemField == 'softwareversions_id') {
-                                       $query = "SELECT `glpi_softwares`.`name` AS softname,
-                                                        `glpi_softwareversions`.`name` AS vname,
-                                                        `glpi_softwareversions`.`id` AS vid
-                                                 FROM `glpi_softwareversions`
-                                                INNER JOIN `glpi_softwares`
-                                                ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
-                                                WHERE `glpi_softwareversions`.`id`='" . $def["value"] . "'";
-                                       if ($result = $DB->doQuery($query)) {
-                                          while ($data = $DB->fetchArray($result)) {
-                                             $name = $data['softname'] . " - ";
-                                             if ($data['vname'] == '') {
-                                                $name .= "(" . $data['vid'] . ")";
-                                             } else {
-                                                $name .= $data['vname'];
-                                             }
-                                             $list[] = $name;
-                                          }
-                                       }
+                                        $softwareData = [];
+                                        foreach ($DB->request([
+                                            'FROM' => 'glpi_softwareversions',
+                                            'LEFT JOIN' => [
+                                                'glpi_softwares' => [
+                                                    'glpi_softwares.id' => 'glpi_softwareversions.softwares_id'
+                                                ]
+                                            ],
+                                            'FIELDS' => [
+                                                'glpi_softwares.name as softname',
+                                                'glpi_softwareversions.name as vname',
+                                                'glpi_softwareversions.id as vid',
+                                            ],
+                                            'WHERE' => [
+                                                'glpi_softwareversions.id' => $def["value"]
+                                            ]
+                                        ]) as $softwareData) {
+                                            $name = $softwareData['softname'] . " - ";
+                                            if ($softwareData['vname'] == '') {
+                                                $name .= "(" . $softwareData['vid'] . ")";
+                                            } else {
+                                                $name .= $softwareData['vname'];
+                                            }
+                                            $list[] = $name;
+                                        }
                                     } else {
                                        $list[] = $data['Field'];
                                     }
@@ -1224,16 +1265,18 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  }
 
                               } else {
-                                 if (stristr($searchOption['table'], 'device')) {// If device type
-                                    $query = "SELECT `" . $searchOption['table'] . "`.`designation`
-                                              FROM `" . $searchOption['table'] . "`
-                                              WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
-
-                                    if ($resultQuery = $DB->doQuery($query)) {
-                                       $tabResult = $DB->fetchAssoc($resultQuery);
-                                    }
-                                    $dropdownResult = $tabResult['designation'];
-                                 } else {
+                                  if (stristr($searchOption['table'], 'device')) { // If device type
+                                      $tabResult = null;
+                                      foreach ($DB->request([
+                                          'FROM'   => $searchOption['table'],
+                                          'FIELDS' => [$searchOption['table'] . '.designation'],
+                                          'WHERE'  => [$searchOption['table'] . '.designation' => $data['Field']]
+                                      ]) as $row) {
+                                          $tabResult = $row;
+                                          break; // On prend juste la première ligne
+                                      }
+                                      $dropdownResult = $tabResult['designation'] ?? null;
+                                  } else {
                                     $dropdownResult = Dropdown::getDropdownName($searchOption['table'], $def["value"]);
                                  }
 
@@ -1259,24 +1302,31 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                                  if ($data['Field'] == $def["value"]) {
                                     $nbok++;
                                     if ($itemField == 'softwareversions_id') {
-                                       $query = "SELECT `glpi_softwares`.`name` AS softname,
-                                                        `glpi_softwareversions`.`name` AS vname,
-                                                        `glpi_softwareversions`.`id` AS vid
-                                                   FROM `glpi_softwareversions`
-                                                   INNER JOIN `glpi_softwares`
-                                                   ON (`glpi_softwareversions`.`softwares_id` = `glpi_softwares`.`id`)
-                                                   WHERE `glpi_softwareversions`.`id` = '" . $def["Field"] . "'";
-                                       if ($result = $DB->doQuery($query)) {
-                                          while ($data = $DB->fetchArray($result)) {
-                                             $name = $data['softname'] . " - ";
-                                             if ($data['vname'] == '') {
+                                        foreach ($DB->request([
+                                            'FROM' => 'glpi_softwareversions',
+                                            'INNER JOIN' => [
+                                                'glpi_softwares' => [
+                                                    'glpi_softwares.id' => 'glpi_softwareversions.softwares_id'
+                                                ]
+                                            ],
+                                            'FIELDS' => [
+                                                'glpi_softwares.name as softname',
+                                                'glpi_softwareversions.name as vname',
+                                                'glpi_softwareversions.id as vid',
+                                            ],
+                                            'WHERE' => [
+                                                'glpi_softwareversions.id' => $def["value"]
+                                            ]
+                                        ]) as $data) {
+                                            $name = $data['softname'] . " - ";
+                                            if ($data['vname'] == '') {
                                                 $name .= "(" . $data['vid'] . ")";
-                                             } else {
+                                            } else {
                                                 $name .= $data['vname'];
-                                             }
-                                             $list[] = $name;
-                                          }
-                                       }
+                                            }
+                                            $list[] = $name;
+                                        }
+
                                     } else {
                                        $list[] = $data['Field'];
                                     }
@@ -1289,14 +1339,17 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
 
                               } else {
                                  if (stristr($searchOption['table'], 'device')) {// If device type
-                                    $query = "SELECT `" . $searchOption['table'] . "`.`designation`
-                                                 FROM `" . $searchOption['table'] . "`
-                                                 WHERE `" . $searchOption['table'] . "`.`designation` = '" . $data['Field'] . "'";
+                                     $tabResult = null;
+                                     foreach ($DB->request([
+                                         'FROM'  => $searchOption['table'],
+                                         'FIELDS'=> [$searchOption['table'] . '.designation'],
+                                         'WHERE' => [$searchOption['table'] . '.designation' => $data['Field']]
+                                     ]) as $row) {
+                                         $tabResult = $row;
+                                         break;
+                                     }
+                                     $dropdownResult = $tabResult['designation'] ?? null;
 
-                                    if ($resultQuery = $DB->doQuery($query)) {
-                                       $tabResult = $DB->fetchAssoc($resultQuery);
-                                    }
-                                    $dropdownResult = $tabResult['designation'];
                                  } else {
                                     $dropdownResult = Dropdown::getDropdownName($searchOption['table'], $def["value"]);
                                  }
@@ -1384,9 +1437,10 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                               }
                            }
                         }
+                         $params['FIELDS'] = $fields;
                         //display the real value even if $nbok==0
                         if ($nbReal == 1 && $nbok == 0) {
-                           foreach ($DB->request($queryReal) as $data) {
+                           foreach ($DB->request($params) as $data) {
                               $list[] = $data['Field'];
                            }
                         }
