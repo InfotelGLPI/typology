@@ -1219,6 +1219,7 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                         $real_value = null;
                         $nbok       = 0;
                         $list       = [];
+                         $params['FIELDS'] = $fields;
                         foreach ($DB->request($params) as $data) {
 
                            $nbReal++;
