@@ -32,6 +32,7 @@ if (strpos($_SERVER['PHP_SELF'], "dropdownCaseValue.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
+Session::checkRight('plugin_typology', UPDATE);
 
 Session::checkLoginUser();
 
