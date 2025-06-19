@@ -1098,9 +1098,12 @@ class PluginTypologyTypologyCriteriaDefinition extends CommonDBChild {
                            case "Computer":
                                $params['FROM'] = 'glpi_computers';
                               if ($searchOption['table'] != 'glpi_computers') {
-                                 $fk        = $dbu->getForeignKeyFieldForTable($searchOption['table']);
+                                 $fk = $dbu->getForeignKeyFieldForTable($searchOption['table']); // ex: locations_id
                                   $params['INNER JOIN'][$searchOption['table']] = [
-                                      "`glpi_computers`.`$fk`" => "`{$searchOption['table']}`.`id`"
+                                        'ON' => [
+                                            'glpi_computers' => $fk,
+                                            $searchOption['table'] => 'id',
+                                        ]
                                   ];
                               }
                                $params['WHERE'] = ['glpi_computers.id' => $pcID];
