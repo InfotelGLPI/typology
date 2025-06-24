@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 14:04+0000\n"
+"POT-Creation-Date: 2025-06-24 13:46+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,38 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:206 inc/typology_item.class.php:573
+#: hook.php:209 inc/typology_item.class.php:573
 msgid "Assign a typology to this material"
 msgstr ""
 
-#: hook.php:207
+#: hook.php:210
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:208 inc/typology.class.php:345
+#: hook.php:211 inc/typology.class.php:345
 msgid "Recalculate typology for the elements"
 msgstr ""
 
-#: hook.php:234
+#: hook.php:237
 msgid "Typology's name"
 msgstr ""
 
-#: hook.php:248 inc/typology_item.class.php:504 inc/typology_item.class.php:742
+#: hook.php:251 inc/typology_item.class.php:504 inc/typology_item.class.php:742
 msgid "Responding to typology's criteria"
 msgstr ""
 
-#: setup.php:85 inc/profile.class.php:166 inc/typology.class.php:73
+#: setup.php:88 inc/profile.class.php:166 inc/typology.class.php:73
 msgid "Typology"
 msgid_plural "Typologies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: front/typology.form.php:84
+#: front/typology.form.php:83
 msgid "Element not match with the rule for assigning the typology:"
 msgstr ""
 
-#: front/typology.form.php:99 inc/typology_item.class.php:1062
-#: inc/typology_item.class.php:1078
+#: front/typology.form.php:98 inc/typology_item.class.php:1092
+#: inc/typology_item.class.php:1108
 msgid "Element not match with rules for assigning a typology"
 msgstr ""
 
@@ -125,27 +125,27 @@ msgstr ""
 msgid "No linked element"
 msgstr ""
 
-#: inc/typology_item.class.php:924
+#: inc/typology_item.class.php:954
 msgid "Management console"
 msgstr ""
 
-#: inc/typology_item.class.php:931
+#: inc/typology_item.class.php:961
 msgid "Comparison"
 msgstr ""
 
-#: inc/typology_item.class.php:932 inc/typologycriteria.class.php:254
+#: inc/typology_item.class.php:962 inc/typologycriteria.class.php:254
 msgid "Detail of the assigned typology"
 msgstr ""
 
-#: inc/typology_item.class.php:933
+#: inc/typology_item.class.php:963
 msgid "Detail of the encountered configuration"
 msgstr ""
 
-#: inc/typology_item.class.php:939
+#: inc/typology_item.class.php:969
 msgid "Waiting value"
 msgstr ""
 
-#: inc/typology_item.class.php:940
+#: inc/typology_item.class.php:970
 msgid "Real value"
 msgstr ""
 
