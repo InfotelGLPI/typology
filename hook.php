@@ -50,12 +50,12 @@ function plugin_typology_install() {
       $query = "UPDATE `glpi_plugin_typology_typologycriterias`
                      SET `itemtype`='IPAddress'
                      WHERE `itemtype`='NetworkPort'";
-      $DB->query($query);
+      $DB->doQuery($query);
 
       $query = "UPDATE `glpi_plugin_typology_typologycriteriadefinitions`
                      SET `field`='name;glpi_ipaddresses;itemlink'
                      WHERE `field` LIKE '%glpi_networkports%'";
-      $DB->query($query);
+      $DB->doQuery($query);
    }
 
    if ($DB->tableExists("glpi_plugin_typology_profiles")) {
@@ -64,10 +64,10 @@ function plugin_typology_install() {
       foreach ($notepad_tables as $t) {
          // Migrate data
          if ($DB->fieldExists($t, 'notepad')) {
-            $query = "SELECT id, notepad
-                      FROM `$t`
-                      WHERE notepad IS NOT NULL
-                            AND notepad <>'';";
+             $criteria = [
+                 'NOT' => ['notepad' => null],
+                 'notepad' => ['!=' => '']
+             ];
             foreach ($DB->request($query) as $data) {
                $iq = "INSERT INTO `glpi_notepads`
                              (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
@@ -76,7 +76,7 @@ function plugin_typology_install() {
                $DB->queryOrDie($iq, "0.85 migrate notepad data");
             }
             $query = "ALTER TABLE `glpi_plugin_typology_typologies` DROP COLUMN `notepad`;";
-            $DB->query($query);
+            $DB->doQuery($query);
          }
       }
    }
@@ -115,7 +115,7 @@ function plugin_typology_uninstall() {
                     "glpi_plugin_typology_typologies_items"];
 
    foreach ($tables as $table) {
-      $DB->query("DROP TABLE IF EXISTS `$table`;");
+      $DB->doQuery("DROP TABLE IF EXISTS `$table`;");
    }
 
    // Plugin adding information on general table deletion
@@ -126,7 +126,7 @@ function plugin_typology_uninstall() {
                         "glpi_notepads"];
 
    foreach ($tables_glpi as $table_glpi) {
-      $DB->query("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginTypologyTypology';");
+      $DB->doQuery("DELETE FROM `$table_glpi` WHERE `itemtype` = 'PluginTypologyTypology';");
    }
 
 
@@ -134,7 +134,10 @@ function plugin_typology_uninstall() {
    $options = ['itemtype' => 'PluginTypologyTypology',
                     'event'    => 'AlertNotValidatedTypology',
                     'FIELDS'   => 'id'];
-   foreach ($DB->request('glpi_notifications', $options) as $data) {
+   foreach ($DB->request([
+       'FROM' => 'glpi_notifications',
+       'WHERE' => $options
+   ]) as $data) {
       $notif->delete($data);
    }
 
@@ -272,7 +275,8 @@ function plugin_typology_getAddSearchOptions($itemtype) {
  */
 function plugin_typology_giveItem($type, $ID, $data, $num) {
 
-   $searchopt=&Search::getOptions($type);
+    $options = Search::getOptions($type);
+    $searchopt=& $options;
    $table=$searchopt[$ID]["table"];
    $field=$searchopt[$ID]["field"];
 

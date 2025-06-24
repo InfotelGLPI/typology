@@ -27,7 +27,7 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
+global $CFG_GLPI;
 
 $typo = new PluginTypologyTypology();
 $criteria = new PluginTypologyTypologyCriteria();

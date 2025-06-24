@@ -205,9 +205,10 @@ class PluginTypologyProfile extends CommonDBTM {
          return true;
       }
 
-      foreach ($DB->request('glpi_plugin_typology_profiles',
-                            "`profiles_id`='$profiles_id'") as $profile_data) {
-
+       foreach ($DB->request([
+           'FROM'  => 'glpi_plugin_typology_profiles',
+           'WHERE' => ['profiles_id' => $profiles_id]
+       ]) as $profile_data) {
          $matching = ['typology'    => 'plugin_typology'];
          $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
          foreach ($matching as $old => $new) {
@@ -215,7 +216,7 @@ class PluginTypologyProfile extends CommonDBTM {
                $query = "UPDATE `glpi_profilerights` 
                          SET `rights`='".self::translateARight($profile_data[$old])."' 
                          WHERE `name`='$new' AND `profiles_id`='$profiles_id'";
-               $DB->query($query);
+               $DB->doQuery($query);
             }
          }
       }
@@ -237,15 +238,22 @@ class PluginTypologyProfile extends CommonDBTM {
       }
 
       //Migration old rights in new ones
-      foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
-         self::migrateOneProfile($prof['id']);
-      }
-      foreach ($DB->request("SELECT *
-                           FROM `glpi_profilerights` 
-                           WHERE `profiles_id`='".$_SESSION['glpiactiveprofile']['id']."' 
-                              AND `name` LIKE '%plugin_typology%'") as $prof) {
-         $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
-      }
+       foreach ($DB->request([
+           'SELECT' => ['id'],
+           'FROM'   => 'glpi_profiles'
+       ]) as $prof) {
+           self::migrateOneProfile($prof['id']);
+       }
+       foreach ($DB->request([
+           'SELECT' => '*',
+           'FROM'   => 'glpi_profilerights',
+           'WHERE'  => [
+               'profiles_id' => $_SESSION['glpiactiveprofile']['id'],
+               'name'        => ['LIKE' => '%plugin_typology%']
+           ]
+       ]) as $prof) {
+           $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
+       }
    }
 
 

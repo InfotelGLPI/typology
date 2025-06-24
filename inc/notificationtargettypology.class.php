@@ -130,7 +130,7 @@ class PluginTypologyNotificationTargetTypology extends NotificationTarget {
                        FROM `glpi_notificationtemplates`
                        WHERE `itemtype`='PluginTypologyTypology'
                        AND `name` = 'Alert no validated typology'";
-      $result       = $DB->query($query_id) or die ($DB->error());
+      $result       = $DB->doQuery($query_id) or die ($DB->error());
 
       if ($DB->numrows($result) > 0) {
          $templates_id = $DB->result($result, 0, 'id');

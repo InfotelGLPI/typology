@@ -27,15 +27,15 @@
  --------------------------------------------------------------------------
  */
 
-include ('../../../inc/includes.php');
 
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
+Session::checkRight('plugin_typology', UPDATE);
 Session::checkLoginUser();
 
 if (!isset($_POST["field"])) {
-   exit();
+    throw new \Glpi\Exception\Http\NotFoundHttpException();
 }
 
 if (isset($_POST["field"]) && $_POST["field"]) {

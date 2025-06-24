@@ -493,7 +493,7 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
                     AND `" . $table_typo_item . "`.`plugin_typology_typologies_id`=`glpi_plugin_typology_typologies`.`id`"
                   . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', '', true);
 
-         $result = $DB->query($query);
+         $result = $DB->doQuery($query);
 
          echo "<tr><th>" . __('Typology assigned to this material', 'typology') . "</th>";
 
@@ -845,47 +845,77 @@ class PluginTypologyTypology_Item extends CommonDBRelation {
       $max = $_SESSION['glpilist_limit'];
       $res = [];
 
-      $query = "SELECT count(`glpi_plugin_typology_typologies_items`.`id`) AS count"
-               . " FROM `glpi_plugin_typology_typologies_items`, `" . $itemtable
-               . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $itemtable . "`.`entities_id`) "
-               . " WHERE `" . $itemtable . "`.`id` = `glpi_plugin_typology_typologies_items`.`items_id`
-                              AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
-                              AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
-      if ($itemtype != 'User') {
-         $query .= $dbu->getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
-      }
+        $where = [
+            [$itemtable . '.id' => new \QueryExpression('glpi_plugin_typology_typologies_items.items_id')],
+            'glpi_plugin_typology_typologies_items.itemtype' => $itemtype,
+            'glpi_plugin_typology_typologies_items.plugin_typology_typologies_id' => $typoID,
+        ];
 
-      if ($item->maybeTemplate()) {
-         $query .= " AND " . $itemtable . ".is_template='0'";
-      }
-      $result = $DB->query($query);
-      $number = $DB->result($result, 0, "count");
+        if ($itemtype != 'User') {
+            $entitiesRestrictSql = $dbu->getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
+            if ($entitiesRestrictSql) {
+                $where[] = new \QueryExpression(substr($entitiesRestrictSql, 5));
+            }
+        }
 
-      $query = "SELECT `" . $itemtable . "`.*,
-                                `glpi_plugin_typology_typologies_items`.`id` AS IDP,
-                                `glpi_plugin_typology_typologies_items`.`is_validated`,
-                                `glpi_plugin_typology_typologies_items`.`error`,
-                                `glpi_entities`.`id` AS entity "
-               . " FROM `glpi_plugin_typology_typologies_items`, `" . $itemtable
-               . "` LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `" . $itemtable . "`.`entities_id`) "
-               . " WHERE `" . $itemtable . "`.`id` = `glpi_plugin_typology_typologies_items`.`items_id`
-                              AND `glpi_plugin_typology_typologies_items`.`itemtype` = '$itemtype'
-                              AND `glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id` = '$typoID'";
-      if ($itemtype != 'User') {
-         $query .= $dbu->getEntitiesRestrictRequest(" AND ", $itemtable, '', '', $item->maybeRecursive());
-      }
+        if ($item->maybeTemplate()) {
+            $where[$itemtable . '.is_template'] = 0;
+        }
 
-      if ($item->maybeTemplate()) {
-         $query .= " AND " . $itemtable . ".is_template='0'";
-      }
+        $countReq = $DB->request([
+            'FROM' => ['glpi_plugin_typology_typologies_items', $itemtable],
+            'WHERE' => $where,
+            'COUNT' => 'count',
+        ]);
+       $number = 0;
+       $countReq->next();  // avancer le curseur
+       $countRow = $countReq->current();  // récupérer la ligne courante
 
-      $query .= " ORDER BY `glpi_entities`.`completename`, `" . $itemtable . "`.`$column`
-                  LIMIT $start, $max";
+       if ($countRow) {
+           $number = $countRow['count'];
+       }
 
-      foreach ($DB->request($query) as $data) {
-         $res[] = $data;
-         $max--;
-      }
+        $queryParams = [
+            'SELECT' => [
+                $itemtable => ['*'],
+                'glpi_plugin_typology_typologies_items' => ['id AS IDP', 'is_validated', 'error'],
+                'glpi_entities' => ['id AS entity']
+            ],
+            'FROM' => $itemtable,
+            'INNER JOIN' => [
+                'glpi_plugin_typology_typologies_items' => [
+                    'ON' => [
+                        $itemtable => 'id',
+                        'glpi_plugin_typology_typologies_items' => 'items_id',
+                    ],
+                ],
+            ],
+            'LEFT JOIN' => [
+                'glpi_entities' => [
+                    'ON' => [
+                        $itemtable => 'entities_id',
+                        'glpi_entities' => 'id',
+                    ],
+                ],
+            ],
+            'WHERE' => [
+                'glpi_plugin_typology_typologies_items.itemtype' => $itemtype,
+                'glpi_plugin_typology_typologies_items.plugin_typology_typologies_id' => $typoID,
+            ],
+            'ORDER' => ['glpi_entities.completename', "$itemtable.$column"],
+            'START' => $start,
+            'LIMIT' => $max,
+        ];
+
+        $queryParams['WHERE'] = array_merge($queryParams['WHERE'], $where);
+
+        if ($item->maybeTemplate()) {
+            $queryParams['WHERE']["$itemtable.is_template"] = 0;
+        }
+
+        foreach ($DB->request($queryParams) as $data) {
+            $res[] = $data;
+        }
 
       return $number;
    }
