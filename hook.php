@@ -132,8 +132,7 @@ function plugin_typology_uninstall() {
 
    $notif = new Notification();
    $options = ['itemtype' => 'PluginTypologyTypology',
-                    'event'    => 'AlertNotValidatedTypology',
-                    'FIELDS'   => 'id'];
+                    'event'    => 'AlertNotValidatedTypology'];
    foreach ($DB->request([
        'FROM' => 'glpi_notifications',
        'WHERE' => $options
