@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GLPI - Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-24 13:46+0000\n"
+"POT-Creation-Date: 2025-07-12 07:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: hook.php:209 inc/typology_item.class.php:573
+#: hook.php:208 inc/typology_item.class.php:573
 msgid "Assign a typology to this material"
 msgstr ""
 
-#: hook.php:210
+#: hook.php:209
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: hook.php:211 inc/typology.class.php:345
+#: hook.php:210 inc/typology.class.php:345
 msgid "Recalculate typology for the elements"
 msgstr ""
 
-#: hook.php:237
+#: hook.php:236
 msgid "Typology's name"
 msgstr ""
 
-#: hook.php:251 inc/typology_item.class.php:504 inc/typology_item.class.php:742
+#: hook.php:250 inc/typology_item.class.php:504 inc/typology_item.class.php:742
 msgid "Responding to typology's criteria"
 msgstr ""
 
