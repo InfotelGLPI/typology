@@ -98,7 +98,7 @@ msgstr "Sınıflama bileşenini güncelle"
 
 #: inc/typology_item.class.php:157
 msgid "Element out of the typology"
-msgstr "Bileşeni sınıflamadan çıkarın"
+msgstr "Bileşeni sınıflamadan çıkar"
 
 #: inc/typology_item.class.php:240
 msgid ""
