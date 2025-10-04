@@ -158,7 +158,7 @@ msgstr "Gerçek değer"
 
 #: inc/typologycriteria.class.php:184
 msgid "Add a criterion"
-msgstr "Bir ölçüt ekle"
+msgstr "Ölçüt ekle"
 
 #: inc/typologycriteria.class.php:230
 msgid "Criteria's list"
