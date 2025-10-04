@@ -90,11 +90,11 @@ msgstr[1] "Bileşenler"
 
 #: inc/typology_item.class.php:153
 msgid "Add element to the typology"
-msgstr "Sınıflamaya bileşen ekleyin"
+msgstr "Sınıflamaya bileşen ekle"
 
 #: inc/typology_item.class.php:155
 msgid "Update element to the typology"
-msgstr "Sınıflama bileşenini güncelleyin"
+msgstr "Sınıflama bileşenini güncelle"
 
 #: inc/typology_item.class.php:157
 msgid "Element out of the typology"
