@@ -28,6 +28,8 @@
  */
 
 // Direct access to file
+use GlpiPlugin\Typology\TypologyCriteriaDefinition;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownCaseValue.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -46,4 +48,4 @@ $options=['itemtype'     =>$_POST['itemtype'],
                'action_type'  =>$_POST['action_type']];
 
 //Display list of values or text field depending on action_type
-PluginTypologyTypologyCriteriaDefinition::dropdownValues($options);
+TypologyCriteriaDefinition::dropdownValues($options);

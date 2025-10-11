@@ -29,8 +29,12 @@
 
 global $CFG_GLPI;
 
-$typo = new PluginTypologyTypology();
-$criteria = new PluginTypologyTypologyCriteria();
+use GlpiPlugin\Typology\Typology;
+use GlpiPlugin\Typology\TypologyCriteria;
+use GlpiPlugin\Typology\TypologyCriteriaDefinition;
+
+$typo = new Typology();
+$criteria = new TypologyCriteria();
 
 if (isset($_POST["update"])) {
 
@@ -44,7 +48,7 @@ if (isset($_POST["update"])) {
          && !empty($_POST["itemtype"])) {
       $criteria->check(-1, CREATE, $_POST);
       $newID = $criteria->add($_POST);
-      Html::redirect($CFG_GLPI["root_doc"]. PLUGIN_TYPOLOGY_DIR_NOFULL . "/front/typologycriteria.form.php?id=$newID");
+      Html::redirect(PLUGIN_TYPOLOGY_WEBDIR . "/front/typologycriteria.form.php?id=$newID");
    } else {
       Session::addMessageAfterRedirect(__('No element to be tested'), false, ERROR);
       Html::back();
@@ -59,7 +63,7 @@ if (isset($_POST["update"])) {
 } else if (isset($_POST["add_action"])) {
 
    $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
-   $definition = new PluginTypologyTypologyCriteriaDefinition();
+   $definition = new TypologyCriteriaDefinition();
    $definition->add($_POST);
 
    // Mise à jour de l'heure de modification pour le critère
@@ -69,7 +73,7 @@ if (isset($_POST["update"])) {
 
 } else if (isset($_POST["delete_action"])) {
 
-   $definition = new PluginTypologyTypologyCriteriaDefinition();
+   $definition = new TypologyCriteriaDefinition();
 
    if (isset($_POST["item"]) && count($_POST["item"])) {
       foreach ($_POST["item"] as $key => $val) {
@@ -93,7 +97,7 @@ if (isset($_POST["update"])) {
 
 } else {
    $typo->checkGlobal(READ);
-   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
+   Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
 
    $criteria->display($_GET);
    Html::footer();

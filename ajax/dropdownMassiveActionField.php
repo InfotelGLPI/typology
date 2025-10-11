@@ -28,6 +28,8 @@
  */
 
 
+use Glpi\Exception\Http\NotFoundHttpException;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
@@ -35,7 +37,7 @@ Session::checkRight('plugin_typology', UPDATE);
 Session::checkLoginUser();
 
 if (!isset($_POST["field"])) {
-    throw new \Glpi\Exception\Http\NotFoundHttpException();
+    throw new NotFoundHttpException();
 }
 
 if (isset($_POST["field"]) && $_POST["field"]) {

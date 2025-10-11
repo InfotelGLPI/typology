@@ -29,6 +29,8 @@
 
 
 // Direct access to file
+use GlpiPlugin\Typology\TypologyCriteriaDefinition;
+
 if (strpos($_SERVER['PHP_SELF'], "dropdownAction.php")) {
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
@@ -37,6 +39,6 @@ Session::checkRight('plugin_typology', UPDATE);
 Session::checkLoginUser();
 
 //Display list of logical operator depending on field
-PluginTypologyTypologyCriteriaDefinition::dropdownSelect($_POST['itemtype'],
+TypologyCriteriaDefinition::dropdownSelect($_POST['itemtype'],
                                                          $_POST['typocrit_id'],
                                                          $_POST['field']);

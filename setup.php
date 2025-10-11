@@ -30,12 +30,19 @@
 global $CFG_GLPI;
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Behaviors\Common;
+use GlpiPlugin\Behaviors\Rule;
+use GlpiPlugin\Typology\Profile;
+use GlpiPlugin\Typology\RuleTypology;
+use GlpiPlugin\Typology\RuleTypologyCollection;
+use GlpiPlugin\Typology\Typology;
 
 define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
 
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
-   define("PLUGIN_TYPOLOGY_DIR_NOFULL", Plugin::getPhpDir("typology",false));
+    $root = $CFG_GLPI['root_doc'] . '/plugins/typology';
+    define("PLUGIN_TYPOLOGY_WEBDIR", $root);
 }
 
 // Init the hooks of the plugins -Needed
@@ -44,34 +51,34 @@ function plugin_init_typology() {
 
    $PLUGIN_HOOKS[Hooks::ADD_CSS]['typology']        = 'typology.css';
    $PLUGIN_HOOKS['csrf_compliant']['typology'] = true;
-   $PLUGIN_HOOKS['change_profile']['typology'] = ['PluginTypologyProfile','initProfile'];
+   $PLUGIN_HOOKS['change_profile']['typology'] = [Profile::class,'initProfile'];
 
    if (Session::getLoginUserID()) {
 
-      Plugin::registerClass('PluginTypologyProfile',
+      Plugin::registerClass(Profile::class,
          ['addtabon' => 'Profile']);
 
-      Plugin::registerClass('PluginTypologyTypology', [
+      Plugin::registerClass(Typology::class, [
          'notificationtemplates_types' => true,
       ]);
       // Display a menu entry ?
       if (Session::haveRight("plugin_typology", READ)) {
          // menu entry
-         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => 'PluginTypologyTypology'];
+         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => Typology::class];
       }
 
       if (Session::haveRight("plugin_typology", UPDATE)) {
          //use massiveaction in the plugin
          $PLUGIN_HOOKS['use_massive_action']['typology']=1;
-         $PLUGIN_HOOKS['redirect_page']['typology'] = PLUGIN_TYPOLOGY_DIR_NOFULL.'/front/typology.form.php';
+         $PLUGIN_HOOKS['redirect_page']['typology'] = PLUGIN_TYPOLOGY_WEBDIR.'/front/typology.form.php';
       }
 
-      Plugin::registerClass('PluginTypologyRuleTypologyCollection', [
+      Plugin::registerClass(RuleTypologyCollection::class, [
          'rulecollections_types' => true
       ]);
 
-      if (class_exists('PluginBehaviorsCommon')) {
-         PluginBehaviorsCommon::addCloneType('PluginTypologyRuleTypology', 'PluginBehaviorsRule');
+      if (class_exists(Common::class)) {
+          Common::addCloneType(RuleTypology::class, Rule::class);
       }
 
       $PLUGIN_HOOKS['post_init']['typology'] = 'plugin_typology_postinit';
@@ -87,7 +94,7 @@ function plugin_version_typology() {
    return  [
       'name'           => _n('Typology', 'Typologies', 2, 'typology'),
       'version'        => PLUGIN_TYPOLOGY_VERSION,
-      'author'         => "<a href='http://blogglpi.infotel.com'>Infotel</a>",
+      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>",
       'license'        => 'GPLv2+',
       'homepage'       => 'https://github.com/InfotelGLPI/typology',
       'requirements'   => [

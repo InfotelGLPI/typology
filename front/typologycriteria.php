@@ -28,5 +28,7 @@
  */
 
 
-$typo = new PluginTypologyTypology();
+use GlpiPlugin\Typology\Typology;
+
+$typo = new Typology();
 $typo->redirectToList();

@@ -27,7 +27,11 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-global $DB, $LANG;
+global $DB, $LANG, $HEADER_LOADED;
+
+use GlpiPlugin\Typology\Typology;
+use GlpiPlugin\Typology\Typology_Item;
+
 $USEDBREPLICATE        = 1;
 $DBCONNECTION_REQUIRED = 1;
 
@@ -39,7 +43,7 @@ $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
 $typocrit = New PluginReportsDropdownCriteria($report, '`glpi_plugin_typology_typologies`.`id`',
-   'glpi_plugin_typology_typologies', PluginTypologyTypology::getTypeName(1));
+   'glpi_plugin_typology_typologies', Typology::getTypeName(1));
 
 //Display criterias form is needed
 $report->displayCriteriasForm();
@@ -95,7 +99,7 @@ $query = "SELECT *
           FROM `glpi_plugin_typology_typologies`
           WHERE $condition $sqltypo ";
 
-$res = $DB->query($query);
+$res = $DB->doQuery($query);
 $nbtot = ($res ? $DB->numrows($res) : 0);
 if ($limit) {
    $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
@@ -103,7 +107,7 @@ if ($limit) {
       $start = 0;
    }
    if ($start > 0 || $start + $limit < $nbtot) {
-      $res = $DB->query($query . " LIMIT $start,$limit");
+      $res = $DB->doQuery($query . " LIMIT $start,$limit");
    }
 } else {
    $start = 0;
@@ -172,7 +176,7 @@ if ($res && $nbtot >0) {
    echo Search::showNewLine($output_type);
    showTitle($output_type, $num, __('Entity'), 'entity', true);
    showTitle($output_type, $num, __('Service'), 'groups_id', true);
-   showTitle($output_type, $num, PluginTypologyTypology::getTypeName(1), 'typoID', true);
+   showTitle($output_type, $num, Typology::getTypeName(1), 'typoID', true);
    showTitle($output_type, $num, __('Number', 'typology'), 'COUNT', true);
    echo Search::showEndLine($output_type);
 
@@ -282,17 +286,17 @@ if ($res && $nbtot >0) {
          $computer = new Computer();
          $computer->getFromDB($dataComputer["items_id"]);
 
-         $userName = $dbu->getUserName($computer->fields["users_id"]);
+         $userName = getUserName($computer->fields["users_id"]);
 
          if ($dataComputer["is_validated"] > 0) {
             $critTypOK = __('Yes');
             $computeOK++;
          } else {
-            $critTypOK = "<span typology_font_red>".__('No')." ".
+            $critTypOK = "<span class='typology_font_red'>".__('No')." ".
                            __('for the criteria', 'typology')." ";
             $i=0;
 
-            $critTypOK.=PluginTypologyTypology_Item::displayErrors($dataComputer["error"]);
+            $critTypOK.= Typology_Item::displayErrors($dataComputer["error"]);
 
             $critTypOK.="</span>";
             $computeNOTOK++;
@@ -311,7 +315,7 @@ if ($res && $nbtot >0) {
       $row_num++;
       $num=1;
 
-      $message = "<b><span typology_font_green>".__('Responding', 'typology')." ".
+      $message = "<b><span class='typology_font_green'>".__('Responding', 'typology')." ".
          $computeOK." / ".$dataService["COUNT"]."</span>".", "."<span class='typology_font_red'>".
          __('Not responding', 'typology')." ".$computeNOTOK." / ".$dataService["COUNT"]."</span></b>";
       echo Search::showNewLine($output_type);
@@ -407,7 +411,7 @@ function getOrderBy($default, $columns) {
  *
  * @param $default string, name of the column used by default
  *
- * @return array of column names
+ * @return string of column names
  */
 function getOrderByFields($default, $columns) {
 
@@ -421,6 +425,6 @@ function getOrderByFields($default, $columns) {
          return $column['sorton'];
       }
    }
-   return [];
+   return "";
 }
 

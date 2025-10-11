@@ -28,13 +28,14 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use GlpiPlugin\Typology\Typology;
 
 
-Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
+Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
 
-$typo = new PluginTypologyTypology();
+$typo = new Typology();
 if ($typo->canView() || Session::haveRight("config", UPDATE)) {
-   Search::show("PluginTypologyTypology");
+   Search::show(Typology::class);
 
 } else {
     throw new AccessDeniedHttpException();

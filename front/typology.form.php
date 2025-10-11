@@ -28,12 +28,16 @@
  */
 
 
+use GlpiPlugin\Typology\RuleTypologyCollection;
+use GlpiPlugin\Typology\Typology;
+use GlpiPlugin\Typology\Typology_Item;
+
 if (!isset($_GET["id"])) {
    $_GET["id"] = "";
 }
 
-$typo = new PluginTypologyTypology();
-$typo_item = new PluginTypologyTypology_Item();
+$typo = new Typology();
+$typo_item = new Typology_Item();
 
 if (isset($_POST["add"])) {
    $typo->check(-1, CREATE, $_POST);
@@ -72,7 +76,7 @@ if (isset($_POST["add"])) {
                               'itemtype'      => $_POST['itemtype']];
       $item = new $_POST['itemtype']();
       if ($item->getFromDB($_POST['items_id'])) {
-         $ruleCollection = new PluginTypologyRuleTypologyCollection($item->fields['entities_id']);
+         $ruleCollection = new RuleTypologyCollection($item->fields['entities_id']);
          $fields= [];
          $item->input = $_POST['plugin_typology_typologies_id'];
          $fields=$ruleCollection->processAllRules($item->fields, $fields, []);
@@ -91,7 +95,7 @@ if (isset($_POST["add"])) {
                             'items_id'      => $input['items_id'],
                             'itemtype'      => $input['itemtype']];
 
-               PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_ADD);
+               Typology_Item::addLog($values, Typology_Item::LOG_ADD);
 
             }
          } else {
@@ -106,7 +110,7 @@ if (isset($_POST["add"])) {
 
    if (!empty($_POST['itemtype'])) {
 
-      $input=PluginTypologyTypology_Item::checkValidated($_POST);
+      $input=Typology_Item::checkValidated($_POST);
       $typo_item->check($input['id'], UPDATE);
       $typo_item->update($input);
 
@@ -114,7 +118,7 @@ if (isset($_POST["add"])) {
                             'items_id'      => $input['items_id'],
                             'itemtype'      => $input['itemtype']];
 
-      PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_UPDATE);
+       Typology_Item::addLog($values, Typology_Item::LOG_UPDATE);
 
    }
    Html::back();
@@ -129,7 +133,7 @@ if (isset($_POST["add"])) {
                             'items_id'      => $_POST['items_id'],
                             'itemtype'      => $_POST['itemtype']];
 
-      PluginTypologyTypology_Item::addLog($values, PluginTypologyTypology_Item::LOG_DELETE);
+       Typology_Item::addLog($values, Typology_Item::LOG_DELETE);
 
    } else {
       foreach ($_POST["item"] as $key => $val) {
@@ -143,7 +147,7 @@ if (isset($_POST["add"])) {
 
 } else {
    $typo->checkGlobal(READ);
-   Html::header(PluginTypologyTypology::getTypeName(2), '', "tools", "plugintypologytypology");
+   Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
 
    $typo->display($_GET);
    Html::footer();

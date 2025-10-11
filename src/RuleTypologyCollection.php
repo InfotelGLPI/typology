@@ -27,52 +27,62 @@
  --------------------------------------------------------------------------
  */
 
+namespace GlpiPlugin\Typology;
+
+use RuleCollection;
+use Session;
+
 if (!defined('GLPI_ROOT')) {
-   die("Sorry. You can't access directly to this file");
+    die("Sorry. You can't access directly to this file");
 }
 
 /**
- * Class PluginTypologyRuleTypologyCollection
+ * Class RuleTypologyCollection
  */
-class PluginTypologyRuleTypologyCollection extends RuleCollection {
+class RuleTypologyCollection extends RuleCollection
+{
 
    // From RuleCollection
-   public $stop_on_first_match=true;
-   static $rightname = 'plugin_typology';
-   public $menu_option='typologies';
+    public $stop_on_first_match=true;
+    static $rightname = 'plugin_typology';
+    public $menu_option='typologies';
 
    /**
     * Get title used in list of rules
     *
-    * @return Title of the rule collection
+    * @return string of the rule collection
     **/
-   function getTitle() {
+    function getTitle()
+    {
 
-      return __('Rules for assigning a typology to a computer', 'typology');
-   }
+        return __('Rules for assigning a typology to a computer', 'typology');
+    }
 
    /**
-    * PluginTypologyRuleTypologyCollection constructor.
+    * RuleTypologyCollection constructor.
     *
     * @param int $entity
     */
-   function __construct($entity = 0) {
-      $this->entity = $entity;
-   }
+    function __construct($entity = 0)
+    {
+        $this->entity = $entity;
+    }
 
    /**
     * @return bool
     */
-   function showInheritedTab() {
-      return Session::haveRight("plugin_typology", UPDATE)
+    function showInheritedTab()
+    {
+        return Session::haveRight("plugin_typology", UPDATE)
                && ($this->entity);
-   }
+    }
 
    /**
     * @return bool
     */
-   function showChildrensTab() {
-      return Session::haveRight("plugin_typology", UPDATE)
+    function showChildrensTab()
+    {
+        return Session::haveRight("plugin_typology", UPDATE)
                && (count($_SESSION['glpiactiveentities']) > 1);
-   }
+    }
 }
