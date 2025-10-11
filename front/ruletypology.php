@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -27,9 +28,8 @@
  --------------------------------------------------------------------------
  */
 
-
 use GlpiPlugin\Typology\RuleTypologyCollection;
 
 $rulecollection = new RuleTypologyCollection($_SESSION['glpiactive_entity']);
 
-include (GLPI_ROOT . "/front/rule.common.php");
+include(GLPI_ROOT . "/front/rule.common.php");

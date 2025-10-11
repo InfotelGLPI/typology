@@ -28,10 +28,6 @@
  --------------------------------------------------------------------------
  */
 
-/**
- * @return bool
- */
-
 use GlpiPlugin\Typology\NotificationTargetTypology;
 use GlpiPlugin\Typology\Profile;
 use GlpiPlugin\Typology\RuleTypology;
@@ -41,8 +37,6 @@ use GlpiPlugin\Typology\Typology_Item;
 function plugin_typology_install()
 {
     global $DB;
-
-    $update = true;
 
     if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
         $update = false;
@@ -278,7 +272,6 @@ function plugin_typology_getAddSearchOptions($itemtype)
             $sopt[4652]['forcegroupby']  = true;
             $sopt[4652]['massiveaction'] = false;
             $sopt[4652]['joinparams']    = ['jointype' => 'itemtype_item'];
-
         }
     }
     return $sopt;

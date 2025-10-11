@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -27,25 +28,24 @@
  --------------------------------------------------------------------------
  */
 
-// Direct access to file
 use GlpiPlugin\Typology\TypologyCriteriaDefinition;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownCaseValue.php")) {
-   header("Content-Type: text/html; charset=UTF-8");
-   Html::header_nocache();
+    header("Content-Type: text/html; charset=UTF-8");
+    Html::header_nocache();
 }
 Session::checkRight('plugin_typology', UPDATE);
 
 Session::checkLoginUser();
 
 if (!defined('GLPI_ROOT')) {
-   die("Can not acces directly to this file");
+    die("Can not acces directly to this file");
 }
 
-$options=['itemtype'     =>$_POST['itemtype'],
-               'typocrit_id'  =>$_POST['typocrit_id'],
-               'field'        =>$_POST['field'],
-               'action_type'  =>$_POST['action_type']];
+$options = ['itemtype'     => $_POST['itemtype'],
+    'typocrit_id'  => $_POST['typocrit_id'],
+    'field'        => $_POST['field'],
+    'action_type'  => $_POST['action_type']];
 
 //Display list of values or text field depending on action_type
 TypologyCriteriaDefinition::dropdownValues($options);

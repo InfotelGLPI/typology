@@ -27,7 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-
 use Glpi\Exception\Http\NotFoundHttpException;
 
 header("Content-Type: text/html; charset=UTF-8");
@@ -41,7 +40,7 @@ if (!isset($_POST["field"])) {
 }
 
 if (isset($_POST["field"]) && $_POST["field"]) {
-   Dropdown::showYesNo('is_active');
-   echo "<br>&nbsp;";
-   echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
+    Dropdown::showYesNo('is_active');
+    echo "<br>&nbsp;";
+    echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
 }

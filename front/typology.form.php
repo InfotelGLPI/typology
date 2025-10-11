@@ -27,7 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-
 use GlpiPlugin\Typology\RuleTypologyCollection;
 use GlpiPlugin\Typology\Typology;
 use GlpiPlugin\Typology\Typology_Item;

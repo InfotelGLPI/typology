@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -32,55 +33,50 @@ namespace GlpiPlugin\Typology;
 use RuleCollection;
 use Session;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class RuleTypologyCollection
  */
 class RuleTypologyCollection extends RuleCollection
 {
+    // From RuleCollection
+    public $stop_on_first_match = true;
+    public static $rightname = 'plugin_typology';
+    public $menu_option = 'typologies';
 
-   // From RuleCollection
-    public $stop_on_first_match=true;
-    static $rightname = 'plugin_typology';
-    public $menu_option='typologies';
-
-   /**
-    * Get title used in list of rules
-    *
-    * @return string of the rule collection
-    **/
-    function getTitle()
+    /**
+     * Get title used in list of rules
+     *
+     * @return string of the rule collection
+     **/
+    public function getTitle()
     {
 
         return __('Rules for assigning a typology to a computer', 'typology');
     }
 
-   /**
-    * RuleTypologyCollection constructor.
-    *
-    * @param int $entity
-    */
-    function __construct($entity = 0)
+    /**
+     * RuleTypologyCollection constructor.
+     *
+     * @param int $entity
+     */
+    public function __construct($entity = 0)
     {
         $this->entity = $entity;
     }
 
-   /**
-    * @return bool
-    */
-    function showInheritedTab()
+    /**
+     * @return bool
+     */
+    public function showInheritedTab()
     {
         return Session::haveRight("plugin_typology", UPDATE)
                && ($this->entity);
     }
 
-   /**
-    * @return bool
-    */
-    function showChildrensTab()
+    /**
+     * @return bool
+     */
+    public function showChildrensTab()
     {
         return Session::haveRight("plugin_typology", UPDATE)
                && (count($_SESSION['glpiactiveentities']) > 1);

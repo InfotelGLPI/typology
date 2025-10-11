@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -39,78 +40,73 @@ use MassiveAction;
 use Session;
 use Toolbox;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
 /**
  * Class TypologyCriteria
  */
 class TypologyCriteria extends CommonDBTM
 {
-
-   // From CommonDBTM
-    var       $dohistory           = true;
-    static $rightname           = "plugin_typology";
+    // From CommonDBTM
+    public $dohistory           = true;
+    public static $rightname           = "plugin_typology";
     protected $criteria_id_field   = 'plugin_typology_typologycriterias_id';
     protected $critdefinitionclass = TypologyCriteriaDefinition::class;
 
-    var $definitions = [];
+    public $definitions = [];
 
-   /**
-    * Return the localized name of the current Type
-    * Should be overloaded in each new class
-    *
-    * @param integer $nb Number of items
-    *
-    * @return string
-    **/
+    /**
+     * Return the localized name of the current Type
+     * Should be overloaded in each new class
+     *
+     * @param integer $nb Number of items
+     *
+     * @return string
+     **/
     public static function getTypeName($nb = 0)
     {
 
         return _n('Criterion', 'Criteria', $nb);
     }
 
-   /**
-    * Is the object may be recursive
-    *
-    * Can be overloaded (ex : infocom)
-    *
-    * @return boolean
-    **/
-    function maybeRecursive()
+    /**
+     * Is the object may be recursive
+     *
+     * Can be overloaded (ex : infocom)
+     *
+     * @return boolean
+     **/
+    public function maybeRecursive()
     {
         return true;
     }
 
-   /**
-    * Is the object assigned to an entity
-    *
-    * Can be overloaded (ex : infocom)
-    *
-    * @return boolean
-    **/
-    function isEntityAssign()
+    /**
+     * Is the object assigned to an entity
+     *
+     * Can be overloaded (ex : infocom)
+     *
+     * @return boolean
+     **/
+    public function isEntityAssign()
     {
         return true;
     }
 
-   /**
-    * is_active = 1 during a creation
-    *
-    * @return
-    */
-    function post_getEmpty()
+    /**
+     * is_active = 1 during a creation
+     *
+     * @return
+     */
+    public function post_getEmpty()
     {
         $this->fields['is_active'] = '1';
     }
 
-   /**
-    * Actions done when a typocriteria is deleted from the database
-    *
-    * @return
-    **/
-    function cleanDBonPurge()
+    /**
+     * Actions done when a typocriteria is deleted from the database
+     *
+     * @return
+     **/
+    public function cleanDBonPurge()
     {
         $temp1 = new TypologyCriteriaDefinition();
         $temp1->deleteByCriteria(['plugin_typology_typologycriterias_id' => $this->fields['id']]);
@@ -130,7 +126,7 @@ class TypologyCriteria extends CommonDBTM
     *
     * @return array|string
     */
-    function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
     {
 
         if (!$withtemplate) {
@@ -152,18 +148,18 @@ class TypologyCriteria extends CommonDBTM
         return '';
     }
 
-   /**
-    * Display tab's content for each typology
-    *
-    * @static
-    *
-    * @param CommonGLPI $item
-    * @param int        $tabnum
-    * @param int        $withtemplate
-    *
-    * @return bool|true
-    */
-    static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+    /**
+     * Display tab's content for each typology
+     *
+     * @static
+     *
+     * @param CommonGLPI $item
+     * @param int        $tabnum
+     * @param int        $withtemplate
+     *
+     * @return bool|true
+     */
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
     {
 
         if ($item->getType() == Typology::class) {
@@ -174,10 +170,10 @@ class TypologyCriteria extends CommonDBTM
         return true;
     }
 
-   /**
-    * display tab for typologycriteria
-    **/
-    function defineTabs($options = [])
+    /**
+     * display tab for typologycriteria
+     **/
+    public function defineTabs($options = [])
     {
 
         $ong = [];
@@ -188,12 +184,12 @@ class TypologyCriteria extends CommonDBTM
         return $ong;
     }
 
-   /**
-    * Display the typologycriteria form, typology side
-    *
-    * @param Typology $typo
-    * @param bool                   $showAdd
-    */
+    /**
+     * Display the typologycriteria form, typology side
+     *
+     * @param Typology $typo
+     * @param bool                   $showAdd
+     */
     public static function showForTypology(Typology $typo, $showAdd = true)
     {
 
@@ -234,24 +230,24 @@ class TypologyCriteria extends CommonDBTM
                 echo "</div>";
             }
 
-           //         echo "<form name='massiveaction_form$rand' id='massiveaction_form$rand' method='post'
-           //                     action=\"../ajax/massiveaction.php\">";
+            //         echo "<form name='massiveaction_form$rand' id='massiveaction_form$rand' method='post'
+            //                     action=\"../ajax/massiveaction.php\">";
 
-            $restrict = ["plugin_typology_typologies_id" => $ID] +
-                     ["ORDER" => "itemtype"];
+            $restrict = ["plugin_typology_typologies_id" => $ID]
+                     + ["ORDER" => "itemtype"];
             $dbu       = new DbUtils();
             $criterias = $dbu->getAllDataFromTable('glpi_plugin_typology_typologycriterias', $restrict);
 
-            Session::initNavigateListItems(TypologyCriteria::class, Typology::getTypeName(1) .
-                                                                          " = " . $typo->getName());
+            Session::initNavigateListItems(TypologyCriteria::class, Typology::getTypeName(1)
+                                                                          . " = " . $typo->getName());
             if (!empty($criterias)) {
-                 echo "<div class='spaced'>";
+                echo "<div class='spaced'>";
                 if ($canedit) {
                     Html::openMassiveActionsForm('mass' . __CLASS__ . $rand);
                     $massiveactionparams = [];
                     Html::showMassiveActions($massiveactionparams);
                 }
-                 echo "<table class='tab_cadre_fixe'>";
+                echo "<table class='tab_cadre_fixe'>";
                 if ($canedit) {
                     echo "<tr>";
                     echo "<th width='10'>" . Html::getCheckAllAsCheckbox('mass' . __CLASS__ . $rand) . "</th>";
@@ -259,7 +255,7 @@ class TypologyCriteria extends CommonDBTM
                     echo "</tr>";
                 }
                 foreach ($criterias as $criteria) {
-                     Session::addToNavigateListItems(TypologyCriteria::class, $criteria["id"]);
+                    Session::addToNavigateListItems(TypologyCriteria::class, $criteria["id"]);
 
                     if ($showAdd) {
                         $colspan = 6;
@@ -303,8 +299,8 @@ class TypologyCriteria extends CommonDBTM
                     echo "<td width='10%'>";
 
                     if ($canedit) {
-                        echo "<a href='" . Toolbox::getItemTypeFormURL(TypologyCriteria::class) .
-                          "?id=" . $criteria["id"] . "'>";
+                        echo "<a href='" . Toolbox::getItemTypeFormURL(TypologyCriteria::class)
+                          . "?id=" . $criteria["id"] . "'>";
                     }
 
                     echo $criteria["name"];
@@ -332,19 +328,19 @@ class TypologyCriteria extends CommonDBTM
                     }
                     echo "</td><td>";
 
-                    $condition   = ["plugin_typology_typologycriterias_id" => $criteria['id']] +
-                             ["ORDER" => "id"];
+                    $condition   = ["plugin_typology_typologycriterias_id" => $criteria['id']]
+                             + ["ORDER" => "id"];
                     $definitions = $dbu->getAllDataFromTable(
                         'glpi_plugin_typology_typologycriteriadefinitions',
                         $condition
                     );
                     if (!empty($definitions)) {
-                         echo "<table class='tab_cadre' width='100%'>";
-                         echo "<tr>";
-                         echo "<th class='center b' width='33%'>" . _n('Field', 'Fields', 2) . "</th>";
-                         echo "<th class='center b' width='33%'>" . __('Logical operator') . "</th>";
-                         echo "<th class='center b'>" . __('Value') . "</th>";
-                         echo "</tr>";
+                        echo "<table class='tab_cadre' width='100%'>";
+                        echo "<tr>";
+                        echo "<th class='center b' width='33%'>" . _n('Field', 'Fields', 2) . "</th>";
+                        echo "<th class='center b' width='33%'>" . __('Logical operator') . "</th>";
+                        echo "<th class='center b'>" . __('Value') . "</th>";
+                        echo "</tr>";
 
                         foreach ($definitions as $definition) {
                             echo "<tr>";
@@ -352,9 +348,9 @@ class TypologyCriteria extends CommonDBTM
                             TypologyCriteriaDefinition::showMinimalDefinitionForm($definition);
                             echo "</tr>";
                         }
-                         echo "</table>";
+                        echo "</table>";
                     }
-                      echo "</td></tr>";
+                    echo "</td></tr>";
                 }
                 echo "</table>";
                 if ($canedit) {
@@ -365,44 +361,44 @@ class TypologyCriteria extends CommonDBTM
 
                 echo "</div>";
 
-              //            if ($showAdd){
-              //               Html::openArrowMassives("massiveaction_form$rand",true);
-              //               self::dropdownMassiveAction($rand);
-              //               Html::closeArrowMassives(array());
-              //            }
+                //            if ($showAdd){
+                //               Html::openArrowMassives("massiveaction_form$rand",true);
+                //               self::dropdownMassiveAction($rand);
+                //               Html::closeArrowMassives(array());
+                //            }
             }
         }
-       //      Html::closeForm();
+        //      Html::closeForm();
     }
 
-   //   static function dropdownMassiveAction($rand) {
-   //      global $CFG_GLPI;
-   //
-   //      echo "<select name=\"massiveaction\" id='massiveaction$rand'>";
-   //      echo "<option value=\"-1\" selected>".Dropdown::EMPTY_VALUE."</option>";
-   //      echo "<option value=\"deleteAll\">".__('Delete permantly')."</option>";
-   //      echo "<option value=\"updateAll\">".__('Update')."</option>";
-   //      echo "</select>";
-   //
-   //      $params=array('action'=>'__VALUE__',
-   //      );
-   //
-   //      Ajax::updateItemOnSelectEvent("massiveaction$rand","show_massiveaction$rand",
-   //         PLUGIN_TYPOLOGY_DIR . "/ajax/dropdownMassiveAction.php",$params);
-   //
-   //      echo "<span id='show_massiveaction$rand'>&nbsp;</span>\n";
-   //
-   //   }
+    //   static function dropdownMassiveAction($rand) {
+    //      global $CFG_GLPI;
+    //
+    //      echo "<select name=\"massiveaction\" id='massiveaction$rand'>";
+    //      echo "<option value=\"-1\" selected>".Dropdown::EMPTY_VALUE."</option>";
+    //      echo "<option value=\"deleteAll\">".__('Delete permantly')."</option>";
+    //      echo "<option value=\"updateAll\">".__('Update')."</option>";
+    //      echo "</select>";
+    //
+    //      $params=array('action'=>'__VALUE__',
+    //      );
+    //
+    //      Ajax::updateItemOnSelectEvent("massiveaction$rand","show_massiveaction$rand",
+    //         PLUGIN_TYPOLOGY_DIR . "/ajax/dropdownMassiveAction.php",$params);
+    //
+    //      echo "<span id='show_massiveaction$rand'>&nbsp;</span>\n";
+    //
+    //   }
 
-   /**
-    * Show the criteria form
-    *
-    * @param $ID
-    * @param $options
-    *
-    * @return
-    **/
-    function showForm($ID, $options = [])
+    /**
+     * Show the criteria form
+     *
+     * @param $ID
+     * @param $options
+     *
+     * @return
+     **/
+    public function showForm($ID, $options = [])
     {
 
         $this->initForm($ID, $options);
@@ -451,16 +447,16 @@ class TypologyCriteria extends CommonDBTM
         $this->showFormButtons($options);
     }
 
-   /**
-    * Display a dropdown which contains all the available itemtypes
-    *
-    *
-    * @return
-    **/
-    static function dropdownItemtype()
+    /**
+     * Display a dropdown which contains all the available itemtypes
+     *
+     *
+     * @return
+     **/
+    public static function dropdownItemtype()
     {
 
-       //Add definition : display dropdown
+        //Add definition : display dropdown
         $types = Typology::getTypesCriteria();
 
         $options[0] = Dropdown::EMPTY_VALUE;
@@ -474,13 +470,13 @@ class TypologyCriteria extends CommonDBTM
         return Dropdown::showFromArray('itemtype', $options);
     }
 
-   /**
-    * Get the standard massive actions which are forbidden
-    *
-    * @since version 0.84
-    *
-    * @return  array of massive actions
-    **/
+    /**
+     * Get the standard massive actions which are forbidden
+     *
+     * @since version 0.84
+     *
+     * @return  array of massive actions
+     **/
     public function getForbiddenStandardMassiveAction()
     {
         $forbidden   = parent::getForbiddenStandardMassiveAction();
@@ -490,15 +486,15 @@ class TypologyCriteria extends CommonDBTM
         return $forbidden;
     }
 
-   /**
-    * Get the specific massive actions
-    *
-    * @since version 0.84
-    *
-    * @param $checkitem
-    * @return  array of massive actions
-    **/
-    function getSpecificMassiveActions($checkitem = null)
+    /**
+     * Get the specific massive actions
+     *
+     * @since version 0.84
+     *
+     * @param $checkitem
+     * @return  array of massive actions
+     **/
+    public function getSpecificMassiveActions($checkitem = null)
     {
         $isadmin = static::canUpdate();
         $actions = parent::getSpecificMassiveActions($checkitem);
@@ -510,12 +506,12 @@ class TypologyCriteria extends CommonDBTM
         return $actions;
     }
 
-   /**
-    * @param MassiveAction $ma
-    *
-    * @return bool|false
-    */
-    static function showMassiveActionsSubForm(MassiveAction $ma)
+    /**
+     * @param MassiveAction $ma
+     *
+     * @return bool|false
+     */
+    public static function showMassiveActionsSubForm(MassiveAction $ma)
     {
         global $CFG_GLPI;
 
@@ -524,14 +520,14 @@ class TypologyCriteria extends CommonDBTM
                 echo "&nbsp;";
                 echo Html::submit(_sx('button', 'Post'), ['name' => 'massiveaction', 'class' => 'btn btn-primary']);
                 return true;
-            break;
+                break;
             case "updateAll":
                 $values = [0 => Dropdown::EMPTY_VALUE,
-                'is_active' => __('Active')];
+                    'is_active' => __('Active')];
                 $rand = Dropdown::showFromArray('field', $values);
 
                 $params = ['field'  => '__VALUE__',
-                       'action' => $_POST["action"]];
+                    'action' => $_POST["action"]];
 
                 Ajax::updateItemOnSelectEvent(
                     "dropdown_field$rand",
@@ -542,23 +538,23 @@ class TypologyCriteria extends CommonDBTM
 
                 echo "&nbsp;<span id='show_massiveaction_field'>&nbsp;</span>\n";
                 return true;
-            break;
+                break;
         }
         return parent::showMassiveActionsSubForm($ma);
     }
 
-   /**
-    * @since version 0.85
-    *
-    * @see CommonDBTM::processMassiveActionsForOneItemtype()
-    *
-    * @param MassiveAction $ma
-    * @param CommonDBTM    $item
-    * @param array         $ids
-    *
-    * @return
-    */
-    static function processMassiveActionsForOneItemtype(
+    /**
+     * @since version 0.85
+     *
+     * @see CommonDBTM::processMassiveActionsForOneItemtype()
+     *
+     * @param MassiveAction $ma
+     * @param CommonDBTM    $item
+     * @param array         $ids
+     *
+     * @return
+     */
+    public static function processMassiveActionsForOneItemtype(
         MassiveAction $ma,
         CommonDBTM $item,
         array $ids
@@ -583,7 +579,7 @@ class TypologyCriteria extends CommonDBTM
                 foreach ($ids as $key) {
                     if ($criteria->can($key, UPDATE)) {
                         $values = ['id'        => $key,
-                             'is_active' => $input['is_active']];
+                            'is_active' => $input['is_active']];
                         if ($criteria->update($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {

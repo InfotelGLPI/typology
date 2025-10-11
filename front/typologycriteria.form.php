@@ -37,68 +37,58 @@ $typo = new Typology();
 $criteria = new TypologyCriteria();
 
 if (isset($_POST["update"])) {
-
-   $criteria->check($_POST['id'], UPDATE);
-   $criteria->update($_POST);
-   Html::back();
-
-} else if (isset($_POST["add"])) {
-
-   if (isset($_POST["itemtype"])
+    $criteria->check($_POST['id'], UPDATE);
+    $criteria->update($_POST);
+    Html::back();
+} elseif (isset($_POST["add"])) {
+    if (isset($_POST["itemtype"])
          && !empty($_POST["itemtype"])) {
-      $criteria->check(-1, CREATE, $_POST);
-      $newID = $criteria->add($_POST);
-      Html::redirect(PLUGIN_TYPOLOGY_WEBDIR . "/front/typologycriteria.form.php?id=$newID");
-   } else {
-      Session::addMessageAfterRedirect(__('No element to be tested'), false, ERROR);
-      Html::back();
-   }
-
-} else if (isset($_POST["purge"])) {
-
-   $criteria->check($_POST['id'], PURGE);
-   $criteria->delete($_POST);
-   $criteria->redirectToList();
-
-} else if (isset($_POST["add_action"])) {
-
-   $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
-   $definition = new TypologyCriteriaDefinition();
-   $definition->add($_POST);
+        $criteria->check(-1, CREATE, $_POST);
+        $newID = $criteria->add($_POST);
+        Html::redirect(PLUGIN_TYPOLOGY_WEBDIR . "/front/typologycriteria.form.php?id=$newID");
+    } else {
+        Session::addMessageAfterRedirect(__('No element to be tested'), false, ERROR);
+        Html::back();
+    }
+} elseif (isset($_POST["purge"])) {
+    $criteria->check($_POST['id'], PURGE);
+    $criteria->delete($_POST);
+    $criteria->redirectToList();
+} elseif (isset($_POST["add_action"])) {
+    $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
+    $definition = new TypologyCriteriaDefinition();
+    $definition->add($_POST);
 
    // Mise à jour de l'heure de modification pour le critère
-   $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
+    $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
                            'date_mod' => $_SESSION['glpi_currenttime']]);
-   Html::back();
+    Html::back();
+} elseif (isset($_POST["delete_action"])) {
+    $definition = new TypologyCriteriaDefinition();
 
-} else if (isset($_POST["delete_action"])) {
-
-   $definition = new TypologyCriteriaDefinition();
-
-   if (isset($_POST["item"]) && count($_POST["item"])) {
-      foreach ($_POST["item"] as $key => $val) {
-         if ($val == 1) {
-            if ($definition->can($key, UPDATE)) {
-               $definition->delete(['id' => $key]);
+    if (isset($_POST["item"]) && count($_POST["item"])) {
+        foreach ($_POST["item"] as $key => $val) {
+            if ($val == 1) {
+                if ($definition->can($key, UPDATE)) {
+                    $definition->delete(['id' => $key]);
+                }
             }
-         }
-      }
-   } else if (isset($_POST['id'])) {
-      $definition->check($_POST['id'], UPDATE);
-      $definition->delete($_POST);
-   }
+        }
+    } elseif (isset($_POST['id'])) {
+        $definition->check($_POST['id'], UPDATE);
+        $definition->delete($_POST);
+    }
 
-   $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
+    $criteria->check($_POST['plugin_typology_typologycriterias_id'], UPDATE);
 
    // Can't do this in RuleAction, so do it here
-   $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
+    $criteria->update(['id'       => $_POST['plugin_typology_typologycriterias_id'],
                            'date_mod' => $_SESSION['glpi_currenttime']]);
-   Html::back();
-
+    Html::back();
 } else {
-   $typo->checkGlobal(READ);
-   Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
+    $typo->checkGlobal(READ);
+    Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
 
-   $criteria->display($_GET);
-   Html::footer();
+    $criteria->display($_GET);
+    Html::footer();
 }

@@ -27,7 +27,6 @@
  --------------------------------------------------------------------------
  */
 
-
 use GlpiPlugin\Typology\Typology;
 
 $typo = new Typology();

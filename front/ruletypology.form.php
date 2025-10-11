@@ -27,9 +27,8 @@
  --------------------------------------------------------------------------
  */
 
-
 use GlpiPlugin\Typology\RuleTypologyCollection;
 
 $rulecollection = new RuleTypologyCollection($_SESSION['glpiactive_entity']);
 
-include (GLPI_ROOT . "/front/rule.common.form.php");
+include(GLPI_ROOT . "/front/rule.common.form.php");
