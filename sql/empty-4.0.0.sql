@@ -86,4 +86,4 @@ CREATE TABLE `glpi_plugin_typology_typologies_items` (
   KEY `items_id` (`items_id`) -- index
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Alert no validated typology', 'PluginTypologyTypology', '2012-11-19 15:20:46','',NULL, '2012-11-19 15:20:46');
+INSERT INTO `glpi_notificationtemplates` VALUES(NULL, 'Alert no validated typology', 'GlpiPlugin\\Typology\\Typology', '2012-11-19 15:20:46','',NULL, '2012-11-19 15:20:46');

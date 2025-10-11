@@ -41,7 +41,7 @@ function plugin_typology_install()
     if (!$DB->tableExists("glpi_plugin_typology_typologies")) {
         $update = false;
         // table sql creation
-        $DB->runFile(PLUGIN_TYPOLOGY_DIR . "/sql/empty-5.0.0.sql");
+        $DB->runFile(PLUGIN_TYPOLOGY_DIR . "/sql/empty-4.0.0.sql");
 
         // Add record notification
         call_user_func([NotificationTargetTypology::class, 'install']);

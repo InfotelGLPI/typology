@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @version $Id: HEADER 15930 2011-10-30 15:47:55Z tsmr $
  -------------------------------------------------------------------------
@@ -37,73 +38,75 @@ use GlpiPlugin\Typology\RuleTypology;
 use GlpiPlugin\Typology\RuleTypologyCollection;
 use GlpiPlugin\Typology\Typology;
 
-define('PLUGIN_TYPOLOGY_VERSION', '3.0.0');
+define('PLUGIN_TYPOLOGY_VERSION', '4.0.0');
 
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
-   define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
+    define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
     $root = $CFG_GLPI['root_doc'] . '/plugins/typology';
     define("PLUGIN_TYPOLOGY_WEBDIR", $root);
 }
 
 // Init the hooks of the plugins -Needed
-function plugin_init_typology() {
-   global $PLUGIN_HOOKS;
+function plugin_init_typology()
+{
+    global $PLUGIN_HOOKS;
 
-   $PLUGIN_HOOKS[Hooks::ADD_CSS]['typology']        = 'typology.css';
-   $PLUGIN_HOOKS['csrf_compliant']['typology'] = true;
-   $PLUGIN_HOOKS['change_profile']['typology'] = [Profile::class,'initProfile'];
+    $PLUGIN_HOOKS[Hooks::ADD_CSS]['typology']        = 'typology.css';
+    $PLUGIN_HOOKS['csrf_compliant']['typology'] = true;
+    $PLUGIN_HOOKS['change_profile']['typology'] = [Profile::class,'initProfile'];
 
-   if (Session::getLoginUserID()) {
+    if (Session::getLoginUserID()) {
+        Plugin::registerClass(
+            Profile::class,
+            ['addtabon' => 'Profile']
+        );
 
-      Plugin::registerClass(Profile::class,
-         ['addtabon' => 'Profile']);
+        Plugin::registerClass(Typology::class, [
+            'notificationtemplates_types' => true,
+        ]);
+        // Display a menu entry ?
+        if (Session::haveRight("plugin_typology", READ)) {
+            // menu entry
+            $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => Typology::class];
+        }
 
-      Plugin::registerClass(Typology::class, [
-         'notificationtemplates_types' => true,
-      ]);
-      // Display a menu entry ?
-      if (Session::haveRight("plugin_typology", READ)) {
-         // menu entry
-         $PLUGIN_HOOKS['menu_toadd']['typology'] = ['tools'   => Typology::class];
-      }
+        if (Session::haveRight("plugin_typology", UPDATE)) {
+            //use massiveaction in the plugin
+            $PLUGIN_HOOKS['use_massive_action']['typology'] = 1;
+            $PLUGIN_HOOKS['redirect_page']['typology'] = PLUGIN_TYPOLOGY_WEBDIR . '/front/typology.form.php';
+        }
 
-      if (Session::haveRight("plugin_typology", UPDATE)) {
-         //use massiveaction in the plugin
-         $PLUGIN_HOOKS['use_massive_action']['typology']=1;
-         $PLUGIN_HOOKS['redirect_page']['typology'] = PLUGIN_TYPOLOGY_WEBDIR.'/front/typology.form.php';
-      }
+        Plugin::registerClass(RuleTypologyCollection::class, [
+            'rulecollections_types' => true,
+        ]);
 
-      Plugin::registerClass(RuleTypologyCollection::class, [
-         'rulecollections_types' => true
-      ]);
+        if (class_exists(Common::class)) {
+            Common::addCloneType(RuleTypology::class, Rule::class);
+        }
 
-      if (class_exists(Common::class)) {
-          Common::addCloneType(RuleTypology::class, Rule::class);
-      }
-
-      $PLUGIN_HOOKS['post_init']['typology'] = 'plugin_typology_postinit';
-   }
+        $PLUGIN_HOOKS['post_init']['typology'] = 'plugin_typology_postinit';
+    }
 }
 
 // Get the name and the version of the plugin - Needed
 /**
  * @return array
  */
-function plugin_version_typology() {
+function plugin_version_typology()
+{
 
-   return  [
-      'name'           => _n('Typology', 'Typologies', 2, 'typology'),
-      'version'        => PLUGIN_TYPOLOGY_VERSION,
-      'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>",
-      'license'        => 'GPLv2+',
-      'homepage'       => 'https://github.com/InfotelGLPI/typology',
-      'requirements'   => [
-         'glpi' => [
-            'min' => '11.0',
-            'max' => '12.0',
-            'dev' => false
-         ]
-      ]
-   ];
-
+    return  [
+        'name'           => _n('Typology', 'Typologies', 2, 'typology'),
+        'version'        => PLUGIN_TYPOLOGY_VERSION,
+        'author'         => "<a href='https://blogglpi.infotel.com'>Infotel</a>",
+        'license'        => 'GPLv2+',
+        'homepage'       => 'https://github.com/InfotelGLPI/typology',
+        'requirements'   => [
+            'glpi' => [
+                'min' => '11.0',
+                'max' => '12.0',
+                'dev' => false,
+            ],
+        ],
+    ];
 }
