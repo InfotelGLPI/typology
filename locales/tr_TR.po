@@ -163,7 +163,7 @@ msgstr "Bir tür seçin"
 
 #: report/typologyreport/typologyreport.php:39
 msgid "Typologies list by service with materials list"
-msgstr "Malzeme listesiyle, hizmete göre tipoloji listesi"
+msgstr "Malzeme listesiyle, hizmete göre sınıflama listesi"
 
 #: setup.php:99 src/Profile.php:196 src/Typology.php:84
 msgid "Typology"
