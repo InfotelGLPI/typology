@@ -38,7 +38,7 @@ use GlpiPlugin\Typology\RuleTypology;
 use GlpiPlugin\Typology\RuleTypologyCollection;
 use GlpiPlugin\Typology\Typology;
 
-define('PLUGIN_TYPOLOGY_VERSION', '4.0.0');
+define('PLUGIN_TYPOLOGY_VERSION', '4.0.1');
 
 if (!defined("PLUGIN_TYPOLOGY_DIR")) {
     define("PLUGIN_TYPOLOGY_DIR", Plugin::getPhpDir("typology"));
