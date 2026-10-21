@@ -27,18 +27,29 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Typology\TypologyCriteriaDefinition;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownAction.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
-Session::checkRight('plugin_typology', UPDATE);
 Session::checkLoginUser();
+Session::checkRight('plugin_typology', UPDATE);
+
+// Back on the empty choice of the field list: nothing to display
+if (empty($_POST['field'])) {
+    return;
+}
+
+// The criterion must be one the user may update, the field a valid "column;table;type"
+if (!TypologyCriteriaDefinition::canEditField($_POST['typocrit_id'] ?? 0, $_POST['field'] ?? null)) {
+    throw new AccessDeniedHttpException();
+}
 
 //Display list of logical operator depending on field
 TypologyCriteriaDefinition::dropdownSelect(
-    $_POST['itemtype'],
-    $_POST['typocrit_id'],
+    $_POST['itemtype'] ?? '',
+    (int) $_POST['typocrit_id'],
     $_POST['field']
 );

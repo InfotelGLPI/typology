@@ -342,6 +342,17 @@ class Typology extends CommonDBTM
     /**
      * @return array
      */
+    /**
+     * Every type a criterion may hold, whatever the rights of the session (cron included):
+     * the allow-list of the stored and posted criterion types
+     *
+     * @return list<string>
+     */
+    public static function getAllTypesCriteria(): array
+    {
+        return array_values(array_unique(array_merge(self::$types_criteria, self::getComputerDeviceTypes())));
+    }
+
     public static function getComputerDeviceTypes()
     {
         return [/*1 => 'DeviceMotherboard', */
@@ -452,7 +463,7 @@ class Typology extends CommonDBTM
                     $typo->getFromDB($data['plugin_typology_typologies_id']);
                     $entity = $typo->fields['entities_id'];
                     if (!isset($message[$entity])) {
-                        $message = [$entity => ''];
+                        $message[$entity] = '';
                     }
                     $task_infos[$type][$entity][] = $data;
                     if (!isset($task_messages[$type][$entity])) {
@@ -529,7 +540,7 @@ class Typology extends CommonDBTM
                                                   . $data["error"] . "<br>\n";
                         $task_infos[$type][$entity][] = $data;
 
-                        if (!isset($tasks_infos[$type][$entity])) {
+                        if (!isset($task_messages[$type][$entity])) {
                             $task_messages[$type][$entity] = __('Elements not match with the typology', 'typology') . "<br />";
                         }
                         $task_messages[$type][$entity] .= $message;
@@ -655,9 +666,16 @@ class Typology extends CommonDBTM
         switch ($ma->getAction()) {
             case "transfer":
                 $input = $ma->getInput();
+                $entities_id = (int) ($input['entities_id'] ?? -1);
                 if ($item->getType() == Typology::class) {
                     foreach ($ids as $key) {
-                        $item->getFromDB($key);
+                        $key = (int) $key;
+                        // The ids and the destination are posted: the typology must be
+                        // updatable and the destination entity within the reach of the user
+                        if (!$item->can($key, UPDATE) || !Session::haveAccessToEntity($entities_id)) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
 
                         $restrict = ["plugin_typology_typologies_id" => $key];
                         $crits    = $dbu->getAllDataFromTable(
@@ -679,20 +697,20 @@ class Typology extends CommonDBTM
 
                                         unset($values);
                                         $values["id"]          = $def["id"];
-                                        $values["entities_id"] = $input['entities_id'];
+                                        $values["entities_id"] = $entities_id;
                                         $definition->update($values);
                                     }
                                 }
                                 unset($values);
                                 $values["id"]          = $crit["id"];
-                                $values["entities_id"] = $input['entities_id'];
+                                $values["entities_id"] = $entities_id;
                                 $criteria->update($values);
                             }
                         }
 
                         unset($values);
                         $values["id"]          = $key;
-                        $values["entities_id"] = $input['entities_id'];
+                        $values["entities_id"] = $entities_id;
 
                         if ($item->update($values)) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
@@ -706,7 +724,12 @@ class Typology extends CommonDBTM
             case 'duplicate':
                 if ($item->getType() == Typology::class) {
                     foreach ($ids as $key) {
-                        $item->getFromDB($key);
+                        $key = (int) $key;
+                        // The ids are posted: the source must be readable and a typology creatable
+                        if (!$item->can($key, READ) || !Typology::canCreate()) {
+                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
 
                         $restrict = ["plugin_typology_typologies_id" => $key];
                         $crits    = $dbu->getAllDataFromTable(
@@ -714,16 +737,15 @@ class Typology extends CommonDBTM
                             $restrict
                         );
 
+                        // GLPI stores values raw: copied as they are, without addslashes()
                         unset($item->fields["id"]);
-                        $item->fields["name"]    = addslashes($item->fields["name"] . " Copy");
-                        $item->fields["comment"] = addslashes($item->fields["comment"]);
-                        //TODO duplicate notes
-                        //                  $item->fields["notepad"] = addslashes($item->fields["notepad"]);
-                        if (!$newIDtypo = $item->add($item->fields)) {
+                        $item->fields["name"] = $item->fields["name"] . " Copy";
+                        // The copy is created in an entity the user may create in
+                        if (!$item->can(-1, CREATE, $item->fields) || !($newIDtypo = $item->add($item->fields))) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
-                        } else {
-                            $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
+                            continue;
                         }
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         if (!empty($crits)) {
                             foreach ($crits as $crit) {
                                 $criteria->getFromDB($crit["id"]);
@@ -735,20 +757,17 @@ class Typology extends CommonDBTM
                                 );
 
                                 unset($criteria->fields["id"]);
-                                $criteria->fields["name"]                          = addslashes($criteria->fields["name"]);
                                 $criteria->fields["plugin_typology_typologies_id"] = $newIDtypo;
-                                $criteria->fields["itemtype"]                      = addslashes($criteria->fields["itemtype"]);
+                                $criteria->fields["entities_id"]                   = $item->fields["entities_id"];
                                 $newIDcrit                                         = $criteria->add($criteria->fields);
 
-                                if (!empty($defs)) {
+                                if ($newIDcrit && !empty($defs)) {
                                     foreach ($defs as $def) {
                                         $definition->getFromDB($def["id"]);
 
                                         unset($definition->fields["id"]);
                                         $definition->fields["plugin_typology_typologycriterias_id"] = $newIDcrit;
-                                        $definition->fields["field"]                                = addslashes($definition->fields["field"]);
-                                        $definition->fields["action_type"   ]                          = addslashes($definition->fields["action_type"]);
-                                        $definition->fields["value"]                                = addslashes($definition->fields["value"]);
+                                        $definition->fields["entities_id"]                          = $item->fields["entities_id"];
                                         $definition->add($definition->fields);
                                     }
                                 }

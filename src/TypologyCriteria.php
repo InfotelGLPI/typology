@@ -54,6 +54,43 @@ class TypologyCriteria extends CommonDBTM
     public $definitions = [];
 
     /**
+     * The criterion type is posted, then instantiated on every display: the known types only
+     */
+    public function prepareInputForAdd($input)
+    {
+        if (!isset($input['itemtype']) || !in_array($input['itemtype'], Typology::getAllTypesCriteria(), true)) {
+            Session::addMessageAfterRedirect(__s('No element to be tested'), false, ERROR);
+            return false;
+        }
+
+        // The parent typology must be one the user may update: its entity is the criterion's one
+        $typology = new Typology();
+        if (!isset($input['plugin_typology_typologies_id'])
+            || !$typology->can((int) $input['plugin_typology_typologies_id'], UPDATE)) {
+            Session::addMessageAfterRedirect(__s('No right to update the typology', 'typology'), false, ERROR);
+            return false;
+        }
+        $input['plugin_typology_typologies_id'] = $typology->getID();
+        $input['entities_id']                   = $typology->fields['entities_id'];
+        $input['is_recursive']                  = $typology->fields['is_recursive'];
+
+        return parent::prepareInputForAdd($input);
+    }
+
+    public function prepareInputForUpdate($input)
+    {
+        // The type, the parent typology and so the entity of a criterion are fixed once created
+        unset(
+            $input['itemtype'],
+            $input['plugin_typology_typologies_id'],
+            $input['entities_id'],
+            $input['is_recursive']
+        );
+
+        return parent::prepareInputForUpdate($input);
+    }
+
+    /**
      * Return the localized name of the current Type
      * Should be overloaded in each new class
      *
@@ -303,9 +340,9 @@ class TypologyCriteria extends CommonDBTM
                           . "?id=" . $criteria["id"] . "'>";
                     }
 
-                    echo $criteria["name"];
+                    echo htmlescape((string) $criteria["name"]);
                     if (empty($criteria["name"])) {
-                        echo "(" . $criteria['id'] . ")";
+                        echo "(" . (int) $criteria['id'] . ")";
                     }
                     if ($canedit) {
                         echo "</a>";
@@ -316,9 +353,12 @@ class TypologyCriteria extends CommonDBTM
                     echo Dropdown::getYesNo($criteria['is_active']);
                     echo "</td>";
 
-                    $item = new $criteria['itemtype']();
+                    // Stored type: the known criterion types only
+                    $item = in_array($criteria['itemtype'], Typology::getAllTypesCriteria(), true)
+                        ? getItemForItemtype($criteria['itemtype'])
+                        : null;
 
-                    echo "<td width='10%'>" . $item::getTypeName(0) . "</td>";
+                    echo "<td width='10%'>" . ($item ? htmlescape($item::getTypeName(0)) : '') . "</td>";
 
                     echo "<td width='10%' class='center'>";
                     if ($criteria['link'] == 0) {
@@ -411,7 +451,9 @@ class TypologyCriteria extends CommonDBTM
         echo Html::input('name', ['value' => $this->fields['name'], 'size' => 40]);
         echo "</td>";
         echo "<td>" . __('Item') . "</td><td>";
-        echo $itemtype::getTypeName(0) . "</td>";
+        // Stored type: the known criterion types only
+        $type_item = in_array($itemtype, Typology::getAllTypesCriteria(), true) ? getItemForItemtype($itemtype) : null;
+        echo ($type_item ? htmlescape($type_item::getTypeName(0)) : '') . "</td>";
         echo "</td></tr>";
 
         echo "<tr class='tab_bg_1'>";
@@ -566,12 +608,16 @@ class TypologyCriteria extends CommonDBTM
         switch ($ma->getAction()) {
             case "deleteAll":
                 foreach ($ids as $key) {
-                    if ($criteria->can($key, UPDATE)) {
+                    // Same right as the purge button of the form
+                    if ($criteria->can($key, PURGE)) {
                         if ($criteria->delete(['id' => $key])) {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_OK);
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                         }
+                    } else {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($criteria->getErrorMessage(ERROR_RIGHT));
                     }
                 }
                 break;
@@ -585,6 +631,9 @@ class TypologyCriteria extends CommonDBTM
                         } else {
                             $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_KO);
                         }
+                    } else {
+                        $ma->itemDone($item->getType(), $key, MassiveAction::ACTION_NORIGHT);
+                        $ma->addMessage($criteria->getErrorMessage(ERROR_RIGHT));
                     }
                 }
                 break;

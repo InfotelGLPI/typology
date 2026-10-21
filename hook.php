@@ -32,6 +32,7 @@ use GlpiPlugin\Typology\NotificationTargetTypology;
 use GlpiPlugin\Typology\Profile;
 use GlpiPlugin\Typology\RuleTypology;
 use GlpiPlugin\Typology\Typology;
+use GlpiPlugin\Typology\TypologyCriteria;
 use GlpiPlugin\Typology\Typology_Item;
 
 function plugin_typology_install()
@@ -135,9 +136,20 @@ function plugin_typology_uninstall()
         "glpi_dropdowntranslations",
         "glpi_impactitems"];
 
+    $plugin_itemtypes = [Typology::class, TypologyCriteria::class, Typology_Item::class];
     foreach ($tables_glpi as $table_glpi) {
-        $DB->delete($table_glpi, ['itemtype' => Typology::class]);
+        $DB->delete($table_glpi, ['itemtype' => $plugin_itemtypes]);
     }
+
+    // CronTask::Unregister() does not match namespaced classes: delete the tasks and their logs by itemtype
+    foreach ($DB->request([
+        'SELECT' => 'id',
+        'FROM'   => 'glpi_crontasks',
+        'WHERE'  => ['itemtype' => Typology::class],
+    ]) as $crontask) {
+        $DB->delete('glpi_crontasklogs', ['crontasks_id' => $crontask['id']]);
+    }
+    $DB->delete('glpi_crontasks', ['itemtype' => Typology::class]);
 
 
     $notif = new Notification();
@@ -148,6 +160,15 @@ function plugin_typology_uninstall()
         'WHERE' => $options,
     ]) as $data) {
         $notif->delete($data);
+    }
+
+    // The templates created at install, with their translations and their links to the
+    // notifications: they point at a class that no longer exists once uninstalled
+    $template = new NotificationTemplate();
+    foreach ($template->find(['itemtype' => Typology::class]) as $data) {
+        (new NotificationTemplateTranslation())->deleteByCriteria(['notificationtemplates_id' => $data['id']]);
+        (new Notification_NotificationTemplate())->deleteByCriteria(['notificationtemplates_id' => $data['id']]);
+        $template->delete(['id' => $data['id']], true);
     }
 
     //Delete rights associated with the plugin

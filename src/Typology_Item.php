@@ -184,8 +184,12 @@ class Typology_Item extends CommonDBRelation
             $new_value .= __('Element out of the typology', 'typology') . " : ";
         }
 
-        $item = new $input['itemtype']();
-        $item->getFromDB($input['items_id']);
+        // The types of the plugin only: the history is written on the item named here
+        if (!in_array($input['itemtype'], Typology::getTypes(true), true)
+            || !($item = getItemForItemtype($input['itemtype']))
+            || !$item->getFromDB((int) $input['items_id'])) {
+            return;
+        }
 
         $new_value .= $item->getName(0) . " - "
                     . Dropdown::getDropdownName('glpi_plugin_typology_typologies', $input['plugin_typology_typologies_id']);
@@ -349,16 +353,21 @@ class Typology_Item extends CommonDBRelation
                     if ($withlink) {
                         $criteria = "<a href='" . PLUGIN_TYPOLOGY_WEBDIR
                              . "/front/typologycriteria.form.php?id="
-                             . $crit->fields["id"] . "' target='_blank'>";
+                             . (int) $crit->fields["id"] . "' target='_blank'>";
                     }
-                    $criteria .= $crit->fields["name"];
+                    // Criterion names are typed by plugin editors: escaped for every viewer
+                    $criteria .= htmlescape((string) $crit->fields["name"]);
                     if ($_SESSION["glpiis_ids_visible"] || empty($crit->fields["name"])) {
-                        $criteria .= " (" . $crit->fields["id"] . ")";
+                        $criteria .= " (" . (int) $crit->fields["id"] . ")";
                     }
                     if ($withlink) {
                         $criteria .= "</a>";
                     }
-                    $criteria .= " (" . $itemtype::getTypeName(0) . ")";
+                    // Stored type: the known criterion types only
+                    $type_item = in_array($itemtype, Typology::getAllTypesCriteria(), true) ? getItemForItemtype($itemtype) : null;
+                    if ($type_item) {
+                        $criteria .= " (" . htmlescape($type_item::getTypeName(0)) . ")";
+                    }
 
                     $display .= $criteria;
                 }
@@ -515,19 +524,28 @@ class Typology_Item extends CommonDBRelation
                 }
             }
 
-            $query = "SELECT `" . $table_typo_item . "`.`id` AS typo_items_id,
-                           `" . $table_typo_item . "`.`is_validated`,
-                           `" . $table_typo_item . "`.`error`,
-                             `glpi_plugin_typology_typologies`.*"
-                  . " FROM `" . $table_typo_item . "`,`glpi_plugin_typology_typologies` "
-                  . " LEFT JOIN `glpi_entities` ON (`glpi_entities`.`id` = `glpi_plugin_typology_typologies`.`entities_id`) "
-                  . " WHERE `" . $table_typo_item . "`.`plugin_typology_typologies_id` = '" . $typo_ID . "' "
-                  . " AND `" . $table_typo_item . "`.`items_id` = '" . $ID . "' "
-                  . " AND `" . $table_typo_item . "`.`itemtype` = '" . $itemtype . "'
-                    AND `" . $table_typo_item . "`.`plugin_typology_typologies_id`=`glpi_plugin_typology_typologies`.`id`"
-                  . $dbu->getEntitiesRestrictRequest(" AND ", "glpi_plugin_typology_typologies", '', '', true);
-
-            $result = $DB->doQuery($query);
+            $iterator = $DB->request([
+                'SELECT'     => [
+                    "$table_typo_item.id AS typo_items_id",
+                    "$table_typo_item.is_validated",
+                    "$table_typo_item.error",
+                    'glpi_plugin_typology_typologies.*',
+                ],
+                'FROM'       => $table_typo_item,
+                'INNER JOIN' => [
+                    'glpi_plugin_typology_typologies' => [
+                        'ON' => [$table_typo_item => 'plugin_typology_typologies_id', 'glpi_plugin_typology_typologies' => 'id'],
+                    ],
+                ],
+                'LEFT JOIN'  => [
+                    'glpi_entities' => ['ON' => ['glpi_entities' => 'id', 'glpi_plugin_typology_typologies' => 'entities_id']],
+                ],
+                'WHERE'      => [
+                    "$table_typo_item.plugin_typology_typologies_id" => (int) $typo_ID,
+                    "$table_typo_item.items_id"                      => (int) $ID,
+                    "$table_typo_item.itemtype"                      => $itemtype,
+                ] + getEntitiesRestrictCriteria('glpi_plugin_typology_typologies', '', '', true),
+            ]);
 
             echo "<tr><th>" . __('Typology assigned to this material', 'typology') . "</th>";
 
@@ -541,7 +559,7 @@ class Typology_Item extends CommonDBRelation
 
             echo "</tr>";
 
-            while ($data = $DB->fetchArray($result)) {
+            foreach ($iterator as $data) {
                 $typo_ID = $data["id"];
                 $used[]  = $typo_ID;
 
@@ -552,21 +570,21 @@ class Typology_Item extends CommonDBRelation
                      || $data["is_recursive"]))) {
                     echo "<td class='center'><a href='"
                     . PLUGIN_TYPOLOGY_WEBDIR . "/front/typology.form.php?id="
-                    . $data["id"] . "'>" . $data["name"];
+                    . (int) $data["id"] . "'>" . htmlescape((string) $data["name"]);
                     if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                        echo " (" . $data["id"] . ")";
+                        echo " (" . (int) $data["id"] . ")";
                     }
                     echo "</a></td>";
                 } else {
-                    echo "<td class='center'>" . $data["name"];
+                    echo "<td class='center'>" . htmlescape((string) $data["name"]);
                     if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                        echo " (" . $data["id"] . ")";
+                        echo " (" . (int) $data["id"] . ")";
                     }
                     echo "</td>";
                 }
                 if (Session::isMultiEntitiesMode()) {
                     echo "<td  class='center'>"
-                    . Dropdown::getDropdownName("glpi_entities", $data['entities_id']) . "</td>";
+                    . htmlescape((string) Dropdown::getDropdownName("glpi_entities", $data['entities_id'])) . "</td>";
                 }
 
                 if ($data["is_validated"] > 0) {
@@ -783,19 +801,20 @@ class Typology_Item extends CommonDBRelation
 
                 Session::addToNavigateListItems($itemtype, $data["id"]);
 
+                // Names and serials come from the database (inventory included): escaped
                 if ($itemtype == 'User') {
-                    $format = formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1);
+                    $format = htmlescape((string) formatUserName($data["id"], $data["name"], $data["realname"], $data["firstname"], 1));
                 } else {
-                    $format = $data["name"];
+                    $format = htmlescape((string) $data["name"]);
                 }
 
                 if ($_SESSION["glpiis_ids_visible"] || empty($data["name"])) {
-                    $ID = " (" . $data["id"] . ")";
+                    $ID = " (" . (int) $data["id"] . ")";
                 }
 
                 $link = Toolbox::getItemTypeFormURL($itemtype);
 
-                $name = "<a href=\"" . $link . "?id=" . $data["id"] . "\">" . $format;
+                $name = "<a href=\"" . htmlescape($link . "?id=" . (int) $data["id"]) . "\">" . $format;
 
                 if ($itemtype != 'User') {
                     $name .= "&nbsp;" . $ID;
@@ -811,17 +830,17 @@ class Typology_Item extends CommonDBRelation
                     echo "</td>";
                 }
                 echo Html::hidden('plugin_typology_typologies_id', ['value' => $typoID]);
-                echo "<td class='left'>" . $item->getTypeName() . "</td>";
+                echo "<td class='left'>" . htmlescape($item->getTypeName()) . "</td>";
                 echo "<td class='left' " . (isset($data['is_deleted']) && $data['is_deleted'] ? "class='tab_bg_2_2'" : "") . ">" . $name . "</td>";
                 if (Session::isMultiEntitiesMode()) {
                     if ($itemtype != 'User') {
-                        echo "<td class='left'>" . Dropdown::getDropdownName("glpi_entities", $data['entity']) . "</td>";
+                        echo "<td class='left'>" . htmlescape((string) Dropdown::getDropdownName("glpi_entities", $data['entity'])) . "</td>";
                     } else {
                         echo "<td class='left'></td>";
                     }
                 }
-                echo "<td class='left'>" . $data["serial"] ?? "" . "</td>";
-                echo "<td class='left'>" . $data["otherserial"] ?? "" . "</td>";
+                echo "<td class='left'>" . htmlescape((string) ($data["serial"] ?? "")) . "</td>";
+                echo "<td class='left'>" . htmlescape((string) ($data["otherserial"] ?? "")) . "</td>";
 
                 if ($data["is_validated"] > 0) {
                     $critTypOK = __('Yes');
@@ -1104,10 +1123,16 @@ class Typology_Item extends CommonDBRelation
                 $input = $ma->getInput();
 
                 foreach ($ids as $id) {
-                    $input = ['plugin_typology_typologies_id' => $input['plugin_typology_typologies_id'],
+                    $id    = (int) $id;
+                    $input = ['plugin_typology_typologies_id' => (int) $input['plugin_typology_typologies_id'],
                         'items_id'                      => $id,
                         'itemtype'                      => $item->getType()];
 
+                    // The ids are posted: the item must be readable before its rules are run
+                    if (!$item->can($id, READ)) {
+                        $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
+                        continue;
+                    }
                     if ($item->getFromDB($id)) {
                         $ruleCollection = new RuleTypologyCollection($item->fields['entities_id']);
                         $fields         = [];
@@ -1117,9 +1142,9 @@ class Typology_Item extends CommonDBRelation
 
                         if (isset($fields['_ruleid'])) {
                             if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']) {
-                                $ma->itemDone($item->getType(), $ids, MassiveAction::ACTION_KO);
-                                $ma->addMessage(Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id) . " : "
-                                      . __('Element not match with rules for assigning a typology', 'typology'));
+                                $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
+                                $ma->addMessage(htmlescape((string) Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id)) . " : "
+                                      . __s('Element not match with rules for assigning a typology', 'typology'));
                             } else {
                                 if ($typo_item->can(-1, UPDATE, $input)) {
                                     if ($typo_item->add($input)) {
@@ -1134,16 +1159,21 @@ class Typology_Item extends CommonDBRelation
                             }
                         } else {
                             $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_KO);
-                            $ma->addMessage(Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id) . " : "
-                                    . __('Element not match with rules for assigning a typology', 'typology'));
+                            $ma->addMessage(htmlescape((string) Dropdown::getDropdownName($dbu->getTableForItemType($item->getType()), $id)) . " : "
+                                    . __s('Element not match with rules for assigning a typology', 'typology'));
                         }
                     }
                 }
                 return;
             case "delete_item":
                 foreach ($ids as $id) {
-                    if ($typo_item->getFromDBByCrit(["`items_id` = $id
-                                                AND `itemtype` = '" . $item->getType() . "'"])) {
+                    $id = (int) $id;
+                    if ($typo_item->getFromDBByCrit(['items_id' => $id, 'itemtype' => $item->getType()])) {
+                        // The ids are posted: rights of the relation, both ends and entities
+                        if (!$typo_item->can($typo_item->getID(), PURGE)) {
+                            $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
                         $values = ['plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
                             'items_id'                      => $typo_item->fields['items_id'],
                             'itemtype'                      => $typo_item->fields['itemtype']];
@@ -1160,8 +1190,12 @@ class Typology_Item extends CommonDBRelation
                 return;
             case "update_allitem":
                 foreach ($ids as $id) {
-                    if ($typo_item->getFromDBByCrit(["`items_id` = $id
-                                                AND `itemtype` = '" . $item->getType() . "'"])) {
+                    $id = (int) $id;
+                    if ($typo_item->getFromDBByCrit(['items_id' => $id, 'itemtype' => $item->getType()])) {
+                        if (!$typo_item->can($typo_item->getID(), UPDATE)) {
+                            $ma->itemDone($item->getType(), $id, MassiveAction::ACTION_NORIGHT);
+                            continue;
+                        }
                         $result = Typology_Item::checkValidated(['items_id'                      => $typo_item->fields['items_id'],
                             'plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
                             'id'                            => $typo_item->fields['id']]);

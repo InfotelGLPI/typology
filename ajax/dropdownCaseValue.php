@@ -28,24 +28,30 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
 use GlpiPlugin\Typology\TypologyCriteriaDefinition;
 
 if (strpos($_SERVER['PHP_SELF'], "dropdownCaseValue.php")) {
     header("Content-Type: text/html; charset=UTF-8");
     Html::header_nocache();
 }
+Session::checkLoginUser();
 Session::checkRight('plugin_typology', UPDATE);
 
-Session::checkLoginUser();
-
-if (!defined('GLPI_ROOT')) {
-    die("Can not acces directly to this file");
+// Back on the empty choice of the field list: nothing to display
+if (empty($_POST['field'])) {
+    return;
 }
 
-$options = ['itemtype'     => $_POST['itemtype'],
-    'typocrit_id'  => $_POST['typocrit_id'],
+// The criterion must be one the user may update, the field a valid "column;table;type"
+if (!TypologyCriteriaDefinition::canEditField($_POST['typocrit_id'] ?? 0, $_POST['field'] ?? null)) {
+    throw new AccessDeniedHttpException();
+}
+
+$options = ['itemtype'     => $_POST['itemtype'] ?? '',
+    'typocrit_id'  => (int) $_POST['typocrit_id'],
     'field'        => $_POST['field'],
-    'action_type'  => $_POST['action_type']];
+    'action_type'  => $_POST['action_type'] ?? ''];
 
 //Display list of values or text field depending on action_type
 TypologyCriteriaDefinition::dropdownValues($options);

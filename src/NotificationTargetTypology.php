@@ -92,9 +92,15 @@ class NotificationTargetTypology extends NotificationTarget
             foreach ($options['items'] as $id => $item) {
                 $tmp = [];
 
+                if (
+                    !in_array($item['itemtype'], Typology::getTypes(true), true)
+                    || !($itemtype = getItemForItemtype($item['itemtype']))
+                    || !$itemtype->getFromDB($item["items_id"])
+                ) {
+                    continue;
+                }
+
                 $tmp['##typology.name##'] = $item['name'];
-                $itemtype = new $item['itemtype']();
-                $itemtype->getFromDB($item["items_id"]);
                 $tmp['##typology.itemtype##'] = $itemtype->getTypeName();
                 $tmp['##typology.items_id##'] = $itemtype->getName();
                 $tmp['##typology.error##'] = Typology_Item::displayErrors($item['error'], false);
@@ -139,14 +145,13 @@ class NotificationTargetTypology extends NotificationTarget
         global $DB;
 
         $template     = new NotificationTemplate();
-        $query_id     = "SELECT `id`
-                       FROM `glpi_notificationtemplates`
-                       WHERE `itemtype`='GlpiPlugin\\Typology\\Typology'
-                       AND `name` = 'Alert no validated typology'";
-        $result       = $DB->doQuery($query_id) or die($DB->error());
+        $existing     = $template->find([
+            'itemtype' => Typology::class,
+            'name'     => 'Alert no validated typology',
+        ], [], 1);
 
-        if ($DB->numrows($result) > 0) {
-            $templates_id = $DB->result($result, 0, 'id');
+        if (count($existing) > 0) {
+            $templates_id = (int) array_key_first($existing);
         } else {
             $tmp = [
                 'name'     => 'Alert no validated typology',

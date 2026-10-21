@@ -27,7 +27,7 @@
  */
 
 //Options for GLPI 0.71 and newer : need slave db to access the report
-global $DB, $LANG, $HEADER_LOADED;
+global $DB, $HEADER_LOADED;
 
 use GlpiPlugin\Typology\Typology;
 use GlpiPlugin\Typology\Typology_Item;
@@ -57,7 +57,7 @@ $columns = ['entity' => ['sorton' => 'entity'],
 $output_type = Search::HTML_OUTPUT;
 
 if (isset ($_POST['list_limit'])) {
-   $_SESSION['glpilist_limit'] = $_POST['list_limit'];
+   $_SESSION['glpilist_limit'] = max(1, (int) $_POST['list_limit']);
    unset ($_POST['list_limit']);
 }
 if (!isset ($_REQUEST['sort'])) {
@@ -68,7 +68,8 @@ if (!isset ($_REQUEST['sort'])) {
 $limit = $_SESSION['glpilist_limit'];
 
 if (isset ($_POST["display_type"])) {
-   $output_type = $_POST["display_type"];
+   // PDF and spreadsheet outputs are produced by the core Search output classes
+   $output_type = (int) $_POST["display_type"];
    if ($output_type < 0) {
       $output_type = - $output_type;
       $limit = 0;
@@ -78,7 +79,7 @@ if (isset ($_POST["display_type"])) {
 //}
 
 //Report title
-$title = $LANG['plugin_typology']['typologyreport'];
+$title = __('Typologies state by service', 'typology');
 
 $styleItemTitle = 'font-size: 12px;
    font-weight: bold;
@@ -93,6 +94,8 @@ $styleItemTitle = 'font-size: 12px;
 // SQL statement
 $dbu = new DbUtils();
 $condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_typology_typologies", '', '', true);
+// A recursive typology must not list the computers of entities the user cannot see
+$computer_condition = $dbu->getEntitiesRestrictRequest('AND', "glpi_computers");
 $sqltypo = $typocrit->getSqlCriteriasRestriction('AND');
 
 $query = "SELECT *
@@ -102,7 +105,9 @@ $query = "SELECT *
 $res = $DB->doQuery($query);
 $nbtot = ($res ? $DB->numrows($res) : 0);
 if ($limit) {
-   $start = (isset ($_GET["start"]) ? $_GET["start"] : 0);
+   // Both end in the LIMIT clause and in the action of the form: integers only
+   $limit = (int) $limit;
+   $start = max(0, (int) ($_GET["start"] ?? 0));
    if ($start >= $nbtot) {
       $start = 0;
    }
@@ -120,8 +125,6 @@ if ($nbtot == 0) {
    }
    echo "<div class='center'><span class='typology_font_red_bold'>".__('No item found')."</span></div>";
    Html::footer();
-} else if ($output_type == Search::PDF_OUTPUT_PORTRAIT || $output_type == Search::PDF_OUTPUT_LANDSCAPE) {
-   include (GLPI_ROOT . "/lib/ezpdf/class.ezpdf.php");
 } else if ($output_type == Search::HTML_OUTPUT) {
    if (!$HEADER_LOADED) {
       Html::header($title, $_SERVER['PHP_SELF'], "utils", "report");
@@ -134,13 +137,13 @@ if ($nbtot == 0) {
    echo "<tr><th>$titre</th></tr>\n";
 
    echo "<tr class='tab_bg_2 center'><td class='center'>";
-   echo "<form method='POST' action='" .$_SERVER["PHP_SELF"] . "?start=$start'>\n";
+   echo "<form method='POST' action='" . htmlescape($_SERVER["PHP_SELF"] . "?start=" . (int) $start) . "'>\n";
 
    $param = "";
    foreach ($_POST as $key => $val) {
       if (is_array($val)) {
          foreach ($val as $k => $v) {
-            echo "<input type='hidden' name='".$key."[$k]' value='$v' >";
+            echo Html::hidden($key . "[" . $k . "]", ['value' => $v]);
             if (!empty ($param)) {
                $param .= "&";
             }
@@ -194,7 +197,7 @@ if ($res && $nbtot >0) {
                             AND `glpi_plugin_typology_typologies_items`.`itemtype` = 'Computer')
                      LEFT JOIN `glpi_entities`
                         ON (`glpi_plugin_typology_typologies`.`entities_id` = `glpi_entities`.`id`)
-                     WHERE $condition $sqltypo
+                     WHERE $condition $sqltypo $computer_condition
                      GROUP BY `glpi_entities`.`entities_id`,
                               `glpi_computers`.`groups_id`,
                               `glpi_plugin_typology_typologies`.`id`".
@@ -204,19 +207,20 @@ if ($res && $nbtot >0) {
    $row_num = 1;
    while ($dataService=$DB->fetchAssoc($resultService)) {
 
+      // Search::showItem() outputs the value as is: every name from the database is escaped
       if ($dataService['groups_id'] == 0) {
-         $serviceName = __('None');
+         $serviceName = __s('None');
       } else {
-         $serviceName = Dropdown::getDropdownName("glpi_groups", $dataService['groups_id']);
+         $serviceName = htmlescape((string) Dropdown::getDropdownName("glpi_groups", $dataService['groups_id']));
       }
 
       if ($dataService['typoID'] == '0') {
-         $typoName = __('None');
+         $typoName = __s('None');
       } else {
-         $typoName = Dropdown::getDropdownName("glpi_plugin_typology_typologies", $dataService["typoID"]);
+         $typoName = htmlescape((string) Dropdown::getDropdownName("glpi_plugin_typology_typologies", $dataService["typoID"]));
       }
 
-      $entityName = Dropdown::getDropdownName('glpi_entities', $dataService['entity']);
+      $entityName = htmlescape((string) Dropdown::getDropdownName('glpi_entities', $dataService['entity']));
 
       $row_num++;
       $num = 1;
@@ -266,10 +270,10 @@ if ($res && $nbtot >0) {
                                  = `glpi_plugin_typology_typologies`.`id`)
                            LEFT JOIN `glpi_computers`
                               ON (`glpi_plugin_typology_typologies_items`.`items_id` = `glpi_computers`.`id`)
-                        WHERE (`glpi_computers`.`groups_id` = '".$dataService['groups_id']."'
-                               AND`plugin_typology_typologies_id` = '".$dataService['typoID']."'
+                        WHERE (`glpi_computers`.`groups_id` = '".(int) $dataService['groups_id']."'
+                               AND`plugin_typology_typologies_id` = '".(int) $dataService['typoID']."'
                                AND `glpi_plugin_typology_typologies_items`.`itemtype`='Computer')
-                               AND ".$condition."".$sqltypo."
+                               AND ".$condition."".$sqltypo." ".$computer_condition."
                                ORDER BY `glpi_computers`.`name`";
 
       $resultComputer = $DB->doQuery($queryComputer);
@@ -280,13 +284,13 @@ if ($res && $nbtot >0) {
 
          $link=Toolbox::getItemTypeFormURL("Computer");
 
-         $computerName = "<a href='".$link."?id=".$dataComputer["items_id"]."' target='_blank'>".
-            Dropdown::getDropdownName("glpi_computers", $dataComputer["items_id"])."</a>";
+         $computerName = "<a href='".htmlescape($link)."?id=".(int) $dataComputer["items_id"]."' target='_blank'>".
+            htmlescape((string) Dropdown::getDropdownName("glpi_computers", $dataComputer["items_id"]))."</a>";
 
          $computer = new Computer();
          $computer->getFromDB($dataComputer["items_id"]);
 
-         $userName = getUserName($computer->fields["users_id"]);
+         $userName = htmlescape((string) getUserName($computer->fields["users_id"] ?? 0));
 
          if ($dataComputer["is_validated"] > 0) {
             $critTypOK = __('Yes');

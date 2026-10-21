@@ -245,10 +245,11 @@ class Profile extends \Profile
             $current_rights = ProfileRight::getProfileRights($profiles_id, array_values($matching));
             foreach ($matching as $old => $new) {
                 if (!isset($current_rights[$old])) {
-                    $query = "UPDATE `glpi_profilerights`
-                         SET `rights`='".self::translateARight($profile_data[$old])."'
-                         WHERE `name`='$new' AND `profiles_id`='$profiles_id'";
-                    $DB->doQuery($query);
+                    $DB->update(
+                        'glpi_profilerights',
+                        ['rights' => self::translateARight($profile_data[$old])],
+                        ['name' => $new, 'profiles_id' => (int) $profiles_id],
+                    );
                 }
             }
         }

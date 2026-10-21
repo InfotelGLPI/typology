@@ -68,23 +68,30 @@ if (isset($_POST["add"])) {
 
 } else if (isset($_POST["add_item"])) {
 
+   // The item type is posted: the types of the plugin only, and an item the user may read,
+   // before its rules are run
    if (!empty($_POST['itemtype'])) {
+      if (!in_array($_POST['itemtype'], Typology::getTypes(true), true)
+          || !($item = getItemForItemtype($_POST['itemtype']))) {
+         throw new \Glpi\Exception\Http\BadRequestHttpException();
+      }
+      $item->check((int) $_POST['items_id'], READ);
+      $typo->check((int) $_POST['plugin_typology_typologies_id'], READ);
 
-      $input = ['plugin_typology_typologies_id' => $_POST['plugin_typology_typologies_id'],
-                              'items_id'      => $_POST['items_id'],
+      $input = ['plugin_typology_typologies_id' => (int) $_POST['plugin_typology_typologies_id'],
+                              'items_id'      => (int) $_POST['items_id'],
                               'itemtype'      => $_POST['itemtype']];
-      $item = new $_POST['itemtype']();
-      if ($item->getFromDB($_POST['items_id'])) {
+      if ($item->getFromDB($input['items_id'])) {
          $ruleCollection = new RuleTypologyCollection($item->fields['entities_id']);
          $fields= [];
-         $item->input = $_POST['plugin_typology_typologies_id'];
+         $item->input = $input['plugin_typology_typologies_id'];
          $fields=$ruleCollection->processAllRules($item->fields, $fields, []);
          //Store rule that matched
 
          if (isset($fields['_ruleid'])) {
             if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']) {
-               $message = __('Element not match with the rule for assigning the typology:', 'typology')." ".
-                  Dropdown::getDropdownName('glpi_plugin_typology_typologies', $input['plugin_typology_typologies_id']);
+               $message = __s('Element not match with the rule for assigning the typology:', 'typology')." ".
+                  htmlescape((string) Dropdown::getDropdownName('glpi_plugin_typology_typologies', $input['plugin_typology_typologies_id']));
                Session::addMessageAfterRedirect($message, ERROR, true);
             } else {
                $typo_item->check(-1, UPDATE, $input);
@@ -108,14 +115,18 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["update_item"])) {
 
    if (!empty($_POST['itemtype'])) {
-
-      $input=Typology_Item::checkValidated($_POST);
-      $typo_item->check($input['id'], UPDATE);
+      // The relation first: its own item and typology are recomputed, not the posted ones
+      $typo_item->check((int) $_POST['id'], UPDATE);
+      $input = Typology_Item::checkValidated([
+         'id'                            => $typo_item->getID(),
+         'items_id'                      => $typo_item->fields['items_id'],
+         'plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
+      ]);
       $typo_item->update($input);
 
-      $values = ['plugin_typology_typologies_id' => $input['plugin_typology_typologies_id'],
-                            'items_id'      => $input['items_id'],
-                            'itemtype'      => $input['itemtype']];
+      $values = ['plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
+                            'items_id'      => $typo_item->fields['items_id'],
+                            'itemtype'      => $typo_item->fields['itemtype']];
 
        Typology_Item::addLog($values, Typology_Item::LOG_UPDATE);
 
@@ -125,20 +136,22 @@ if (isset($_POST["add"])) {
 } else if (isset($_POST["delete_item"])) {
 
    if (!empty($_POST['itemtype'])) {
+      // The relation must be removable by the user; the history is written from the relation
+      // itself, never from the request
+      $typo_item->check((int) $_POST['id'], PURGE);
+      $values = ['plugin_typology_typologies_id' => $typo_item->fields['plugin_typology_typologies_id'],
+                            'items_id'      => $typo_item->fields['items_id'],
+                            'itemtype'      => $typo_item->fields['itemtype']];
 
-      $typo_item->delete($_POST);
-
-      $values = ['plugin_typology_typologies_id' => $_POST['plugin_typology_typologies_id'],
-                            'items_id'      => $_POST['items_id'],
-                            'itemtype'      => $_POST['itemtype']];
+      $typo_item->delete(['id' => (int) $_POST['id']]);
 
        Typology_Item::addLog($values, Typology_Item::LOG_DELETE);
 
    } else {
-      foreach ($_POST["item"] as $key => $val) {
+      foreach ((array) ($_POST["item"] ?? []) as $key => $val) {
          if ($val==1) {
-            $typo_item->check($key, UPDATE);
-            $typo_item->delete(['id'=>$key]);
+            $typo_item->check((int) $key, PURGE);
+            $typo_item->delete(['id' => (int) $key]);
          }
       }
    }
