@@ -1056,11 +1056,11 @@ class TypologyCriteriaDefinition extends CommonDBChild
               && $ligne['realvalue'][1] > 1)
              || ($ligne['realvalue'][0] == 1
                  && $ligne['realvalue'][1] == 2)) {
-                echo $ligne['realvalue'][0] . ' / ' . $ligne['realvalue'][1];
+                echo (int) $ligne['realvalue'][0] . ' / ' . (int) $ligne['realvalue'][1];
                 echo "<br>";
             } elseif ($ligne['realvalue'][0] == 0
                     && $ligne['realvalue'][1] != 1) {
-                echo __('Item not found');
+                echo __s('Item not found');
             }
 
             if ((isset($ligne['list_ok'])
@@ -1075,21 +1075,22 @@ class TypologyCriteriaDefinition extends CommonDBChild
                     if ($val == '') {
                         $val = __('Item not found');
                     }
+                    // The values are read on the item (name, serial, software...): plain text, escaped here
                     if ($itemDataType != "bool") {
-                        echo $val;
+                        echo htmlescape((string) $val);
                         if ($itemField == 'size') {
-                            echo "\"";
+                            echo "&quot;";
                         } elseif ($ligne["itemtype"] == 'DeviceHardDrive') {
-                            echo " " . __('Mio');
+                            echo " " . __s('Mio');
                         } elseif ($itemField == 'frequence') {
-                            echo " " . __('MHz');
+                            echo " " . __s('MHz');
                         } elseif ($ligne["itemtype"] == 'DeviceMemory' && $itemField == 'specif_default') {
-                            echo " " . __('Mio');
+                            echo " " . __s('Mio');
                         } elseif ($ligne["itemtype"] == 'DeviceProcessor' && $itemField == 'specif_default') {
-                            echo " " . __('MHz');
+                            echo " " . __s('MHz');
                         }
                     } else {
-                        echo Dropdown::GetYesNo($val);
+                        echo htmlescape(Dropdown::getYesNo($val));
                     }
                     if ($i < $count) {
                         echo "<br>";
@@ -1423,8 +1424,7 @@ class TypologyCriteriaDefinition extends CommonDBChild
                                                 if ($itemField == 'softwarecategories_id') {
                                                      $name = $data['Field'];
                                                     if (isset($data['softwares_name'])) {
-                                                        $name .= ' <span class="italic">(' .
-                                                        $data['softwares_name'] . ')</span>';
+                                                        $name .= ' (' . $data['softwares_name'] . ')';
                                                     }
                                                     $list[] = $name;
                                                 } else {
@@ -1494,8 +1494,7 @@ class TypologyCriteriaDefinition extends CommonDBChild
                                                 if ($itemField == 'softwarecategories_id') {
                                                     $name = $data['Field'];
                                                     if (isset($data['softwares_name'])) {
-                                                        $name .= ' <span class="italic">(' .
-                                                           $data['softwares_name'] . ')</span>';
+                                                        $name .= ' (' . $data['softwares_name'] . ')';
                                                     }
                                                     $list[] = $name;
                                                 } else {
@@ -1519,8 +1518,7 @@ class TypologyCriteriaDefinition extends CommonDBChild
                                             if ($itemField == 'softwarecategories_id') {
                                                 $name = $data['Field'];
                                                 if (isset($data['softwares_name'])) {
-                                                        $name .= ' <span class="italic">(' .
-                                                    $data['softwares_name'] . ')</span>';
+                                                        $name .= ' (' . $data['softwares_name'] . ')';
                                                 }
                                                 $list[] = $name;
                                             } else {
@@ -1533,8 +1531,7 @@ class TypologyCriteriaDefinition extends CommonDBChild
                                             if ($itemField == 'softwarecategories_id') {
                                                     $name = $data['Field'];
                                                 if (isset($data['softwares_name'])) {
-                                                    $name .= ' <span class="italic">(' .
-                                                    $data['softwares_name'] . ')</span>';
+                                                    $name .= ' (' . $data['softwares_name'] . ')';
                                                 }
                                                 $list[] = $name;
                                             } else {

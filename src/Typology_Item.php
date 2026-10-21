@@ -275,10 +275,11 @@ class Typology_Item extends CommonDBRelation
         if (isset($typoID) && $typoID > 0) {
             if ($display) {
                 $itemtype_table = $dbu->getTableForItemType($input["itemtype"]);
-                $message        = Dropdown::getDropdownName($itemtype_table, $input["items_id"]) . " : "
-                              . __('You cannot assign this typology to this material as he has already a typology : ', 'typology')
-                              . Dropdown::getDropdownName('glpi_plugin_typology_typologies', $typoID);
-                Session::addMessageAfterRedirect($message, ERROR, true);
+                // The message is displayed as HTML: the names come from the database
+                $message        = htmlescape((string) Dropdown::getDropdownName($itemtype_table, $input["items_id"])) . " : "
+                              . __s('You cannot assign this typology to this material as he has already a typology : ', 'typology')
+                              . htmlescape((string) Dropdown::getDropdownName('glpi_plugin_typology_typologies', $typoID));
+                Session::addMessageAfterRedirect($message, false, ERROR);
                 return -1;
             }
             return $ID;

@@ -467,7 +467,7 @@ class Typology extends CommonDBTM
                     }
                     $task_infos[$type][$entity][] = $data;
                     if (!isset($task_messages[$type][$entity])) {
-                        $task_messages[$type][$entity] = __('Typology of the linked elements is updated.', 'typology') . "<br />";
+                        $task_messages[$type][$entity] = __('Typology of the linked elements is updated.', 'typology') . "\n";
                     }
                     $task_messages[$type][$entity] .= $message[$entity];
                 }
@@ -480,17 +480,13 @@ class Typology extends CommonDBTM
 
                 $message     = $task_messages[$type][$entity];
                 $cron_status = 1;
+                // Messages go to the task log only, never to the HTML of a session
                 if ($task) {
                     $task->log(Dropdown::getDropdownName(
                         "glpi_entities",
                         $entity
                     ) . ":  $message\n");
                     $task->addVolume(count($items));
-                } else {
-                    Session::addMessageAfterRedirect(Dropdown::getDropdownName(
-                        "glpi_entities",
-                        $entity
-                    ) . ":  $message");
                 }
             }
         }
@@ -536,12 +532,13 @@ class Typology extends CommonDBTM
                     if (isset($item->fields['entities_id'])) {
                         $entity = $item->fields['entities_id'];
 
+                        // Plain text: the message only goes to the log of the task
                         $message                      = $data["name"] . ": "
-                                                  . $data["error"] . "<br>\n";
+                                                  . $data["error"] . "\n";
                         $task_infos[$type][$entity][] = $data;
 
                         if (!isset($task_messages[$type][$entity])) {
-                            $task_messages[$type][$entity] = __('Elements not match with the typology', 'typology') . "<br />";
+                            $task_messages[$type][$entity] = __('Elements not match with the typology', 'typology') . "\n";
                         }
                         $task_messages[$type][$entity] .= $message;
                     }
@@ -564,31 +561,20 @@ class Typology extends CommonDBTM
                 )) {
                     $message     = $task_messages[$type][$entity];
                     $cron_status = 1;
+                    // Messages go to the task log only, never to the HTML of a session
                     if ($task) {
                         $task->log(Dropdown::getDropdownName(
                             "glpi_entities",
                             $entity
                         ) . ":  $message\n");
                         $task->addVolume(1);
-                    } else {
-                        Session::addMessageAfterRedirect(Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $entity
-                        ) . ":  $message");
                     }
-                } else {
-                    if ($task) {
-                        $task->log(Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $entity
-                        ) . ":  $message\n");
-                        $task->addVolume(count($items));
-                    } else {
-                        Session::addMessageAfterRedirect(Dropdown::getDropdownName(
-                            "glpi_entities",
-                            $entity
-                        ) . ":  $message");
-                    }
+                } elseif ($task) {
+                    $task->log(Dropdown::getDropdownName(
+                        "glpi_entities",
+                        $entity
+                    ) . ":  $message\n");
+                    $task->addVolume(count($items));
                 }
             }
         }

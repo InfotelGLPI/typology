@@ -47,7 +47,7 @@ if (isset($_POST["update"])) {
         $newID = $criteria->add($_POST);
         Html::redirect(PLUGIN_TYPOLOGY_WEBDIR . "/front/typologycriteria.form.php?id=$newID");
     } else {
-        Session::addMessageAfterRedirect(__('No element to be tested'), false, ERROR);
+        Session::addMessageAfterRedirect(__s('No element to be tested'), false, ERROR);
         Html::back();
     }
 } elseif (isset($_POST["purge"])) {

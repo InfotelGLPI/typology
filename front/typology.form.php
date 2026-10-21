@@ -92,7 +92,7 @@ if (isset($_POST["add"])) {
             if ($input['plugin_typology_typologies_id'] != $fields['plugin_typology_typologies_id']) {
                $message = __s('Element not match with the rule for assigning the typology:', 'typology')." ".
                   htmlescape((string) Dropdown::getDropdownName('glpi_plugin_typology_typologies', $input['plugin_typology_typologies_id']));
-               Session::addMessageAfterRedirect($message, ERROR, true);
+               Session::addMessageAfterRedirect($message, false, ERROR);
             } else {
                $typo_item->check(-1, UPDATE, $input);
                $typo_item->add($input);
@@ -105,8 +105,8 @@ if (isset($_POST["add"])) {
 
             }
          } else {
-            $message = __('Element not match with rules for assigning a typology', 'typology');
-            Session::addMessageAfterRedirect($message, ERROR, true);
+            $message = __s('Element not match with rules for assigning a typology', 'typology');
+            Session::addMessageAfterRedirect($message, false, ERROR);
          }
       }
    }
