@@ -105,6 +105,59 @@ class Typology extends CommonDBTM
      *
      * @return
      **/
+    /**
+     * The entity of a typology is posted by its form: one the user may reach only
+     */
+    public function prepareInputForUpdate($input)
+    {
+        if (isset($input['entities_id'])
+            && (int) $input['entities_id'] != (int) ($this->fields['entities_id'] ?? -1)
+            && !Session::haveAccessToEntity((int) $input['entities_id'])) {
+            Session::addMessageAfterRedirect(
+                __s('You do not have access to the destination entity', 'typology'),
+                false,
+                ERROR
+            );
+            return false;
+        }
+
+        return parent::prepareInputForUpdate($input);
+    }
+
+    /**
+     * The criteria and their definitions belong to the entity of their typology: they follow it.
+     * Their own update refuses an entity change, hence the direct writes.
+     */
+    public function post_updateItem($history = true)
+    {
+        global $DB;
+
+        parent::post_updateItem($history);
+
+        if (!in_array('entities_id', $this->updates, true)
+            && !in_array('is_recursive', $this->updates, true)) {
+            return;
+        }
+
+        $values = [
+            'entities_id'  => (int) $this->fields['entities_id'],
+            'is_recursive' => (int) $this->fields['is_recursive'],
+        ];
+        $criterias_ids = array_column(iterator_to_array($DB->request([
+            'SELECT' => 'id',
+            'FROM'   => TypologyCriteria::getTable(),
+            'WHERE'  => ['plugin_typology_typologies_id' => $this->getID()],
+        ])), 'id');
+        if (!empty($criterias_ids)) {
+            $DB->update(TypologyCriteria::getTable(), $values, ['id' => $criterias_ids]);
+            $DB->update(
+                TypologyCriteriaDefinition::getTable(),
+                $values,
+                ['plugin_typology_typologycriterias_id' => $criterias_ids]
+            );
+        }
+    }
+
     public function cleanDBonPurge()
     {
 
@@ -663,37 +716,7 @@ class Typology extends CommonDBTM
                             continue;
                         }
 
-                        $restrict = ["plugin_typology_typologies_id" => $key];
-                        $crits    = $dbu->getAllDataFromTable(
-                            "glpi_plugin_typology_typologycriterias",
-                            $restrict
-                        );
-                        if (!empty($crits)) {
-                            foreach ($crits as $crit) {
-                                $criteria->getFromDB($crit["id"]);
-
-                                $condition = ["plugin_typology_typologycriterias_id" => $crit["id"]];
-                                $defs      = $dbu->getAllDataFromTable(
-                                    "glpi_plugin_typology_typologycriteriadefinitions",
-                                    $condition
-                                );
-                                if (!empty($defs)) {
-                                    foreach ($defs as $def) {
-                                        $definition->getFromDB($def["id"]);
-
-                                        unset($values);
-                                        $values["id"]          = $def["id"];
-                                        $values["entities_id"] = $entities_id;
-                                        $definition->update($values);
-                                    }
-                                }
-                                unset($values);
-                                $values["id"]          = $crit["id"];
-                                $values["entities_id"] = $entities_id;
-                                $criteria->update($values);
-                            }
-                        }
-
+                        // The criteria and their definitions follow (post_updateItem())
                         unset($values);
                         $values["id"]          = $key;
                         $values["entities_id"] = $entities_id;

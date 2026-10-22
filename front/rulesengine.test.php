@@ -27,23 +27,18 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Typology\RuleTypology;
+
 Session::checkCentralAccess();
 
-if (isset($_POST["sub_type"])) {
-    $sub_type = $_POST["sub_type"];
-} elseif (isset($_GET["sub_type"])) {
-    $sub_type = $_GET["sub_type"];
-} else {
-    $sub_type = 0;
+// The rules of the plugin only
+$sub_type = $_POST["sub_type"] ?? $_GET["sub_type"] ?? RuleTypology::class;
+if ($sub_type !== RuleTypology::class) {
+    throw new BadRequestHttpException();
 }
 
-if (isset($_POST["condition"])) {
-    $condition = $_POST["condition"];
-} elseif (isset($_GET["condition"])) {
-    $condition = $_GET["condition"];
-} else {
-    $condition = 0;
-}
+$condition = (int) ($_POST["condition"] ?? $_GET["condition"] ?? 0);
 
 $rulecollection = RuleCollection::getClassByType($sub_type);
 if ($rulecollection->isRuleRecursive()) {

@@ -27,16 +27,14 @@
  --------------------------------------------------------------------------
  */
 
-use Glpi\Exception\Http\AccessDeniedHttpException;
+
 use GlpiPlugin\Typology\Typology;
+
+// The right of the plugin only: the configuration right gives no access to the typologies
+Session::checkRight(Typology::$rightname, READ);
 
 Html::header(Typology::getTypeName(2), '', "tools", Typology::class);
 
-$typo = new Typology();
-if ($typo->canView() || Session::haveRight("config", UPDATE)) {
-    Search::show(Typology::class);
-} else {
-    throw new AccessDeniedHttpException();
-}
+Search::show(Typology::class);
 
 Html::footer();

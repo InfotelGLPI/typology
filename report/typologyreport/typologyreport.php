@@ -35,6 +35,8 @@ use GlpiPlugin\Typology\Typology_Item;
 $USEDBREPLICATE        = 1;
 $DBCONNECTION_REQUIRED = 1;
 
+// The right of the typologies, whatever the reports plugin checks on its side
+Session::checkRight(Typology::$rightname, READ);
 
 $titre = __('Typologies list by service with materials list', 'typology');
 

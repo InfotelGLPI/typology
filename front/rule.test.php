@@ -27,27 +27,19 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+use GlpiPlugin\Typology\RuleTypology;
+
 Session::checkCentralAccess();
 
-if (isset($_POST["sub_type"])) {
-    $sub_type = $_POST["sub_type"];
-} elseif (isset($_GET["sub_type"])) {
-    $sub_type = $_GET["sub_type"];
-} else {
-    $sub_type = 0;
+// The rules of the plugin only
+$sub_type = $_POST["sub_type"] ?? $_GET["sub_type"] ?? RuleTypology::class;
+if ($sub_type !== RuleTypology::class) {
+    throw new BadRequestHttpException();
 }
 
-if (isset($_POST["rules_id"])) {
-    $rules_id = $_POST["rules_id"];
-} elseif (isset($_GET["rules_id"])) {
-    $rules_id = $_GET["rules_id"];
-} else {
-    $rules_id = 0;
-}
-$dbu = new DbUtils();
-if (!$rule = $dbu->getItemForItemtype($sub_type)) {
-    exit;
-}
+$rules_id = (int) ($_POST["rules_id"] ?? $_GET["rules_id"] ?? 0);
+$rule = new RuleTypology();
 $rule->checkGlobal(READ);
 
 $test_rule_output = null;
