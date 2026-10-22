@@ -616,7 +616,11 @@ class Typology_Item extends CommonDBRelation
                 echo "</tr>";
             }
 
-            self::showManagementConsole($ID, $typo_ID);
+            // The criteria of the typology: only when the user may read it (the link above is
+            // not restricted to the entities of the user)
+            if ($typo_ID && (new Typology())->can((int) $typo_ID, READ)) {
+                self::showManagementConsole($ID, $typo_ID);
+            }
 
             //typologie non attribuée
         } else {

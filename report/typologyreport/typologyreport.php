@@ -29,6 +29,7 @@
 //Options for GLPI 0.71 and newer : need slave db to access the report
 global $DB, $HEADER_LOADED;
 
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Typology\Typology;
 use GlpiPlugin\Typology\Typology_Item;
 
@@ -37,6 +38,8 @@ $DBCONNECTION_REQUIRED = 1;
 
 // The right of the typologies, whatever the reports plugin checks on its side
 Session::checkRight(Typology::$rightname, READ);
+// The report lists computers and their users: the right on the computers too
+Session::checkRight(Computer::$rightname, READ);
 
 $titre = __('Typologies list by service with materials list', 'typology');
 
@@ -44,7 +47,7 @@ $titre = __('Typologies list by service with materials list', 'typology');
 $report = new PluginReportsAutoReport($titre);
 
 //Report's search criterias
-$typocrit = New PluginReportsDropdownCriteria($report, '`glpi_plugin_typology_typologies`.`id`',
+$typocrit = New PluginReportsDropdownCriteria($report, 'glpi_plugin_typology_typologies.id',
    'glpi_plugin_typology_typologies', Typology::getTypeName(1));
 
 //Display criterias form is needed
@@ -94,27 +97,28 @@ $styleItemTitle = 'font-size: 12px;
 
 //to verify if typology exist in this entity
 // SQL statement
-$dbu = new DbUtils();
-$condition = $dbu->getEntitiesRestrictRequest('', "glpi_plugin_typology_typologies", '', '', true);
-// A recursive typology must not list the computers of entities the user cannot see
-$computer_condition = $dbu->getEntitiesRestrictRequest('AND', "glpi_computers");
-$sqltypo = $typocrit->getSqlCriteriasRestriction('AND');
+// Query builder criteria: the typologies of the user, the typology chosen, and the computers
+// of the entities of the user (a recursive typology must not list the others)
+$typo_condition     = getEntitiesRestrictCriteria('glpi_plugin_typology_typologies', '', '', true);
+$computer_condition = getEntitiesRestrictCriteria('glpi_computers');
+$typo_criteria      = $typocrit->getNewSqlCriteriasRestriction();
 
-$query = "SELECT *
-          FROM `glpi_plugin_typology_typologies`
-          WHERE $condition $sqltypo ";
+$criteria = [
+   'FROM'  => 'glpi_plugin_typology_typologies',
+   'WHERE' => $typo_condition + $typo_criteria,
+];
 
-$res = $DB->doQuery($query);
-$nbtot = ($res ? $DB->numrows($res) : 0);
+$res   = $DB->request($criteria);
+$nbtot = count($res);
 if ($limit) {
-   // Both end in the LIMIT clause and in the action of the form: integers only
+   // The action of the form: integers only
    $limit = (int) $limit;
    $start = max(0, (int) ($_GET["start"] ?? 0));
    if ($start >= $nbtot) {
       $start = 0;
    }
    if ($start > 0 || $start + $limit < $nbtot) {
-      $res = $DB->doQuery($query . " LIMIT $start,$limit");
+      $res = $DB->request($criteria + ['START' => $start, 'LIMIT' => $limit]);
    }
 } else {
    $start = 0;
@@ -169,8 +173,9 @@ if ($nbtot == 0) {
 
 if ($res && $nbtot >0) {
 
-   $nbCols=$DB->numFields($res);
-   $nbrows = $DB->numrows($res);
+   // The four columns below
+   $nbCols = 4;
+   $nbrows = count($res);
    $num = 1;
    $link  = $_SERVER['PHP_SELF'];
    $order = 'ASC';
@@ -185,29 +190,61 @@ if ($res && $nbtot >0) {
    showTitle($output_type, $num, __('Number', 'typology'), 'COUNT', true);
    echo Search::showEndLine($output_type);
 
-   //By service and typology
-   $queryService = "SELECT count(*) AS COUNT,
-                           `glpi_plugin_typology_typologies`.`entities_id` AS entity,
-                           `glpi_computers`.`groups_id`,
-                           `glpi_plugin_typology_typologies`.`id` AS typoID
-                     FROM `glpi_plugin_typology_typologies_items`
-                     LEFT JOIN `glpi_plugin_typology_typologies`
-                        ON(`glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id`
-                            = `glpi_plugin_typology_typologies`.`id`)
-                     LEFT JOIN `glpi_computers`
-                        ON (`glpi_plugin_typology_typologies_items`.`items_id` = `glpi_computers`.`id`
-                            AND `glpi_plugin_typology_typologies_items`.`itemtype` = 'Computer')
-                     LEFT JOIN `glpi_entities`
-                        ON (`glpi_plugin_typology_typologies`.`entities_id` = `glpi_entities`.`id`)
-                     WHERE $condition $sqltypo $computer_condition
-                     GROUP BY `glpi_entities`.`entities_id`,
-                              `glpi_computers`.`groups_id`,
-                              `glpi_plugin_typology_typologies`.`id`".
-                      getOrderBy('entity', $columns);
-
-   $resultService = $DB->doQuery($queryService);
+   //By service and typology. The service of a computer is its group (Group_Item, normal type,
+   // not the technical one): a computer of several groups is counted in each, one without any
+   // in "None" (groups_id 0)
+   $resultService = $DB->request([
+      'SELECT'    => [
+         'glpi_plugin_typology_typologies.entities_id AS entity',
+         new QueryExpression('COALESCE(' . $DB->quoteName('glpi_groups_items.groups_id') . ', 0) AS '
+            . $DB->quoteName('groups_id')),
+         'glpi_plugin_typology_typologies.id AS typoID',
+      ],
+      'COUNT'     => 'COUNT',
+      'FROM'      => 'glpi_plugin_typology_typologies_items',
+      'LEFT JOIN' => [
+         'glpi_plugin_typology_typologies' => [
+            'ON' => [
+               'glpi_plugin_typology_typologies_items' => 'plugin_typology_typologies_id',
+               'glpi_plugin_typology_typologies'       => 'id',
+            ],
+         ],
+         'glpi_computers' => [
+            'ON' => [
+               'glpi_plugin_typology_typologies_items' => 'items_id',
+               'glpi_computers'                        => 'id', [
+                  'AND' => ['glpi_plugin_typology_typologies_items.itemtype' => 'Computer'],
+               ],
+            ],
+         ],
+         'glpi_groups_items' => [
+            'ON' => [
+               'glpi_groups_items' => 'items_id',
+               'glpi_computers'    => 'id', [
+                  'AND' => [
+                     'glpi_groups_items.itemtype' => Computer::class,
+                     'glpi_groups_items.type'     => Group_Item::GROUP_TYPE_NORMAL,
+                  ],
+               ],
+            ],
+         ],
+         'glpi_entities' => [
+            'ON' => [
+               'glpi_plugin_typology_typologies' => 'entities_id',
+               'glpi_entities'                   => 'id',
+            ],
+         ],
+      ],
+      'WHERE'     => $typo_condition + $typo_criteria + $computer_condition,
+      'GROUPBY'   => [
+         'glpi_entities.entities_id',
+         'groups_id',
+         'glpi_plugin_typology_typologies.id',
+      ],
+      'ORDER'     => getOrderBy('entity', $columns),
+   ]);
    $row_num = 1;
-   while ($dataService=$DB->fetchAssoc($resultService)) {
+   foreach ($resultService as $dataService) {
 
       // Search::showItem() outputs the value as is: every name from the database is escaped
       if ($dataService['groups_id'] == 0) {
@@ -262,27 +299,53 @@ if ($res && $nbtot >0) {
       echo Search::showEndLine($output_type);
 
       //by computer
-      $queryComputer = "SELECT `glpi_plugin_typology_typologies_items`.`itemtype` as itemtype,
-                               `glpi_plugin_typology_typologies_items`.`items_id` as items_id,
-                               `glpi_plugin_typology_typologies_items`.`is_validated`,
-                               `glpi_plugin_typology_typologies_items`.`error`
-                        FROM `glpi_plugin_typology_typologies_items`
-                           LEFT JOIN `glpi_plugin_typology_typologies`
-                              ON(`glpi_plugin_typology_typologies_items`.`plugin_typology_typologies_id`
-                                 = `glpi_plugin_typology_typologies`.`id`)
-                           LEFT JOIN `glpi_computers`
-                              ON (`glpi_plugin_typology_typologies_items`.`items_id` = `glpi_computers`.`id`)
-                        WHERE (`glpi_computers`.`groups_id` = '".(int) $dataService['groups_id']."'
-                               AND`plugin_typology_typologies_id` = '".(int) $dataService['typoID']."'
-                               AND `glpi_plugin_typology_typologies_items`.`itemtype`='Computer')
-                               AND ".$condition."".$sqltypo." ".$computer_condition."
-                               ORDER BY `glpi_computers`.`name`";
-
-      $resultComputer = $DB->doQuery($queryComputer);
+      $resultComputer = $DB->request([
+         'SELECT'    => [
+            'glpi_plugin_typology_typologies_items.itemtype',
+            'glpi_plugin_typology_typologies_items.items_id',
+            'glpi_plugin_typology_typologies_items.is_validated',
+            'glpi_plugin_typology_typologies_items.error',
+         ],
+         'FROM'      => 'glpi_plugin_typology_typologies_items',
+         'LEFT JOIN' => [
+            'glpi_plugin_typology_typologies' => [
+               'ON' => [
+                  'glpi_plugin_typology_typologies_items' => 'plugin_typology_typologies_id',
+                  'glpi_plugin_typology_typologies'       => 'id',
+               ],
+            ],
+            'glpi_computers' => [
+               'ON' => [
+                  'glpi_plugin_typology_typologies_items' => 'items_id',
+                  'glpi_computers'                        => 'id',
+               ],
+            ],
+            'glpi_groups_items' => [
+               'ON' => [
+                  'glpi_groups_items' => 'items_id',
+                  'glpi_computers'    => 'id', [
+                     'AND' => [
+                        'glpi_groups_items.itemtype' => Computer::class,
+                        'glpi_groups_items.type'     => Group_Item::GROUP_TYPE_NORMAL,
+                     ],
+                  ],
+               ],
+            ],
+         ],
+         'WHERE'     => [
+            // The computers of this service, or without any for the "None" row
+            'glpi_groups_items.groups_id'                                         => (int) $dataService['groups_id'] > 0
+               ? (int) $dataService['groups_id']
+               : null,
+            'glpi_plugin_typology_typologies_items.plugin_typology_typologies_id' => (int) $dataService['typoID'],
+            'glpi_plugin_typology_typologies_items.itemtype'                      => 'Computer',
+         ] + $typo_condition + $typo_criteria + $computer_condition,
+         'ORDER'     => 'glpi_computers.name',
+      ]);
       $computeOK=0;
       $computeNOTOK=0;
 
-      while ($dataComputer=$DB->fetchArray($resultComputer)) {
+      foreach ($resultComputer as $dataComputer) {
 
          $link=Toolbox::getItemTypeFormURL("Computer");
 
@@ -405,11 +468,12 @@ function getOrderBy($default, $columns) {
    }
    $order   = $_REQUEST['order'];
 
+   // A column of the allow-list of the report, for the query builder
    $tab = getOrderByFields($default, $columns);
-   if (count($tab)>0) {
-      return " ORDER BY ". $tab ." ". $order;
+   if ($tab !== '') {
+      return ["$tab $order"];
    }
-   return '';
+   return [];
 }
 
 /**

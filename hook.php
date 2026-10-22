@@ -28,6 +28,7 @@
  --------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
 use GlpiPlugin\Typology\NotificationTargetTypology;
 use GlpiPlugin\Typology\Profile;
 use GlpiPlugin\Typology\RuleTypology;
@@ -49,15 +50,17 @@ function plugin_typology_install()
     }
 
     if ($DB->tableExists("glpi_plugin_typology_typologycriterias")) {
-        $query = "UPDATE `glpi_plugin_typology_typologycriterias`
-                     SET `itemtype`='IPAddress'
-                     WHERE `itemtype`='NetworkPort'";
-        $DB->doQuery($query);
+        $DB->update(
+            'glpi_plugin_typology_typologycriterias',
+            ['itemtype' => 'IPAddress'],
+            ['itemtype' => 'NetworkPort']
+        );
 
-        $query = "UPDATE `glpi_plugin_typology_typologycriteriadefinitions`
-                     SET `field`='name;glpi_ipaddresses;itemlink'
-                     WHERE `field` LIKE '%glpi_networkports%'";
-        $DB->doQuery($query);
+        $DB->update(
+            'glpi_plugin_typology_typologycriteriadefinitions',
+            ['field' => 'name;glpi_ipaddresses;itemlink'],
+            ['field' => ['LIKE', '%glpi_networkports%']]
+        );
     }
 
     if ($DB->tableExists("glpi_plugin_typology_profiles")) {
@@ -78,15 +81,19 @@ function plugin_typology_install()
             ]);
             if (count($iterator) > 0) {
                 foreach ($iterator as $data) {
-                    $iq = "INSERT INTO `glpi_notepads`
-                          (`itemtype`, `items_id`, `content`, `date`, `date_mod`)
-                   VALUES ('" . $dbu->getItemTypeForTable($t) . "', '" . $data['id'] . "',
-                           '" . addslashes($data['notepad']) . "', NOW(), NOW())";
-                    $DB->doQuery($iq, "0.85 migrate notepad data");
+                    // The note is bound by the query builder, not escaped by hand
+                    $DB->insert('glpi_notepads', [
+                        'itemtype' => $dbu->getItemTypeForTable($t),
+                        'items_id' => (int) $data['id'],
+                        'content'  => (string) $data['notepad'],
+                        'date'     => new QueryExpression('NOW()'),
+                        'date_mod' => new QueryExpression('NOW()'),
+                    ]);
                 }
             }
-            $query = "ALTER TABLE `glpi_plugin_typology_typologies` DROP COLUMN `notepad`;";
-            $DB->doQuery($query);
+            $migration = new Migration(PLUGIN_TYPOLOGY_VERSION);
+            $migration->dropField('glpi_plugin_typology_typologies', 'notepad');
+            $migration->executeMigration();
         }
     }
 
