@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 17:10+0000\n"
+"POT-Creation-Date: 2026-10-22 08:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:29+0000\n"
 "Last-Translator: Xavier CAILLAUD <thetsmr@gmail.com>, 2026\n"
 "Language-Team: French (France) (https://app.transifex.com/infotelGLPI/teams/12374/fr_FR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: src/Typology_Item.php:558
+#: src/Typology_Item.php:559
 msgid "Actions"
 msgstr "Actions"
 
@@ -33,11 +33,11 @@ msgstr "Ajouter un critère"
 msgid "Add element to the typology"
 msgstr "ajout de l'élément à la typologie"
 
-#: hook.php:242 src/Typology_Item.php:622
+#: hook.php:242 src/Typology_Item.php:623
 msgid "Assign a typology to this material"
 msgstr "Attribuer une typologie à ce matériel"
 
-#: src/Typology_Item.php:1007
+#: src/Typology_Item.php:1008
 msgid "Comparison"
 msgstr "Comparaison"
 
@@ -45,7 +45,7 @@ msgstr "Comparaison"
 msgid "Criteria's list"
 msgstr "Liste des critères"
 
-#: src/TypologyCriteriaDefinition.php:161
+#: src/TypologyCriteriaDefinition.php:202
 msgid "Definition"
 msgid_plural "Definitions"
 msgstr[0] "Définition"
@@ -56,16 +56,16 @@ msgstr[2] "Définitions"
 msgid "Delete the typology of this material"
 msgstr "Supprimer la typologie du matériel"
 
-#: report/typologyreport/typologyreport.php:239
 #: report/typologyreport/typologyreport.php:241
+#: report/typologyreport/typologyreport.php:243
 msgid "Detail (workstation concerned)"
 msgstr "Détail (Objet concerné)"
 
-#: src/TypologyCriteria.php:314 src/Typology_Item.php:1008
+#: src/TypologyCriteria.php:314 src/Typology_Item.php:1009
 msgid "Detail of the assigned typology"
 msgstr "Détail de la typologie attribuée"
 
-#: src/Typology_Item.php:1009
+#: src/Typology_Item.php:1010
 msgid "Detail of the encountered configuration"
 msgstr "Détail de la configuration rencontrée"
 
@@ -76,8 +76,8 @@ msgstr[0] "Elément"
 msgstr[1] "Eléments"
 msgstr[2] "Eléments"
 
-#: front/typology.form.php:108 src/Typology_Item.php:1147
-#: src/Typology_Item.php:1163
+#: front/typology.form.php:108 src/Typology_Item.php:1148
+#: src/Typology_Item.php:1164
 msgid "Element not match with rules for assigning a typology"
 msgstr "L'élément ne verifie pas de règle d'affectation de typologie"
 
@@ -90,21 +90,25 @@ msgid "Element out of the typology"
 msgstr "sortie de l'élément de la typologie"
 
 #: src/NotificationTargetTypology.php:56 src/NotificationTargetTypology.php:80
-#: src/Typology.php:381 src/Typology.php:544
+#: src/Typology.php:434 src/Typology.php:594
 msgid "Elements not match with the typology"
 msgstr "Eléments ne verifiant pas la typologie"
 
-#: src/TypologyCriteriaDefinition.php:139
+#: src/TypologyCriteriaDefinition.php:152
 msgid "Invalid field"
 msgstr "Champ invalide"
 
-#: src/TypologyCriteriaDefinition.php:143
+#: src/TypologyCriteriaDefinition.php:156
 msgid "Invalid operator"
 msgstr "Opérateur invalide"
 
-#: src/TypologyCriteriaDefinition.php:705
-#: src/TypologyCriteriaDefinition.php:711
-#: src/TypologyCriteriaDefinition.php:952
+#: src/TypologyCriteriaDefinition.php:162
+msgid "Invalid regular expression"
+msgstr "Expression régulière invalide"
+
+#: src/TypologyCriteriaDefinition.php:746
+#: src/TypologyCriteriaDefinition.php:752
+#: src/TypologyCriteriaDefinition.php:993
 msgid "Less than"
 msgstr "Moins de"
 
@@ -118,25 +122,25 @@ msgstr "Lien vers l'élément"
 msgid "Link to the typology"
 msgstr "Lien vers la typologie"
 
-#: src/Typology_Item.php:729 src/Typology_Item.php:774
+#: src/Typology_Item.php:730 src/Typology_Item.php:775
 msgid "Linked elements"
 msgstr "Eléments liés"
 
-#: src/Typology_Item.php:1000
+#: src/Typology_Item.php:1001
 msgid "Management console"
 msgstr "Console de gestion"
 
-#: src/TypologyCriteriaDefinition.php:706
-#: src/TypologyCriteriaDefinition.php:712
-#: src/TypologyCriteriaDefinition.php:954
+#: src/TypologyCriteriaDefinition.php:747
+#: src/TypologyCriteriaDefinition.php:753
+#: src/TypologyCriteriaDefinition.php:995
 msgid "More than"
 msgstr "Plus de"
 
-#: src/Typology_Item.php:772
+#: src/Typology_Item.php:773
 msgid "No linked element"
 msgstr "Aucun élément lié"
 
-#: src/TypologyCriteriaDefinition.php:71
+#: src/TypologyCriteriaDefinition.php:84
 msgid "No right to update the criterion"
 msgstr "Aucun droit de modifier le critère"
 
@@ -144,29 +148,29 @@ msgstr "Aucun droit de modifier le critère"
 msgid "No right to update the typology"
 msgstr "Aucun droit de mettre à jour la typologie"
 
-#: report/typologyreport/typologyreport.php:324
+#: report/typologyreport/typologyreport.php:326
 msgid "Not responding"
 msgstr "Ne réponds pas"
 
-#: report/typologyreport/typologyreport.php:183
+#: report/typologyreport/typologyreport.php:185
 msgid "Number"
 msgstr "Nombre"
 
-#: src/Typology_Item.php:1016
+#: src/Typology_Item.php:1017
 msgid "Real value"
 msgstr "Valeur réelle"
 
-#: hook.php:244 src/Typology.php:378
+#: hook.php:244 src/Typology.php:431
 msgid "Recalculate typology for the elements"
 msgstr "Recalculer la typologie sur les éléments"
 
-#: report/typologyreport/typologyreport.php:322
+#: report/typologyreport/typologyreport.php:324
 msgid "Responding"
 msgstr "Réponds"
 
-#: report/typologyreport/typologyreport.php:254
-#: report/typologyreport/typologyreport.php:258 hook.php:285
-#: src/Typology_Item.php:556 src/Typology_Item.php:790
+#: report/typologyreport/typologyreport.php:256
+#: report/typologyreport/typologyreport.php:260 hook.php:285
+#: src/Typology_Item.php:557 src/Typology_Item.php:791
 msgid "Responding to typology's criteria"
 msgstr "Répondant aux critères de la typologie"
 
@@ -174,15 +178,15 @@ msgstr "Répondant aux critères de la typologie"
 msgid "Rules for assigning a typology to a computer"
 msgstr "Règle d'affectation des typologies"
 
-#: src/Typology_Item.php:751
+#: src/Typology_Item.php:752
 msgid "Select a type"
 msgstr "Sélectionner un type"
 
-#: report/typologyreport/typologyreport.php:39
+#: report/typologyreport/typologyreport.php:41
 msgid "Typologies list by service with materials list"
 msgstr "Liste des typologies par service avec liste des matériels"
 
-#: report/typologyreport/typologyreport.php:82
+#: report/typologyreport/typologyreport.php:84
 msgid "Typologies state by service"
 msgstr "Statut de typologie par service"
 
@@ -193,11 +197,11 @@ msgstr[0] "Typologie"
 msgstr[1] "Typologies"
 msgstr[2] "Typologies"
 
-#: src/Typology_Item.php:550
+#: src/Typology_Item.php:551
 msgid "Typology assigned to this material"
 msgstr "Typologie attribuée à ce matériel"
 
-#: src/Typology.php:470
+#: src/Typology.php:523
 msgid "Typology of the linked elements is updated."
 msgstr "La typologie des éléments liés est actualisée."
 
@@ -209,11 +213,11 @@ msgstr "Nom de la typologie"
 msgid "Update element to the typology"
 msgstr "actualisation de l'élément à la typologie"
 
-#: src/Typology_Item.php:1015
+#: src/Typology_Item.php:1016
 msgid "Waiting value"
 msgstr "Valeur attendue"
 
-#: src/Typology_Item.php:279
+#: src/Typology_Item.php:280
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
@@ -221,7 +225,11 @@ msgstr ""
 "Vous ne pouvez attribuer cette typologie à ce matériel car il a déjà la "
 "typologie : "
 
-#: src/TypologyCriteriaDefinition.php:222
+#: src/Typology.php:117
+msgid "You do not have access to the destination entity"
+msgstr "Vous n'avez pas accès à l'entité de destination"
+
+#: src/TypologyCriteriaDefinition.php:263
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
@@ -229,7 +237,7 @@ msgstr ""
 "Vous n'avez pas les droits nécessaires pour créer une définition à ce "
 "critère. Merci de contacter une personne ayant ce droit."
 
-#: report/typologyreport/typologyreport.php:300 src/Typology_Item.php:593
-#: src/Typology_Item.php:849
+#: report/typologyreport/typologyreport.php:302 src/Typology_Item.php:594
+#: src/Typology_Item.php:850
 msgid "for the criteria"
 msgstr "pour le critère"
