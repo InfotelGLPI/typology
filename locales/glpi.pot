@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-21 17:32+0000\n"
+"POT-Creation-Date: 2026-10-22 08:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Criteria's list"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:161
+#: src/TypologyCriteriaDefinition.php:202
 msgid "Definition"
 msgid_plural "Definitions"
 msgstr[0] ""
@@ -52,8 +52,8 @@ msgstr[1] ""
 msgid "Delete the typology of this material"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:239
 #: report/typologyreport/typologyreport.php:241
+#: report/typologyreport/typologyreport.php:243
 msgid "Detail (workstation concerned)"
 msgstr ""
 
@@ -85,21 +85,25 @@ msgid "Element out of the typology"
 msgstr ""
 
 #: src/NotificationTargetTypology.php:56 src/NotificationTargetTypology.php:80
-#: src/Typology.php:381 src/Typology.php:541
+#: src/Typology.php:434 src/Typology.php:594
 msgid "Elements not match with the typology"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:139
+#: src/TypologyCriteriaDefinition.php:152
 msgid "Invalid field"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:143
+#: src/TypologyCriteriaDefinition.php:156
 msgid "Invalid operator"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:705
-#: src/TypologyCriteriaDefinition.php:711
-#: src/TypologyCriteriaDefinition.php:952
+#: src/TypologyCriteriaDefinition.php:162
+msgid "Invalid regular expression"
+msgstr ""
+
+#: src/TypologyCriteriaDefinition.php:746
+#: src/TypologyCriteriaDefinition.php:752
+#: src/TypologyCriteriaDefinition.php:993
 msgid "Less than"
 msgstr ""
 
@@ -119,9 +123,9 @@ msgstr ""
 msgid "Management console"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:706
-#: src/TypologyCriteriaDefinition.php:712
-#: src/TypologyCriteriaDefinition.php:954
+#: src/TypologyCriteriaDefinition.php:747
+#: src/TypologyCriteriaDefinition.php:753
+#: src/TypologyCriteriaDefinition.php:995
 msgid "More than"
 msgstr ""
 
@@ -129,7 +133,7 @@ msgstr ""
 msgid "No linked element"
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:71
+#: src/TypologyCriteriaDefinition.php:84
 msgid "No right to update the criterion"
 msgstr ""
 
@@ -137,11 +141,11 @@ msgstr ""
 msgid "No right to update the typology"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:324
+#: report/typologyreport/typologyreport.php:326
 msgid "Not responding"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:183
+#: report/typologyreport/typologyreport.php:185
 msgid "Number"
 msgstr ""
 
@@ -149,16 +153,16 @@ msgstr ""
 msgid "Real value"
 msgstr ""
 
-#: hook.php:244 src/Typology.php:378
+#: hook.php:244 src/Typology.php:431
 msgid "Recalculate typology for the elements"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:322
+#: report/typologyreport/typologyreport.php:324
 msgid "Responding"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:254
-#: report/typologyreport/typologyreport.php:258 hook.php:285
+#: report/typologyreport/typologyreport.php:256
+#: report/typologyreport/typologyreport.php:260 hook.php:285
 #: src/Typology_Item.php:557 src/Typology_Item.php:791
 msgid "Responding to typology's criteria"
 msgstr ""
@@ -171,11 +175,11 @@ msgstr ""
 msgid "Select a type"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:39
+#: report/typologyreport/typologyreport.php:41
 msgid "Typologies list by service with materials list"
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:82
+#: report/typologyreport/typologyreport.php:84
 msgid "Typologies state by service"
 msgstr ""
 
@@ -189,7 +193,7 @@ msgstr[1] ""
 msgid "Typology assigned to this material"
 msgstr ""
 
-#: src/Typology.php:470
+#: src/Typology.php:523
 msgid "Typology of the linked elements is updated."
 msgstr ""
 
@@ -211,13 +215,17 @@ msgid ""
 "typology : "
 msgstr ""
 
-#: src/TypologyCriteriaDefinition.php:222
+#: src/Typology.php:117
+msgid "You do not have access to the destination entity"
+msgstr ""
+
+#: src/TypologyCriteriaDefinition.php:263
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
 msgstr ""
 
-#: report/typologyreport/typologyreport.php:300 src/Typology_Item.php:594
+#: report/typologyreport/typologyreport.php:302 src/Typology_Item.php:594
 #: src/Typology_Item.php:850
 msgid "for the criteria"
 msgstr ""
