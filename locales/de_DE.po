@@ -228,7 +228,7 @@ msgstr ""
 
 #: src/Typology.php:117
 msgid "You do not have access to the destination entity"
-msgstr "Sie haben keinen Zugriff auf die Zielentität."
+msgstr "Sie haben keinen Zugriff auf die Zielentität"
 
 #: src/TypologyCriteriaDefinition.php:263
 msgid ""
