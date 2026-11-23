@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Typology plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-31 18:00+0000\n"
+"POT-Creation-Date: 2026-10-22 08:28+0000\n"
 "PO-Revision-Date: 2020-11-02 16:29+0000\n"
 "Last-Translator: NeoTrinity <tecvisor@yahoo.fr>, 2026\n"
 "Language-Team: Italian (Italy) (https://app.transifex.com/infotelGLPI/teams/12374/it_IT/)\n"
@@ -22,11 +22,11 @@ msgstr ""
 "Language: it_IT\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
-#: src/Typology_Item.php:540
+#: src/Typology_Item.php:559
 msgid "Actions"
 msgstr "Azioni"
 
-#: src/TypologyCriteria.php:209
+#: src/TypologyCriteria.php:246
 msgid "Add a criterion"
 msgstr "Aggiungere un criterio"
 
@@ -34,39 +34,39 @@ msgstr "Aggiungere un criterio"
 msgid "Add element to the typology"
 msgstr "Aggiungere elemento alla tipologia"
 
-#: hook.php:221 src/Typology_Item.php:604
+#: hook.php:242 src/Typology_Item.php:623
 msgid "Assign a typology to this material"
 msgstr "Assegnare una tipologia a questo materiale"
 
-#: src/Typology_Item.php:988
+#: src/Typology_Item.php:1008
 msgid "Comparison"
 msgstr "Confronto"
 
-#: src/TypologyCriteria.php:254
+#: src/TypologyCriteria.php:291
 msgid "Criteria's list"
 msgstr "La lista di criteri"
 
-#: src/TypologyCriteriaDefinition.php:66
+#: src/TypologyCriteriaDefinition.php:202
 msgid "Definition"
 msgid_plural "Definitions"
 msgstr[0] "Definizione"
 msgstr[1] "Definizioni"
 msgstr[2] "Definizioni"
 
-#: hook.php:222
+#: hook.php:243
 msgid "Delete the typology of this material"
 msgstr "Eliminare la tipologia di questo materiale"
 
-#: report/typologyreport/typologyreport.php:235
-#: report/typologyreport/typologyreport.php:237
+#: report/typologyreport/typologyreport.php:241
+#: report/typologyreport/typologyreport.php:243
 msgid "Detail (workstation concerned)"
 msgstr "Dettagli (collegati al computer)"
 
-#: src/Typology_Item.php:989 src/TypologyCriteria.php:277
+#: src/TypologyCriteria.php:314 src/Typology_Item.php:1009
 msgid "Detail of the assigned typology"
 msgstr "Dettaglio della tipologia assegnata"
 
-#: src/Typology_Item.php:990
+#: src/Typology_Item.php:1010
 msgid "Detail of the encountered configuration"
 msgstr "Dettaglio della configurazione incontrata"
 
@@ -77,12 +77,12 @@ msgstr[0] "Elemento"
 msgstr[1] "Elementi"
 msgstr[2] "Elementi"
 
-#: front/typology.form.php:101 src/Typology_Item.php:1122
-#: src/Typology_Item.php:1138
+#: front/typology.form.php:108 src/Typology_Item.php:1148
+#: src/Typology_Item.php:1164
 msgid "Element not match with rules for assigning a typology"
 msgstr "Elemento non corrisponde con le regole per assegnare una tipologia"
 
-#: front/typology.form.php:86
+#: front/typology.form.php:93
 msgid "Element not match with the rule for assigning the typology:"
 msgstr ""
 "Elemento non corrisponde a la regola dell'assegnazione della tipologia:"
@@ -91,68 +91,88 @@ msgstr ""
 msgid "Element out of the typology"
 msgstr "Elemento fuori dalla tipologia"
 
-#: src/Typology.php:370 src/Typology.php:533
 #: src/NotificationTargetTypology.php:56 src/NotificationTargetTypology.php:80
+#: src/Typology.php:434 src/Typology.php:594
 msgid "Elements not match with the typology"
 msgstr "Gli elementi non corrispondono a la tipologia"
 
-#: src/TypologyCriteriaDefinition.php:602
-#: src/TypologyCriteriaDefinition.php:608
-#: src/TypologyCriteriaDefinition.php:849
+#: src/TypologyCriteriaDefinition.php:152
+msgid "Invalid field"
+msgstr "Campo non valido"
+
+#: src/TypologyCriteriaDefinition.php:156
+msgid "Invalid operator"
+msgstr "Operatore non valido"
+
+#: src/TypologyCriteriaDefinition.php:162
+msgid "Invalid regular expression"
+msgstr "Espressione regolare non valida"
+
+#: src/TypologyCriteriaDefinition.php:746
+#: src/TypologyCriteriaDefinition.php:752
+#: src/TypologyCriteriaDefinition.php:993
 msgid "Less than"
 msgstr "Meno di"
 
 #: src/NotificationTargetTypology.php:87
-#: src/NotificationTargetTypology.php:127
+#: src/NotificationTargetTypology.php:133
 msgid "Link to the element"
 msgstr "Collegamento al elemento"
 
 #: src/NotificationTargetTypology.php:86
-#: src/NotificationTargetTypology.php:126
+#: src/NotificationTargetTypology.php:132
 msgid "Link to the typology"
 msgstr "Collegamento alla tipologia"
 
-#: src/Typology_Item.php:711 src/Typology_Item.php:756
+#: src/Typology_Item.php:730 src/Typology_Item.php:775
 msgid "Linked elements"
 msgstr "Elementi collegati"
 
-#: src/Typology_Item.php:981
+#: src/Typology_Item.php:1001
 msgid "Management console"
 msgstr "Console di gestione"
 
-#: src/TypologyCriteriaDefinition.php:603
-#: src/TypologyCriteriaDefinition.php:609
-#: src/TypologyCriteriaDefinition.php:851
+#: src/TypologyCriteriaDefinition.php:747
+#: src/TypologyCriteriaDefinition.php:753
+#: src/TypologyCriteriaDefinition.php:995
 msgid "More than"
 msgstr "Più di"
 
-#: src/Typology_Item.php:754
+#: src/Typology_Item.php:773
 msgid "No linked element"
 msgstr "Nessun elemento collegato"
 
-#: report/typologyreport/typologyreport.php:320
+#: src/TypologyCriteriaDefinition.php:84
+msgid "No right to update the criterion"
+msgstr "Nessun diritto di aggiornare il criterio"
+
+#: src/TypologyCriteria.php:70
+msgid "No right to update the typology"
+msgstr "Nessun diritto di aggiornare la topologia"
+
+#: report/typologyreport/typologyreport.php:326
 msgid "Not responding"
 msgstr "Non risponde"
 
-#: report/typologyreport/typologyreport.php:180
+#: report/typologyreport/typologyreport.php:185
 msgid "Number"
 msgstr "Numero"
 
-#: src/Typology_Item.php:997
+#: src/Typology_Item.php:1017
 msgid "Real value"
 msgstr "Valore reale"
 
-#: hook.php:223 src/Typology.php:367
+#: hook.php:244 src/Typology.php:431
 msgid "Recalculate typology for the elements"
 msgstr "Ricalcolare tipologia per gli elementi"
 
-#: report/typologyreport/typologyreport.php:318
+#: report/typologyreport/typologyreport.php:324
 msgid "Responding"
 msgstr "Risponde"
 
-#: hook.php:264 report/typologyreport/typologyreport.php:250
-#: report/typologyreport/typologyreport.php:254 src/Typology_Item.php:538
-#: src/Typology_Item.php:772
+#: report/typologyreport/typologyreport.php:256
+#: report/typologyreport/typologyreport.php:260 hook.php:285
+#: src/Typology_Item.php:557 src/Typology_Item.php:791
 msgid "Responding to typology's criteria"
 msgstr "Rispondendo ai criteri della tipologia"
 
@@ -160,13 +180,17 @@ msgstr "Rispondendo ai criteri della tipologia"
 msgid "Rules for assigning a typology to a computer"
 msgstr "Regole per l'assegnazione di una tipologia ad un computer"
 
-#: src/Typology_Item.php:733
+#: src/Typology_Item.php:752
 msgid "Select a type"
 msgstr "Selezionare il tipo"
 
-#: report/typologyreport/typologyreport.php:39
+#: report/typologyreport/typologyreport.php:41
 msgid "Typologies list by service with materials list"
 msgstr "Repertorio delle tipologie per servizio con la lista dei materiali"
+
+#: report/typologyreport/typologyreport.php:84
+msgid "Typologies state by service"
+msgstr "Stato delle tipologie per servizio."
 
 #: setup.php:99 src/Profile.php:196 src/Typology.php:84
 msgid "Typology"
@@ -175,15 +199,15 @@ msgstr[0] "Tipologia"
 msgstr[1] "Tipologie"
 msgstr[2] "Tipologie"
 
-#: src/Typology_Item.php:532
+#: src/Typology_Item.php:551
 msgid "Typology assigned to this material"
 msgstr "Tipologia assegnata a questo materiale"
 
-#: src/Typology.php:459
+#: src/Typology.php:523
 msgid "Typology of the linked elements is updated."
 msgstr "Tipologia degli elementi connessi e aggiornata."
 
-#: hook.php:250
+#: hook.php:271
 msgid "Typology's name"
 msgstr "Il nome della tipologia"
 
@@ -191,11 +215,11 @@ msgstr "Il nome della tipologia"
 msgid "Update element to the typology"
 msgstr "Aggiornare l'elemento alla tipologia"
 
-#: src/Typology_Item.php:996
+#: src/Typology_Item.php:1016
 msgid "Waiting value"
 msgstr "Valore di attesa"
 
-#: src/Typology_Item.php:275
+#: src/Typology_Item.php:280
 msgid ""
 "You cannot assign this typology to this material as he has already a "
 "typology : "
@@ -203,7 +227,11 @@ msgstr ""
 "Non è possibile assegnare questa tipologia a questo materiale perché ha già "
 "una tipologia:"
 
-#: src/TypologyCriteriaDefinition.php:127
+#: src/Typology.php:117
+msgid "You do not have access to the destination entity"
+msgstr "Non avete accesso all'entità di destinazione"
+
+#: src/TypologyCriteriaDefinition.php:263
 msgid ""
 "You don't have right to create a definition for this criteria. Thank to "
 "contact a person having this right."
@@ -211,7 +239,7 @@ msgstr ""
 "Non avete diritto di creare una definizione per questo criterio. Si prega di"
 " contattare una persona che ha questo diritto."
 
-#: report/typologyreport/typologyreport.php:296 src/Typology_Item.php:575
-#: src/Typology_Item.php:830
+#: report/typologyreport/typologyreport.php:302 src/Typology_Item.php:594
+#: src/Typology_Item.php:850
 msgid "for the criteria"
 msgstr "per i criteri"
